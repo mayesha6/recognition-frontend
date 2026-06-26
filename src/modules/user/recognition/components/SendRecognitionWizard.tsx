@@ -10,10 +10,8 @@ import {
   SendRecognitionFormValues 
 } from "../validation/recognition.schema";
 import { RecipientUser } from "@/types/recognition";
+import SelectUser from "./SelectUser";
 
-// We will build these next
-import Step1SelectUser from "./steps/Step1SelectUser";
-// import Step2Configuration from "./steps/Step2Configuration"; ...
 
 interface WizardProps {
   prefilledUser: RecipientUser | null;
@@ -65,7 +63,7 @@ export default function SendRecognitionWizard({ prefilledUser, onClose }: Wizard
 
         {/* Step 1 Component */}
         {currentStep === 1 && (
-          <Step1SelectUser 
+          <SelectUser 
             prefilledUser={prefilledUser} 
             onContinue={() => setCurrentStep(2)} 
           />

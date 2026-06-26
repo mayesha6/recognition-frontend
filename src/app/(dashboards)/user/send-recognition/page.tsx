@@ -6,7 +6,7 @@ import { Plus, Search, Bell } from "lucide-react";
 import { Input } from "@/components/ui/input";
 // import SendRecognitionWizard from "@/modules/recognition/components/SendRecognitionWizard";
 import { RecipientUser } from "@/types/recognition";
-import SendRecognitionWizard from "@/components/common/SendRecognitionWizard";
+import SendRecognitionWizard from "@/modules/user/recognition/components/SendRecognitionWizard";
 
 // Dummy data representing users in the logged-in user's department
 const departmentUsers: RecipientUser[] = [
