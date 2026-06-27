@@ -3,15 +3,45 @@
 @theme {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-primary: #555DE3;
+  --color-secondary: #958AFF;
+  --color-gray: #E1E5EB;
+
+  /* Gradient */
+ --background-image-gradient: linear-gradient(to right, #555DE3, #958AFF);
+ --shadow-custom-card: 0 1px 2px -1px rgb(0 0 0 / 0.1), 0 1px 3px 0 rgb(0 0 0 / 0.1);
 }
 
+@layer utilities {
+  /* পুরো ব্যাকগ্রাউন্ড গ্র্যাডিয়েন্টের জন্য */
+  .bg-gradient {
+    background-image: var(--background-image-gradient);
+  }
+
+  /* টেক্সট গ্র্যাডিয়েন্টের জন্য */
+  .text-gradient {
+    background-image: var(--background-image-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* বর্ডার গ্র্যাডিয়েন্টের জন্য */
+  .border-gradient {
+    border: 1px solid transparent;
+    background-image: linear-gradient(var(--background), var(--background)), var(--background-image-gradient);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+  }
+}
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   /* shadcn variables will be here */
 }
 
-html, body {
+html,
+body {
   width: 100%;
   min-height: 100%;
 }

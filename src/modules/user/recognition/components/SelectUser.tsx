@@ -26,6 +26,7 @@ const DUMMY_USERS: RecipientUser[] = [
 interface SelectUserProps {
   prefilledUser: RecipientUser | null;
   onContinue: () => void;
+  onClose: () => void;
 }
 
 export default function SelectUser({ prefilledUser, onContinue }: SelectUserProps) {

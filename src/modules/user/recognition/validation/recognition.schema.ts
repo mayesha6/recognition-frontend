@@ -10,7 +10,7 @@ export const sendRecognitionSchema = z.object({
     .min(1, "Select at least 1 value")
     .max(3, "You can choose a maximum of 3 values"),
   points: z.number().min(1, "Points must be greater than 0"),
-  imageId: z.string().min(1, "Please select a card image"),
+  imageId: z.string().min(1, "Please select a category image"),
 });
 
 export type SendRecognitionFormValues = z.infer<typeof sendRecognitionSchema>;
