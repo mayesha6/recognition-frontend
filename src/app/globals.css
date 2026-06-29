@@ -1,7 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
+
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-geist-sans);
+  --font-sans: 'Lexend Deca', sans-serif;
   --font-mono: var(--font-geist-mono);
   --color-primary: #555DE3;
   --color-secondary: #958AFF;
