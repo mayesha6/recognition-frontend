@@ -10,7 +10,7 @@ export default function Step4Preview({ onBack }: any) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
       {/* বাম পাশ: প্রিভিউ কার্ড */}
-      <div className="bg-gradient p-6 rounded-2xl text-white shadow-lg flex flex-col justify-between min-h-[400px]">
+      <div className="bg-gradient p-6 rounded-2xl text-white shadow-lg flex flex-col justify-between min-h-100">
         <div>
           <h2 className="text-3xl font-bold mb-6">Greetely</h2>
           <p className="text-sm opacity-90">To:</p>

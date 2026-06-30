@@ -14,7 +14,7 @@ export default function ChangePassword() {
     };
 
     // ইনপুট ক্লাসের জন্য কমন স্টাইল (focus:outline-none দিয়ে বর্ডার রিমুভ হবে)
-    const inputStyle = "w-full border-0 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all";
+    const inputStyle = "w-full border-0 focus:outline-none focus:ring-0 focus:ring-indigo-500 transition-all";
     const labelStyle = "text-sm font-medium text-[#596475]";
     const divStyle = "flex border border-gray-200 rounded-lg px-3 py-2"
     return (
