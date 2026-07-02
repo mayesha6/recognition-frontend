@@ -10,6 +10,9 @@ import {
   Trophy,
   ShieldCheck,
   LucideIcon,
+  FileImage,
+  File,
+  Coins,
 } from "lucide-react";
 
 import { UserRole } from "@/types/auth";
@@ -61,7 +64,7 @@ export const sidebarConfig: Record<UserRole, SidebarItem[]> = {
       icon: LayoutDashboard,
     },
     {
-      name: "Users",
+      name: "Employees",
       href: "/dept-admin/users",
       icon: Users,
     },
@@ -70,6 +73,22 @@ export const sidebarConfig: Record<UserRole, SidebarItem[]> = {
       href: "/dept-admin/recognitions",
       icon: Trophy,
     },
+    {
+      name: "Reports",
+      href: "/dept-admin/reports",
+      icon: File,
+    },
+     {
+      name: "Reward Claim",
+      href: "/dept-admin/claim-rewards",
+      icon: BaggageClaim,
+    },
+     {
+      name: "Point Distribution",
+      href: "/dept-admin/point",
+      icon: Coins,
+    },
+
     {
       name: "Settings",
       href: "/dept-admin/settings",
