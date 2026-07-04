@@ -85,6 +85,7 @@ import { LogOut } from "lucide-react";
 import { sidebarConfig } from "@/config/sidebar.config";
 // import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { UserRole } from "@/types/auth";
+import { useEffect, useState } from "react";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -97,17 +98,22 @@ export default function Sidebar() {
   // const navItems = sidebarConfig[user.role];
 
 
+const [mounted, setMounted] = useState(false);
+  const [role, setRole] = useState<UserRole>("user");
+useEffect(() => {
+    // ২. ক্লায়েন্ট সাইডে লোড হলে লোকাল স্টোরেজ থেকে রোল সেট করুন
+    const storedRole = localStorage.getItem("role") as UserRole || "user";
+    setRole(storedRole);
+    setMounted(true);
+  }, []);
 
-const role =
-  (typeof window !== "undefined"
-    ? localStorage.getItem("role")
-    : "user") || "user";
-
-const navItems = sidebarConfig[role as UserRole];
+  // ৩. মাউন্ট না হওয়া পর্যন্ত কিছুই রেন্ডার করবেন না বা লোডিং দেখান
+  if (!mounted) return <aside className="hidden lg:flex w-64 bg-white border-r h-full" />;
+const navItems = sidebarConfig[role];
 
 const user = {
   name: "Saifur Rahman",
-  role: role as UserRole,
+  role: role,
 };
 
   const initials = user.name
@@ -116,12 +122,12 @@ const user = {
     .join("")
     .toUpperCase();
 
-  const handleLogout = async () => {
-    // TODO:
-    // await logout();
+  // const handleLogout = async () => {
+  //   // TODO:
+  //   // await logout();
 
-    router.push("/login");
-  };
+  //   router.push("/login");
+  // };
 
   return (
     <>
@@ -170,7 +176,7 @@ const user = {
           </div>
 
           <button
-            onClick={handleLogout}
+            // onClick={handleLogout}
             className="flex items-center gap-2 bg-[#F3F4F6] w-full text-sm text-gray-600 rounded-xl text-center justify-center py-1"
           >
             <LogOut className="w-4 h-4" />
@@ -196,7 +202,7 @@ const user = {
         ))}
 
         <button
-          onClick={handleLogout}
+          // onClick={handleLogout}
           className="flex flex-col items-center gap-1 text-gray-500"
         >
           <LogOut className="w-6 h-6" />

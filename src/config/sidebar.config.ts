@@ -80,12 +80,12 @@ export const sidebarConfig: Record<UserRole, SidebarItem[]> = {
     },
      {
       name: "Reward Claim",
-      href: "/dept-admin/claim-rewards",
+      href: "/dept-admin/reward-claim",
       icon: BaggageClaim,
     },
      {
       name: "Point Distribution",
-      href: "/dept-admin/point",
+      href: "/dept-admin/point-distribution",
       icon: Coins,
     },
 
