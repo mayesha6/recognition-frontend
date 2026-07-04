@@ -8,23 +8,23 @@ import { useState } from "react";
 
 
 const mockClaims = [
-  { claimId: "CLM-2041", user: "Saifur Rahman", department: "Engineering", reward: "Amazon Gift Card $25", status: "Resolved" },
-  { claimId: "CLM-2042", user: "Rahman", department: "Sterling Health", reward: "Yoga Mat", status: "Pending" },
-  { claimId: "CLM-2043", user: "Jessica Liu", department: "Tech Innovations", reward: "Wireless Charger", status: "Rejected" },
+    { claimId: "CLM-2041", user: "Saifur Rahman", department: "Engineering", reward: "Amazon Gift Card $25", status: "Resolved" },
+    { claimId: "CLM-2042", user: "Rahman", department: "Sterling Health", reward: "Yoga Mat", status: "Pending" },
+    { claimId: "CLM-2043", user: "Jessica Liu", department: "Tech Innovations", reward: "Wireless Charger", status: "Rejected" },
 ];
-    const claims = [
-        { id: "CLM-2041", user: "Saifur Rahman", dept: "Acme Corp", reward: "Amazon Gift Card", points: 2500, date: "Apr 12, 2026", status: "Approved" },
-        { id: "CLM-2042", user: "Saifur Rahman", dept: "Acme Corp", reward: "Amazon Gift Card", points: 2500, date: "Apr 12, 2026", status: "Rejected" },
-        { id: "CLM-2043", user: "Saifur Rahman", dept: "Acme Corp", reward: "Amazon Gift Card", points: 2500, date: "Apr 12, 2026", status: "Pending" },
-        // ...
-    ];
+const claims = [
+    { id: "CLM-2041", user: "Saifur Rahman", dept: "Acme Corp", reward: "Amazon Gift Card", points: 2500, date: "Apr 12, 2026", status: "Approved" },
+    { id: "CLM-2042", user: "Saifur Rahman", dept: "Acme Corp", reward: "Amazon Gift Card", points: 2500, date: "Apr 12, 2026", status: "Rejected" },
+    { id: "CLM-2043", user: "Saifur Rahman", dept: "Acme Corp", reward: "Amazon Gift Card", points: 2500, date: "Apr 12, 2026", status: "Pending" },
+    // ...
+];
 
 export default function RewardClaimPage() {
     const [currentPage, setCurrentPage] = useState(1);
-  return (
-    <div className="">
-      <h1 className="text-[28px] font-medium mb-4">Rewards & Redeem</h1>
-       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
+    return (
+        <div className="">
+            <h1 className="text-[28px] font-medium mb-4">Rewards & Redeem</h1>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
                 <StatCard
                     title="Pending Claims"
                     count={5}
@@ -47,18 +47,18 @@ export default function RewardClaimPage() {
                     iconBgColor="bg-[#FF0000]/10"
                 />
             </div>
-      
-      {/* স্ট্যাটস কার্ডস (আগের বানানো StatCard কম্পোনেন্ট এখানে বসাবেন) */}
-      
-      <RewardClaimTable data={mockClaims} />
 
-      <div className="py-6 flex justify-end">
-                      <Pagination
-                          currentPage={currentPage}
-                          totalPages={16}
-                          onPageChange={(p) => setCurrentPage(p)}
-                      />
-                  </div>
-    </div>
-  );
+            {/* স্ট্যাটস কার্ডস (আগের বানানো StatCard কম্পোনেন্ট এখানে বসাবেন) */}
+
+            <RewardClaimTable data={mockClaims} />
+
+            <div className="py-6 flex justify-end">
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={16}
+                    onPageChange={(p) => setCurrentPage(p)}
+                />
+            </div>
+        </div>
+    );
 }
