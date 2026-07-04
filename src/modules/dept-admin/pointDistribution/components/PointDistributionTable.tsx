@@ -4,7 +4,8 @@ import { Pencil, Trash2 } from "lucide-react"; // আইকনগুলো ই�
 export default function PointDistributionTable({ data, onDelete, onEdit }: any) {
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-      <table className="w-full text-left">
+      <div className="overflow-x-auto w-full">
+        <table className="w-full text-left">
         <thead className="bg-gray-50/50 text-gray-500 text-xs uppercase">
           <tr>
             <th className="px-6 py-4 font-medium">Name</th>
@@ -37,6 +38,7 @@ export default function PointDistributionTable({ data, onDelete, onEdit }: any) 
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

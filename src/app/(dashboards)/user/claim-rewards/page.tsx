@@ -20,7 +20,7 @@ export default function ClaimListPage() {
     ];
 
     return (
-        <div className="p-8 bg-gray-50/50 min-h-screen">
+        <div className=" bg-gray-50/50 min-h-screen">
             <h1 className="text-2xl font-bold mb-6">Claim List</h1>
 
             {/* স্ট্যাটাস কার্ডস */}
@@ -58,7 +58,8 @@ export default function ClaimListPage() {
                     </div>
                 </div>
 
-                <table className="w-full text-left">
+                <div className="overflow-x-auto w-full">
+                    <table className="w-full text-left">
                     <thead className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
                         <tr>
                             <th className="px-6 py-4">Claim ID</th>
@@ -86,6 +87,7 @@ export default function ClaimListPage() {
                         ))}
                     </tbody>
                 </table>
+                </div>
 
 
 
