@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Search } from "lucide-react";
 import { useState } from "react";
+import ActionMenu from "./ActionMenu";
 
 const StatusBadge = ({ status }: { status: string }) => {
     const styles = {
@@ -56,32 +57,37 @@ export default function RewardClaimTable({ data }: { data: any[] }) {
 
 
 
-           <div className="overflow-x-auto w-full"> {/* w-full যোগ করুন */}
-    <table className="w-full min-w-[800px] text-left border-collapse"> {/* min-w যোগ করুন */}
-        <thead className="bg-gray-50/50 text-gray-500 text-xs uppercase">
-            <tr>
-                <th className="px-6 py-4 font-medium">Claim ID</th>
-                <th className="px-6 py-4 font-medium">User</th>
-                <th className="px-6 py-4 font-medium">Department</th>
-                <th className="px-6 py-4 font-medium">Reward</th>
-                <th className="px-6 py-4 font-medium">Status</th>
-                <th className="px-6 py-4 font-medium text-center">Actions</th>
-            </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-100">
-            {filteredData.map((row: any) => (
-                <tr key={row.claimId} className="hover:bg-gray-50/50 whitespace-nowrap"> {/* whitespace-nowrap যোগ করুন */}
-                    <td className="px-6 py-4">{row.claimId}</td>
-                    <td className="px-6 py-4">{row.user}</td>
-                    <td className="px-6 py-4">{row.department}</td>
-                    <td className="px-6 py-4">{row.reward}</td>
-                    <td className="px-6 py-4"><StatusBadge status={row.status} /></td>
-                    <td className="px-6 py-4 text-center">...</td>
-                </tr>
-            ))}
-        </tbody>
-    </table>
-</div>
+            <div className="overflow-x-auto w-full"> {/* w-full যোগ করুন */}
+                <table className="w-full min-w-200 text-left border-collapse"> {/* min-w যোগ করুন */}
+                    <thead className="bg-gray-50/50 text-gray-500 text-xs uppercase">
+                        <tr>
+                            <th className="px-6 py-4 font-medium">Claim ID</th>
+                            <th className="px-6 py-4 font-medium">User</th>
+                            <th className="px-6 py-4 font-medium">Department</th>
+                            <th className="px-6 py-4 font-medium">Reward</th>
+                            <th className="px-6 py-4 font-medium">Status</th>
+                            <th className="px-6 py-4 font-medium text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                        {filteredData.map((row: any) => (
+                            <tr key={row.claimId} className="hover:bg-gray-50/50 whitespace-nowrap"> {/* whitespace-nowrap যোগ করুন */}
+                                <td className="px-6 py-4">{row.claimId}</td>
+                                <td className="px-6 py-4">{row.user}</td>
+                                <td className="px-6 py-4">{row.department}</td>
+                                <td className="px-6 py-4">{row.reward}</td>
+                                <td className="px-6 py-4"><StatusBadge status={row.status} /></td>
+                                <td className="px-6 py-4 text-center cursor-pointer"><ActionMenu
+                                    onStatusChange={(status: any) => {
+                                        // এখানে আপনার API কল হবে (Update Status API)
+                                        console.log(`Claim ${row.claimId} status changed to:`, status);
+                                    }}
+                                /></td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 }
