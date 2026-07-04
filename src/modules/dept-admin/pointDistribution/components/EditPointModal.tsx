@@ -38,7 +38,7 @@ export default function EditPointModal({ isOpen, onClose, userData, onSave }: an
 
         <button 
           onClick={() => onSave(userData)} 
-          className="w-full mt-6 bg-[#6366F1] text-white py-3 rounded-lg font-bold hover:bg-indigo-700"
+          className="w-full mt-6 bg-gradient text-white py-3 rounded-lg font-bold hover:bg-indigo-700"
         >
           Update Point
         </button>

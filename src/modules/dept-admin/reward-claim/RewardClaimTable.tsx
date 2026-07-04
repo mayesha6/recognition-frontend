@@ -77,7 +77,8 @@ export default function RewardClaimTable({ data }: { data: any[] }) {
                                 <td className="px-6 py-4">{row.department}</td>
                                 <td className="px-6 py-4">{row.reward}</td>
                                 <td className="px-6 py-4"><StatusBadge status={row.status} /></td>
-                                <td className="px-6 py-4 text-center cursor-pointer"><ActionMenu
+                                <td className="px-6 py-4 text-center cursor-pointer">
+                                    <ActionMenu
                                     onStatusChange={(status: any) => {
                                         // এখানে আপনার API কল হবে (Update Status API)
                                         console.log(`Claim ${row.claimId} status changed to:`, status);

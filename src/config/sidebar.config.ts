@@ -65,7 +65,7 @@ export const sidebarConfig: Record<UserRole, SidebarItem[]> = {
     },
     {
       name: "Employees",
-      href: "/dept-admin/users",
+      href: "/dept-admin/employee-management",
       icon: Users,
     },
     {

@@ -12,12 +12,7 @@ const mockClaims = [
     { claimId: "CLM-2042", user: "Rahman", department: "Sterling Health", reward: "Yoga Mat", status: "Pending" },
     { claimId: "CLM-2043", user: "Jessica Liu", department: "Tech Innovations", reward: "Wireless Charger", status: "Rejected" },
 ];
-const claims = [
-    { id: "CLM-2041", user: "Saifur Rahman", dept: "Acme Corp", reward: "Amazon Gift Card", points: 2500, date: "Apr 12, 2026", status: "Approved" },
-    { id: "CLM-2042", user: "Saifur Rahman", dept: "Acme Corp", reward: "Amazon Gift Card", points: 2500, date: "Apr 12, 2026", status: "Rejected" },
-    { id: "CLM-2043", user: "Saifur Rahman", dept: "Acme Corp", reward: "Amazon Gift Card", points: 2500, date: "Apr 12, 2026", status: "Pending" },
-    // ...
-];
+
 
 export default function RewardClaimPage() {
     const [currentPage, setCurrentPage] = useState(1);
