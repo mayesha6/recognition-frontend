@@ -86,11 +86,14 @@ export default function EmployeeManagementPage() {
                 isOpen={isModalOpen} 
                 onClose={() => setIsModalOpen(false)} 
                 userData={selectedUser}
+                type="employee"
                 onSave={(data: any) => {
                     console.log("Saving new point:", data);
                     setIsModalOpen(false);
                 }}
             />
+
+
         </div>
     );
 }

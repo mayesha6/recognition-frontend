@@ -51,17 +51,17 @@
 import { X } from "lucide-react";
 import { useState } from "react";
 
-export default function EditPointModal({ 
-  isOpen, 
-  onClose, 
-  userData, 
-  onSave, 
+export default function EditPointModal({
+  isOpen,
+  onClose,
+  userData,
+  onSave,
   type = "point" // ডিফল্ট 'point', প্রয়োজনে 'employee' পাঠাবেন
 }: any) {
   if (!isOpen) return null;
 
   const isPointMode = type === "point";
-  
+
   // স্ট্যাটাস হ্যান্ডল করার জন্য লোকাল স্টেট
   const [status, setStatus] = useState(userData?.status || "Active");
 
@@ -88,36 +88,49 @@ export default function EditPointModal({
             <label className="text-sm text-gray-500">Email</label>
             <input disabled value={userData?.email} className="w-full bg-gray-50 border rounded-lg px-3 py-2 mt-1 border-gray text-gray-400 text-[14px]" />
           </div>
-          
+
           {/* Status Input */}
           <div>
             <label className="text-sm text-gray-500">Status</label>
-            <select 
-              disabled={isPointMode} // পয়েন্ট ডিস্ট্রিবিউশনে এটি ডিজেবল থাকবে
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              className={`w-full border rounded-lg px-3 py-2 mt-1 ${isPointMode ? "bg-gray-50 text-gray-400" : "border-indigo-500"}`}
-            >
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
-            </select>
+            <div className="relative w-full mt-1">
+              <select
+                disabled={isPointMode}
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                className={`w-full appearance-none border rounded-lg pl-4 pr-10 py-2 focus:outline-none 
+        ${isPointMode ? "bg-gray-50 text-gray-400 border-gray-200" : "border-indigo-500 text-gray-900"}
+      `}
+              >
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+
+              {/* অ্যারো আইকন - এটি সবসময় ডানে ফিক্সড থাকবে */}
+              <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </div>
           </div>
 
-          {isPointMode && (
+
+
+          
             <div>
               <label className="text-sm text-gray-500">Points</label>
-              <input 
+              <input
                 type="number"
                 defaultValue={userData?.point}
                 className="w-full border-2 border-indigo-500 rounded-lg px-3 py-2 mt-1 focus:outline-none"
                 onChange={(e) => userData.point = e.target.value}
               />
             </div>
-          )}
+          
         </div>
 
-        <button 
-          onClick={() => onSave({ ...userData, status })} 
+        <button
+          onClick={() => onSave({ ...userData, status })}
           className="w-full mt-6 bg-gradient text-white py-3 rounded-lg font-bold hover:opacity-90"
         >
           {isPointMode ? "Update Point" : "Update Information"}

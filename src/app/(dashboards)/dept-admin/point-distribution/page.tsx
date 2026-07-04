@@ -70,11 +70,13 @@ export default function PointDistributionPage() {
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
         userData={selectedUser}
+        type="point"
         onSave={(data: any) => {
           console.log("Saving new point:", data);
           setIsModalOpen(false);
         }}
       />
+
     </div>
 
             <div className="py-6 flex justify-end">
