@@ -23,7 +23,7 @@ export default function RewardClaimPage() {
     const [currentPage, setCurrentPage] = useState(1);
     return (
         <div className="">
-            <h1 className="text-[28px] font-medium mb-4">Rewards & Redeem</h1>
+            <h2 className="text-[28px] font-medium mb-4">Rewards & Redeem</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
                 <StatCard
                     title="Pending Claims"

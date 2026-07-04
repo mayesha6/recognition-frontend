@@ -70,7 +70,7 @@ export const sidebarConfig: Record<UserRole, SidebarItem[]> = {
     },
     {
       name: "Recognitions",
-      href: "/dept-admin/recognitions",
+      href: "/dept-admin/recognition",
       icon: Trophy,
     },
     {

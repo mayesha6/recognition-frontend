@@ -57,8 +57,8 @@ export default function RewardClaimTable({ data }: { data: any[] }) {
 
 
 
-            <div className="overflow-x-auto w-full"> {/* w-full যোগ করুন */}
-                <table className="w-full min-w-200 text-left border-collapse"> {/* min-w যোগ করুন */}
+            <div className="overflow-x-auto w-full">
+                <table className="w-full min-w-200 text-left border-collapse">
                     <thead className="bg-gray-50/50 text-gray-500 text-xs uppercase">
                         <tr>
                             <th className="px-6 py-4 font-medium">Claim ID</th>
