@@ -30,12 +30,12 @@ export default function PointDistributionPage() {
     };
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
+    const [selectedUser, setSelectedUser] = useState(null);
 
-  const handleEdit = (user: any) => {
-    setSelectedUser(user);
-    setIsModalOpen(true);
-  };
+    const handleEdit = (user: any) => {
+        setSelectedUser(user);
+        setIsModalOpen(true);
+    };
 
     return (
         <div className="">
@@ -55,29 +55,29 @@ export default function PointDistributionPage() {
                 </div>
             </div>
 
-           
+
 
             <div>
-      {/* আপনার টেবিল যেখানে onEdit কল হবে */}
-      <PointDistributionTable 
-        data={mockPoints} 
-        onDelete={handleDelete}
-        onEdit={handleEdit} 
-      />
+                {/* আপনার টেবিল যেখানে onEdit কল হবে */}
+                <PointDistributionTable
+                    data={mockPoints}
+                    onDelete={handleDelete}
+                    onEdit={handleEdit}
+                />
 
-      {/* মডাল */}
-      <EditPointModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        userData={selectedUser}
-        type="point"
-        onSave={(data: any) => {
-          console.log("Saving new point:", data);
-          setIsModalOpen(false);
-        }}
-      />
+                {/* মডাল */}
+                <EditPointModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    userData={selectedUser}
+                    type="point"
+                    onSave={(data: any) => {
+                        console.log("Saving new point:", data);
+                        setIsModalOpen(false);
+                    }}
+                />
 
-    </div>
+            </div>
 
             <div className="py-6 flex justify-end">
                 <Pagination

@@ -6,7 +6,7 @@ import EditPointModal from "@/modules/dept-admin/pointDistribution/components/Ed
 import AddEmployeeModal from "@/modules/dept-admin/user/AddEmployeeModal";
 import EmployeeTable from "@/modules/dept-admin/user/EmployeeTable";
 import StatCard from "@/modules/user/rewards/components/StatCard";
-import { Plus, Search, User } from "lucide-react";
+import { Plus, Search, User, Users } from "lucide-react";
 import { useState } from "react";
 
 const employees = [
@@ -41,13 +41,13 @@ export default function EmployeeManagementPage() {
                 <StatCard
                     title="Total Employees"
                     count={5}
-                    icon={<User className="w-5 h-5 text-orange-500" />}
+                    icon={<Users className="w-5 h-5 text-orange-500" />}
                     iconBgColor="bg-[#FFAA00]/10"
                 />
                 <StatCard
                     title="Active Employees"
                     count={3}
-                    icon={<User className="w-5 h-5 text-green-500" />}
+                    icon={<Users className="w-5 h-5 text-green-500" />}
                     iconBgColor="bg-[#00AC5F]/10"
                 />
             </div>
@@ -62,7 +62,7 @@ export default function EmployeeManagementPage() {
                 <Button onClick={() => setIsAddEmployeeModalOpen(true)} className="bg-gradient hover:opacity-90 text-white whitespace-nowrap">
                     <Plus className="w-4 h-4" />
                     Add Employee
-                </Button>
+                </Button>                   
             </div>
 
             {/* Tables & Modals */}

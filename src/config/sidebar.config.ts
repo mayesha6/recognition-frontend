@@ -105,12 +105,12 @@ export const sidebarConfig: Record<UserRole, SidebarItem[]> = {
     },
     {
       name: "Departments",
-      href: "/org-admin/departments",
+      href: "/org-admin/department-management",
       icon: Building2,
     },
     {
       name: "Employees",
-      href: "/org-admin/employees",
+      href: "/org-admin/employee-management",
       icon: Users,
     },
     {
