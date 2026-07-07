@@ -71,7 +71,7 @@ export default function RewardClaimTable({ data }: { data: any[] }) {
                     </thead>
                     <tbody className="divide-y divide-gray-100">
                         {filteredData.map((row: any) => (
-                            <tr key={row.claimId} className="hover:bg-gray-50/50 whitespace-nowrap"> {/* whitespace-nowrap যোগ করুন */}
+                            <tr key={row.claimId} className="hover:bg-gray-50/50 whitespace-nowrap">
                                 <td className="px-6 py-4">{row.claimId}</td>
                                 <td className="px-6 py-4">{row.user}</td>
                                 <td className="px-6 py-4">{row.department}</td>

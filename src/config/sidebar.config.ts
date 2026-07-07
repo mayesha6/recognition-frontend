@@ -108,14 +108,29 @@ export const sidebarConfig: Record<UserRole, SidebarItem[]> = {
       icon: Building2,
     },
     {
-      name: "Users",
-      href: "/org-admin/users",
+      name: "Employees",
+      href: "/org-admin/employees",
       icon: Users,
     },
     {
-      name: "Rewards",
+      name: "Recognitions",
+      href: "/org-admin/recognitions",
+      icon: Trophy,
+    },
+    {
+      name: "Rewards & Redeem",
       href: "/org-admin/rewards",
       icon: Gift,
+    },
+    {
+      name: "Reward Claim",
+      href: "/org-admin/reward-claim",
+      icon: BaggageClaim,
+    },
+    {
+      name: "Support Ticket",
+      href: "/org-admin/support-ticket",
+      icon: BaggageClaim,
     },
     {
       name: "Settings",
