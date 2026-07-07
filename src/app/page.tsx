@@ -27,7 +27,7 @@ export default function HomePage() {
         </Link>
 
         <Link
-          href="/org-admin/dashboard"
+          href="/org-admin"
           className="block w-full text-center px-4 py-3 bg-orange-500 text-white rounded-lg"
           onClick={() => {
             localStorage.setItem("role", "org-admin");

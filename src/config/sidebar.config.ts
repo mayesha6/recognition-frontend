@@ -13,6 +13,7 @@ import {
   FileImage,
   File,
   Coins,
+  Ticket,
 } from "lucide-react";
 
 import { UserRole } from "@/types/auth";
@@ -130,7 +131,7 @@ export const sidebarConfig: Record<UserRole, SidebarItem[]> = {
     {
       name: "Support Ticket",
       href: "/org-admin/support-ticket",
-      icon: BaggageClaim,
+      icon: Ticket,
     },
     {
       name: "Settings",
