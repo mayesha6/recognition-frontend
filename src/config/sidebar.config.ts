@@ -135,7 +135,7 @@ export const sidebarConfig: Record<UserRole, SidebarItem[]> = {
     },
     {
       name: "Settings",
-      href: "/org-admin/settings",
+      href: "/org-admin/settings/general",
       icon: Settings,
     },
   ],
