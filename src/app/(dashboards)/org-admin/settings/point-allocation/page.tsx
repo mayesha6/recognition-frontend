@@ -1,6 +1,6 @@
 "use client";
 
-import PointsManager from "@/modules/org-admin/settings/PointsAllocation";
+import PointsManager from "@/modules/org-admin/settings/point/PointsAllocation";
 
 export default function PointsAllocationPage() {
   const handleSave = (data: any) => {
