@@ -4,6 +4,7 @@ import { CategoryBar } from "@/modules/dept-admin/recognition/CategoryBar";
 import StatCard from "@/modules/user/rewards/components/StatCard";
 import RecognitionTable from "@/modules/dept-admin/recognition/RecognitionTable";
 import RecognitionChart from "@/modules/dept-admin/recognition/RecognitionChart";
+import RecognitionByDeptChart from "@/modules/org-admin/recognition/RecognitionByDeptChart";
 export const trendData = [
     { name: 'Jan', value: 70000 },
     { name: 'Feb', value: 95000 },
@@ -58,6 +59,9 @@ export default function RecognitionAnalyticsPage() {
                 />
             </div>
 
+            <div className="mb-5">
+                <RecognitionByDeptChart />
+            </div>
             {/* ২. চার্ট এবং ক্যাটাগরি */}
             <div className="grid grid-cols-3 gap-6 mb-8">
                 <div className="col-span-2 bg-white p-6 rounded-2xl border border-gray shadow-sm">

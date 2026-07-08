@@ -59,9 +59,7 @@ export default function RecognitionAnalyticsPage() {
                 />
             </div>
 
-            <div>
-                <RecognitionByDeptChart />
-            </div>
+            
 
             {/* ২. চার্ট এবং ক্যাটাগরি */}
             <div className="grid grid-cols-3 gap-6 mb-8">

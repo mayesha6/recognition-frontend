@@ -18,7 +18,7 @@ const data = [
 
 export default function RecognitionByDeptChart() {
   return (
-    <div className="bg-white p-6 rounded-2xl border shadow-sm w-full h-80">
+    <div className="bg-white p-6 rounded-2xl border border-gray shadow-sm w-full h-80">
       <h3 className="font-bold mb-6">Recognition by Department</h3>
       <ResponsiveContainer width="100%" height="90%">
         <BarChart data={data} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
