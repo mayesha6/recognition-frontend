@@ -6,7 +6,7 @@ import { User, ShieldCheck, Coins, GitBranch, MessageSquare, Star } from "lucide
 const tabs = [
   { name: "General", icon: User, path: "/org-admin/settings/general" },
   { name: "Admin Access", icon: ShieldCheck, path: "/org-admin/settings/admin-access" },
-  { name: "Points Allocation", icon: Coins, path: "/org-admin/settings/points-allocation" },
+  { name: "Points Allocation", icon: Coins, path: "/org-admin/settings/point-allocation" },
   { name: "Category", icon: GitBranch, path: "/org-admin/settings/category" },
   { name: "Tone", icon: MessageSquare, path: "/org-admin/settings/tone" },
   { name: "Recognition Value", icon: Star, path: "/org-admin/settings/recognition-value" },
