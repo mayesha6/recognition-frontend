@@ -1,4 +1,4 @@
-const Badge = ({ children, type, variant }: any) => {
+export const Badge = ({ children, type, variant }: any) => {
   const styles: any = {
     // Priority Colors
     High: "bg-amber-50 text-amber-600",
