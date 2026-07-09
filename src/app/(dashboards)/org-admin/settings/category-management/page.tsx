@@ -27,9 +27,9 @@ export default function CategoryPage() {
         };
     // ডাটা API থেকে ফেচ করার জন্য এখানে useEffect বা useQuery থাকবে
     const categories = [
-        { id: 1, name: "Category 1" },
-        { id: 2, name: "Category 2" },
-        // ...
+        { id: 1, name: "Category 1", images: ["https://res.cloudinary.com/dtb6o7zzr/image/upload/v1766096376/tanah-lot-temple-bali-island-indonesia_fcqv9z.jpg", "https://res.cloudinary.com/dtb6o7zzr/image/upload/v1766096376/tanah-lot-temple-bali-island-indonesia_fcqv9z.jpg"] },
+        { id: 2, name: "Category 2", images: ["https://res.cloudinary.com/dtb6o7zzr/image/upload/v1766096376/tanah-lot-temple-bali-island-indonesia_fcqv9z.jpg", "https://res.cloudinary.com/dtb6o7zzr/image/upload/v1766096376/tanah-lot-temple-bali-island-indonesia_fcqv9z.jpg"] },
+        
     ];
 
     return (
