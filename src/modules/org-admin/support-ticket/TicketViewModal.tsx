@@ -14,7 +14,6 @@ export default function TicketViewModal({ isOpen, onClose, ticket }: any) {
           </button>
         </div>
 
-        {/* Info Grid */}
         <div className="grid grid-cols-2 gap-y-4 gap-x-6 text-sm">
           <div>
             <p className="text-gray-500">Ticket ID</p>

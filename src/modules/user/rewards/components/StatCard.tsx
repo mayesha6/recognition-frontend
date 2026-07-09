@@ -28,7 +28,7 @@ export default function StatCard({
       </div>
 
       <div className="flex items-end gap-3">
-        <h3 className="text-3xl font-bold text-gray-900">{count}</h3>
+        <h3 className="text-3xl font-semibold text-gray-900">{count}</h3>
         
         {/* ট্রেন্ড ভ্যালু থাকলে দেখাবে */}
         {trend && (

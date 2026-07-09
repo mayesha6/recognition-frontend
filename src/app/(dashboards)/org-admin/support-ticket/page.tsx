@@ -7,6 +7,7 @@ import TicketTable from "@/modules/org-admin/support-ticket/TicketTable";
 import { Input } from "@/components/ui/input";
 import AddTicketModal from "@/modules/org-admin/support-ticket/AddTicketModal";
 import TicketResponseModal from "@/modules/org-admin/support-ticket/TicketResponseModal";
+import TicketViewModal from "@/modules/org-admin/support-ticket/TicketViewModal";
 
 const ticketData = [
     { id: "#TI12", category: "Billing Information", subject: "SSO redirect loop", description: "SSO redirect loop, fix urgently...", priority: "High", status: "Resolved", date: "Apr 12, 2026" },
@@ -18,6 +19,7 @@ export default function SupportPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
     const [selectedTicket, setSelectedTicket] = useState(null);
+    const [viewingTicket, setViewingTicket] = useState(null);
 
     const handleDelete = async (id: string) => {
         if (confirm("Are you sure you want to delete this?")) {
@@ -30,15 +32,20 @@ export default function SupportPage() {
         setIsModalOpen(true);
     };
 
+    // const handleResponse = (ticket: any) => {
+    //     setSelectedTicket(ticket);
+    //     setIsModalOpen(true);
+    // };
+
     const handleView = (ticket: any) => {
-        setSelectedTicket(ticket);
+        setViewingTicket(ticket);
         setIsModalOpen(true);
     };
 
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold">Support Ticket</h1>
+                <h2 className="text-[28px] font-medium">Support Ticket</h2>
                 <div className="flex items-center justify-end gap-4 w-full sm:w-auto">
                     <div className="flex items-center bg-gray-100 rounded-lg px-3 w-full sm:w-64">
                         <Search className="w-4 h-4 text-gray-400" />
@@ -72,7 +79,7 @@ export default function SupportPage() {
                     }}
                 />
 
-                <TicketResponseModal
+                {/* <TicketResponseModal
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
                     ticket={selectedTicket}
@@ -80,7 +87,18 @@ export default function SupportPage() {
                         console.log("Response sent!");
                         setIsModalOpen(false);
                     }}
+                /> */}
+
+                <TicketViewModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    ticket={viewingTicket}
+                    onSend={() => {
+                        console.log("Response sent!");
+                        setIsModalOpen(false);
+                    }}
                 />
+
                 {/* <EditTicketModal
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}

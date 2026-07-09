@@ -2,7 +2,7 @@
 import { Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { Badge } from "./Badge";
 
-export default function TicketTable({ tickets, onDelete, onEdit, onView }: any) {
+export default function TicketTable({ tickets, onDelete, onView }: any) {
     return (
         <div className="overflow-hidden">
             <table className="w-full text-left">
@@ -30,9 +30,9 @@ export default function TicketTable({ tickets, onDelete, onEdit, onView }: any) 
                             <td className="px-6 py-4 text-sm text-gray-500">{ticket.date}</td>
                             <td className="px-6 py-4 text-gray-500 text-center">
                                 <div className="flex justify-center gap-3">
-                                    <button onClick={() => onEdit(ticket)} className="text-gray-400 hover:text-indigo-600">
+                                    {/* <button onClick={() => onEdit(ticket)} className="text-gray-400 hover:text-indigo-600">
                                         <Pencil size={18} />
-                                    </button>
+                                    </button> */}
                                     <button onClick={() => onView(ticket)} className="text-gray-400 hover:text-green-600">
                                         <Eye size={18} />
                                     </button>
