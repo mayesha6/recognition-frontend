@@ -10,10 +10,11 @@ import {
   Trophy,
   ShieldCheck,
   LucideIcon,
-  FileImage,
-  File,
   Coins,
   Ticket,
+  ChartBarIcon,
+  Tag,
+  Award,
 } from "lucide-react";
 
 import { UserRole } from "@/types/auth";
@@ -72,19 +73,19 @@ export const sidebarConfig: Record<UserRole, SidebarItem[]> = {
     {
       name: "Recognitions",
       href: "/dept-admin/recognition",
-      icon: Trophy,
+      icon: Award,
     },
     // {
     //   name: "Reports",
     //   href: "/dept-admin/reports",
     //   icon: File,
     // },
-     {
+    {
       name: "Reward Claim",
       href: "/dept-admin/reward-claim",
       icon: BaggageClaim,
     },
-     {
+    {
       name: "Point Distribution",
       href: "/dept-admin/point-distribution",
       icon: Coins,
@@ -100,7 +101,7 @@ export const sidebarConfig: Record<UserRole, SidebarItem[]> = {
   "org-admin": [
     {
       name: "Dashboard",
-      href: "/org-admin/dashboard",
+      href: "/org-admin",
       icon: LayoutDashboard,
     },
     {
@@ -116,7 +117,7 @@ export const sidebarConfig: Record<UserRole, SidebarItem[]> = {
     {
       name: "Recognitions",
       href: "/org-admin/recognition",
-      icon: Trophy,
+      icon: Award,
     },
     {
       name: "Rewards & Redeem",
@@ -143,7 +144,7 @@ export const sidebarConfig: Record<UserRole, SidebarItem[]> = {
   "super-admin": [
     {
       name: "Dashboard",
-      href: "/super-admin/dashboard",
+      href: "/super-admin",
       icon: LayoutDashboard,
     },
     {
@@ -152,14 +153,44 @@ export const sidebarConfig: Record<UserRole, SidebarItem[]> = {
       icon: Building2,
     },
     {
+      name: "Departments",
+      href: "/super-admin/department-management",
+      icon: ChartBarIcon,
+    },
+    {
+      name: "User Management",
+      href: "/super-admin/user-management",
+      icon: Users,
+    },
+    {
+      name: "Subscription",
+      href: "/super-admin/subscription",
+      icon: Tag,
+    },
+    {
+      name: "Recognitions",
+      href: "/super-admin/recognitions",
+      icon: Award,
+    },
+    {
+      name: "Rewards & Redeem",
+      href: "/super-admin/rewards",
+      icon: Gift,
+    },
+    {
+      name: "Reward Claim",
+      href: "/super-admin/reward-claim",
+      icon: BaggageClaim,
+    },
+    {
       name: "Admins",
       href: "/super-admin/admins",
       icon: ShieldCheck,
     },
     {
-      name: "Users",
-      href: "/super-admin/users",
-      icon: Users,
+      name: "Support Ticket",
+      href: "/org-admin/support-ticket",
+      icon: Ticket,
     },
     {
       name: "Settings",
