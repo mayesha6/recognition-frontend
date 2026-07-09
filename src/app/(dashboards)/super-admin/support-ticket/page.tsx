@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Search, Plus } from "lucide-react";
-import TicketTable from "@/modules/org-admin/support-ticket/TicketTable";
 import { Input } from "@/components/ui/input";
 import AddTicketModal from "@/modules/org-admin/support-ticket/AddTicketModal";
 import TicketResponseModal from "@/modules/org-admin/support-ticket/TicketResponseModal";
 import TicketViewModal from "@/modules/org-admin/support-ticket/TicketViewModal";
+import TicketTable from "@/modules/super-admin/support/ticketTable";
 
 const ticketData = [
     { id: "#TI12", organization: "ACME", subject: "SSO redirect loop", description: "SSO redirect loop, fix urgently...", priority: "High", status: "Resolved", date: "Apr 12, 2026" },
@@ -32,10 +32,10 @@ export default function SupportPage() {
         setIsModalOpen(true);
     };
 
-    // const handleResponse = (ticket: any) => {
-    //     setSelectedTicket(ticket);
-    //     setIsModalOpen(true);
-    // };
+    const handleResponse = (ticket: any) => {
+        setSelectedTicket(ticket);
+        setIsModalOpen(true);
+    };
 
     const handleView = (ticket: any) => {
         setViewingTicket(ticket);
@@ -68,6 +68,7 @@ export default function SupportPage() {
                     onDelete={handleDelete}
                     onEdit={handleEdit}
                     onView={handleView}
+                    onResponse={handleResponse}
                 />
 
                 <AddTicketModal
@@ -79,7 +80,7 @@ export default function SupportPage() {
                     }}
                 />
 
-                {/* <TicketResponseModal
+                <TicketResponseModal
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
                     ticket={selectedTicket}
@@ -87,7 +88,7 @@ export default function SupportPage() {
                         console.log("Response sent!");
                         setIsModalOpen(false);
                     }}
-                /> */}
+                />
 
                 <TicketViewModal
                     isOpen={isModalOpen}

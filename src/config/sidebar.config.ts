@@ -189,7 +189,7 @@ export const sidebarConfig: Record<UserRole, SidebarItem[]> = {
     },
     {
       name: "Support Ticket",
-      href: "/org-admin/support-ticket",
+      href: "/super-admin/support-ticket",
       icon: Ticket,
     },
     {

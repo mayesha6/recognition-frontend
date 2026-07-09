@@ -1,4 +1,4 @@
-import SettingsTabs from "@/modules/org-admin/settings/SettingTabs";
+import SettingsTabs from "@/modules/super-admin/settings/SettingTabs";
 
 
 export default function SettingsLayout({ children }: { children: React.ReactNode }) {
