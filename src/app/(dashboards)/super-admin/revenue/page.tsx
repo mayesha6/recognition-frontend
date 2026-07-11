@@ -63,7 +63,7 @@ export default function RevenuePage() {
   if (!data) return <div>Loading...</div>;
 
   return (
-    <div className="space-y-6 p-8">
+    <div className="space-y-6">
       <h1 className="text-[28px] font-medium">Revenue & Billing Analytics</h1>
       
       {/* Stats Cards */}
