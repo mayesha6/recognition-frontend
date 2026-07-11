@@ -52,3 +52,12 @@ body {
 *{
 box-sizing: border-box;
 }
+/* গ্লোবাল CSS ফাইলে (যেমন: globals.css) */
+.recharts-wrapper *:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.recharts-surface {
+  outline: none !important;
+}

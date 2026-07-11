@@ -64,7 +64,7 @@ export default function RevenuePage() {
 
   return (
     <div className="space-y-6 p-8">
-      <h1 className="text-2xl font-bold">Revenue & Billing Analytics</h1>
+      <h1 className="text-[28px] font-medium">Revenue & Billing Analytics</h1>
       
       {/* Stats Cards */}
       {/* <div className="grid grid-cols-3 gap-6">
@@ -98,18 +98,18 @@ export default function RevenuePage() {
             </div>
 
       <div className="grid grid-cols-3 gap-6">
-        <div className="col-span-2 bg-white p-6 rounded-2xl border">
-          <h3 className="font-medium mb-4">Revenue Growth</h3>
+        <div className="col-span-2 bg-white p-6 rounded-2xl border border-gray">
+          <h3 className="font-light text-2xl mb-4">Revenue Growth</h3>
           <RevenueChart data={data.growthData} />
         </div>
-        <div className="bg-white p-6 rounded-2xl border">
-          <h3 className="font-medium mb-4">Plan Distribution</h3>
+        <div className="bg-white p-6 rounded-2xl border border-gray">
+          <h3 className="font-light text-2xl mb-4">Plan Distribution</h3>
           <PlanDistributionChart data={data.planDistribution} />
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-2xl border">
-        <h3 className="font-medium mb-4">Subscription Upgrades</h3>
+      <div className="bg-white p-6 rounded-2xl border border-gray">
+        <h3 className="font-light text-2xl mb-4">Subscription Upgrades</h3>
         <UpgradeBarChart data={data.upgradeData} />
       </div>
     </div>
