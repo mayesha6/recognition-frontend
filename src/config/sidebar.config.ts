@@ -168,8 +168,13 @@ export const sidebarConfig: Record<UserRole, SidebarItem[]> = {
       icon: Tag,
     },
     {
+      name: "Revenue",
+      href: "/super-admin/revenue",
+      icon: Coins,
+    },    
+    {
       name: "Recognitions",
-      href: "/super-admin/recognitions",
+      href: "/super-admin/recognition",
       icon: Award,
     },
     {

@@ -1,13 +1,131 @@
+// "use client";
+
+// import { useState } from "react";
+// import { Button } from "@/components/ui/button";
+// import { Search, Plus } from "lucide-react";
+// import { Input } from "@/components/ui/input";
+// import AddTicketModal from "@/modules/org-admin/support-ticket/AddTicketModal";
+// import TicketResponseModal from "@/modules/org-admin/support-ticket/TicketResponseModal";
+// import TicketViewModal from "@/modules/org-admin/support-ticket/TicketViewModal";
+// import TicketTable from "@/modules/super-admin/support/ticketTable";
+
+// const ticketData = [
+//     { id: "#TI12", organization: "ACME", subject: "SSO redirect loop", description: "SSO redirect loop, fix urgently...", priority: "High", status: "Resolved", date: "Apr 12, 2026" },
+//     { id: "#TI13", organization: "ACME", subject: "Increase monthly limit", description: "Need to increase point limit...", priority: "Urgent", status: "Pending", date: "Mar 02, 2026" },
+// ];
+
+// export default function SupportPage() {
+//     const [tickets] = useState(ticketData);
+//     const [isModalOpen, setIsModalOpen] = useState(false);
+//     const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
+//     const [selectedTicket, setSelectedTicket] = useState(null);
+//     const [viewingTicket, setViewingTicket] = useState(null);
+
+//     const handleDelete = async (id: string) => {
+//         if (confirm("Are you sure you want to delete this?")) {
+//             // await deleteEmployee(id);
+//         }
+//     };
+
+//     // const handleEdit = (ticket: any) => {
+//     //     setSelectedTicket(ticket);
+//     //     setIsModalOpen(true);
+//     // };
+
+//     const handleResponse = (ticket: any) => {
+//         setSelectedTicket(ticket);
+//         setIsModalOpen(true);
+//     };
+
+//     const handleView = (ticket: any) => {
+//         setViewingTicket(ticket);
+//         setIsModalOpen(true);
+//     };
+
+//     return (
+//         <div className="space-y-6">
+//             <div className="flex justify-between items-center">
+//                 <h2 className="text-[28px] font-medium">Support Ticket</h2>
+//                 <div className="flex items-center justify-end gap-4 w-full sm:w-auto">
+//                     <div className="flex items-center bg-gray-100 rounded-lg px-3 w-full sm:w-64">
+//                         <Search className="w-4 h-4 text-gray-400" />
+//                         <Input placeholder="Search..." className="w-full focus-visible:ring-0 focus-visible:ring-offset-0 border-none bg-transparent" />
+//                     </div>
+//                     <Button onClick={() => setIsTicketModalOpen(true)} className="bg-gradient hover:opacity-90 text-white whitespace-nowrap">
+//                         <Plus className="w-4 h-4" />
+//                         Open New Ticket
+//                     </Button>
+//                 </div>
+//             </div>
+
+//             <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+//                 <div className="flex justify-between items-center mb-6">
+//                     <h2 className="text-2xl font-light">Tickets History</h2>
+//                 </div>
+
+//                 <TicketTable
+//                     tickets={tickets}
+//                     onDelete={handleDelete}
+//                     // onEdit={handleEdit}
+//                     onView={handleView}
+//                     onResponse={handleResponse}
+//                 />
+
+//                 <AddTicketModal
+//                     isOpen={isTicketModalOpen}
+//                     onClose={() => setIsTicketModalOpen(false)}
+//                     onSave={(data: any) => {
+//                         console.log("Saving new ticket:", data);
+//                         setIsTicketModalOpen(false);
+//                     }}
+//                 />
+
+//                 <TicketResponseModal
+//                     isOpen={isModalOpen}
+//                     onClose={() => setIsModalOpen(false)}
+//                     ticket={selectedTicket}
+//                     onSend={() => {
+//                         console.log("Response sent!");
+//                         setIsModalOpen(false);
+//                     }}
+//                 />
+
+//                 <TicketViewModal
+//                     isOpen={isModalOpen}
+//                     onClose={() => setIsModalOpen(false)}
+//                     ticket={viewingTicket}
+//                     onSend={() => {
+//                         console.log("Response sent!");
+//                         setIsModalOpen(false);
+//                     }}
+//                 />
+
+//                 {/* <EditTicketModal
+//                     isOpen={isModalOpen}
+//                     onClose={() => setIsModalOpen(false)}
+//                     userData={selectedUser}
+//                     type="employee"
+//                     onSave={(data: any) => {
+//                         console.log("Saving new point:", data);
+//                         setIsModalOpen(false);
+//                     }}
+//                 /> */}
+//             </div>
+//         </div>
+//     );
+// }
+
+
 "use client";
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Search, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import TicketTable from "@/modules/super-admin/support/ticketTable";
 import AddTicketModal from "@/modules/org-admin/support-ticket/AddTicketModal";
 import TicketResponseModal from "@/modules/org-admin/support-ticket/TicketResponseModal";
 import TicketViewModal from "@/modules/org-admin/support-ticket/TicketViewModal";
-import TicketTable from "@/modules/super-admin/support/ticketTable";
 
 const ticketData = [
     { id: "#TI12", organization: "ACME", subject: "SSO redirect loop", description: "SSO redirect loop, fix urgently...", priority: "High", status: "Resolved", date: "Apr 12, 2026" },
@@ -16,101 +134,59 @@ const ticketData = [
 
 export default function SupportPage() {
     const [tickets] = useState(ticketData);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
+    
+    // আলাদা আলাদা মোডাল স্টেট
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [isResponseModalOpen, setIsResponseModalOpen] = useState(false);
+    const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+
     const [selectedTicket, setSelectedTicket] = useState(null);
-    const [viewingTicket, setViewingTicket] = useState(null);
 
-    const handleDelete = async (id: string) => {
+    const handleDelete = (id: string) => {
         if (confirm("Are you sure you want to delete this?")) {
-            // await deleteEmployee(id);
+            console.log("Deleted:", id);
         }
-    };
-
-    const handleEdit = (ticket: any) => {
-        setSelectedTicket(ticket);
-        setIsModalOpen(true);
-    };
-
-    const handleResponse = (ticket: any) => {
-        setSelectedTicket(ticket);
-        setIsModalOpen(true);
-    };
-
-    const handleView = (ticket: any) => {
-        setViewingTicket(ticket);
-        setIsModalOpen(true);
     };
 
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <h2 className="text-[28px] font-medium">Support Ticket</h2>
-                <div className="flex items-center justify-end gap-4 w-full sm:w-auto">
-                    <div className="flex items-center bg-gray-100 rounded-lg px-3 w-full sm:w-64">
+                <div className="flex items-center gap-4">
+                    <div className="flex items-center bg-gray-100 rounded-lg px-3 w-64">
                         <Search className="w-4 h-4 text-gray-400" />
-                        <Input placeholder="Search..." className="w-full focus-visible:ring-0 focus-visible:ring-offset-0 border-none bg-transparent" />
+                        <Input placeholder="Search..." className="border-none bg-transparent focus-visible:ring-0" />
                     </div>
-                    <Button onClick={() => setIsTicketModalOpen(true)} className="bg-gradient hover:opacity-90 text-white whitespace-nowrap">
-                        <Plus className="w-4 h-4" />
-                        Open New Ticket
+                    <Button onClick={() => setIsAddModalOpen(true)} className="bg-gradient text-white">
+                        <Plus className="w-4 h-4 mr-2" /> Open New Ticket
                     </Button>
                 </div>
             </div>
 
             <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-light">Tickets History</h2>
-                </div>
-
+                <h2 className="text-2xl font-light mb-6">Tickets History</h2>
                 <TicketTable
                     tickets={tickets}
                     onDelete={handleDelete}
-                    onEdit={handleEdit}
-                    onView={handleView}
-                    onResponse={handleResponse}
+                    onView={(t: any) => { setSelectedTicket(t); setIsViewModalOpen(true); }}
+                    onResponse={(t: any) => { setSelectedTicket(t); setIsResponseModalOpen(true); }}
                 />
-
-                <AddTicketModal
-                    isOpen={isTicketModalOpen}
-                    onClose={() => setIsTicketModalOpen(false)}
-                    onSave={(data: any) => {
-                        console.log("Saving new ticket:", data);
-                        setIsTicketModalOpen(false);
-                    }}
-                />
-
-                <TicketResponseModal
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                    ticket={selectedTicket}
-                    onSend={() => {
-                        console.log("Response sent!");
-                        setIsModalOpen(false);
-                    }}
-                />
-
-                <TicketViewModal
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                    ticket={viewingTicket}
-                    onSend={() => {
-                        console.log("Response sent!");
-                        setIsModalOpen(false);
-                    }}
-                />
-
-                {/* <EditTicketModal
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                    userData={selectedUser}
-                    type="employee"
-                    onSave={(data: any) => {
-                        console.log("Saving new point:", data);
-                        setIsModalOpen(false);
-                    }}
-                /> */}
             </div>
+
+            <AddTicketModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} />
+            
+            <TicketResponseModal 
+                isOpen={isResponseModalOpen} 
+                onClose={() => setIsResponseModalOpen(false)} 
+                ticket={selectedTicket} 
+                onSend={() => setIsResponseModalOpen(false)} 
+            />
+
+            <TicketViewModal 
+                isOpen={isViewModalOpen} 
+                onClose={() => setIsViewModalOpen(false)} 
+                ticket={selectedTicket} 
+            />
         </div>
     );
 }
