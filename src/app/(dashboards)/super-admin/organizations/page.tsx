@@ -1,6 +1,6 @@
 "use client";
+import OrganizationTable from "@/modules/super-admin/organization/OrganizationTable";
 import { useEffect, useState } from "react";
-import OrganizationTable from "@/components/OrganizationTable";
 
 export default function OrganizationManagement() {
   const [organizations, setOrganizations] = useState([]);
