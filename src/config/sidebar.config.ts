@@ -187,11 +187,11 @@ export const sidebarConfig: Record<UserRole, SidebarItem[]> = {
       href: "/super-admin/reward-claim",
       icon: BaggageClaim,
     },
-    {
-      name: "Admins",
-      href: "/super-admin/admins",
-      icon: ShieldCheck,
-    },
+    // {
+    //   name: "Admins",
+    //   href: "/super-admin/admins",
+    //   icon: ShieldCheck,
+    // },
     {
       name: "Support Ticket",
       href: "/super-admin/support-ticket",
