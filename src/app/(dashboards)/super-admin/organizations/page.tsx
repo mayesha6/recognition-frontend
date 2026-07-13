@@ -103,7 +103,7 @@ export default function OrganizationManagement() {
 
             <OrganizationTable
                 orgs={organizations}
-                onView={(org: any) => console.log("Viewing:", org)}
+                onView={handleView}
                 onSuspend={handleSuspend}
                 onDelete={handleDelete}
             />

@@ -40,7 +40,7 @@ const dashboardData = {
 export default function DashboardPage() {
   return (
     <div className="bg-gray-50 min-h-screen">
-      <h2 className="text-[28px] font-medium mb-4">Recognition Analytics</h2>
+      <h2 className="text-[28px] font-medium mb-4">Organization Overview</h2>
 
       {/* ১. স্ট্যাটস কার্ডস */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
