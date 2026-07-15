@@ -10,6 +10,7 @@ export const userApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["User", "Recognition"],
     }),
+
     getRecognitionHistory: builder.query({
       query: (params) => ({
         url: "/recognition/history",
@@ -18,10 +19,21 @@ export const userApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Recognition"],
     }),
+
+    getDepartmentUsers: builder.query({
+      query: (params) => ({
+        url: "/user/all-users", 
+        method: "GET",
+        params, 
+      }),
+      providesTags: ["User"],
+    }),
+
   }),
 });
 
 export const { 
   useSendRecognitionMutation, 
-  useGetRecognitionHistoryQuery 
+  useGetRecognitionHistoryQuery,
+  useGetDepartmentUsersQuery
 } = userApi;
