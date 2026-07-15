@@ -1,6 +1,6 @@
 import Sidebar from "@/components/layout/dashboard/Sidebar";
 import Header from "@/components/layout/dashboard/Header";
-import ReduxProvider from "@/redux/reduxProvider";
+// import ReduxProvider from "@/redux/reduxProvider";
 export default function DashboardsLayout({ children }: { children: React.ReactNode }) {
   return (
     <ReduxProvider>
