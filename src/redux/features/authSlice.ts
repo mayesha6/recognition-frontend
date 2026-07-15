@@ -8,15 +8,26 @@ interface AuthState {
 }
 
 const getInitialState = (): AuthState => {
-  const token = Cookies.get("accessToken") || localStorage.getItem("accessToken");
+  if (typeof window === "undefined") {
+    return {
+      token: null,
+      user: null,
+      isAuthenticated: false,
+    };
+  }
+
+  const token =
+    Cookies.get("accessToken") ||
+    localStorage.getItem("accessToken");
+
   const user = localStorage.getItem("user");
+
   return {
-    token: token || null,
+    token,
     user: user ? JSON.parse(user) : null,
     isAuthenticated: !!token,
   };
 };
-
 const authSlice = createSlice({
   name: "auth",
   initialState: getInitialState(),

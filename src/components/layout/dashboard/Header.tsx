@@ -11,8 +11,9 @@ import Cookies from "js-cookie"; // Cookies লাইব্রেরির জ�
 
 export default function Header() {
   const token = useSelector((state: RootState) => state.auth?.token);
-  const { data: profileData } = useGetMeQuery(undefined, { skip: !token });
+  const { data: profileData, isLoading } = useGetMeQuery(undefined, { skip: !token });
   
+  console.log({isLoading})
   const user = profileData?.data;
   const tokenKeep = Cookies.get("accessToken");
   const isAuthenticated = !!tokenKeep && !!user;
@@ -69,7 +70,7 @@ export default function Header() {
         
         <div className="h-8 w-px bg-gray-200"></div> {/* Divider */}
 
-        {isAuthenticated && user && (
+        {isLoading? "LOADING" : isAuthenticated && user && (
           <div className="flex items-center gap-3">
             {/* প্রোফাইল ইমেজ */}
             <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center border border-gray-200 overflow-hidden">

@@ -54,7 +54,7 @@ export default function SendRecognitionPage() {
 
   return (
     <div className="flex flex-col gap-6 w-full">
-      {/* Top Bar - রেসপনসিভ ফ্লেক্স */}
+     
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <h1 className="text-2xl font-bold">Send Recognition</h1>
 
@@ -105,8 +105,8 @@ export default function SendRecognitionPage() {
                       </div>
                     </td>
                     <td className="px-6 py-3 text-gray-500">{user.email}</td>
-                    <td className="px-6 py-3 text-gray-500">{user.department}</td> {/* departmentName এর পরিবর্তে department */}
-                    <td className="px-6 py-3 text-gray-500">{user.wallet?.pointsBalance || 0}</td> {/* wallet থেকে পয়েন্ট নিন */}
+                    <td className="px-6 py-3 text-gray-500">{user.department}</td> 
+                    <td className="px-6 py-3 text-gray-500">{user.wallet?.pointsBalance || 0}</td> 
                     <td className="px-6 py-3 text-center">
                       <Button
                         onClick={() => handleOpenUserRecognition(user)}

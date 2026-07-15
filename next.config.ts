@@ -6,9 +6,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'res.cloudinary.com', // আপনার হোস্টনেম এখানে দিন
-        port: '',
-        pathname: '/**',
+        hostname: '**', 
       },
     ],
   },

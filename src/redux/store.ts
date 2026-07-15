@@ -1,15 +1,29 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { rootReducer } from "./features/rootReducer";
 import { baseApi } from "./api/baseApi";
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  persistReducer,
+  persistStore,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+} from "redux-persist";
 
 const persistConfig = { key: "root", storage, whitelist: ["auth"] };
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
-  middleware: (gDM) => gDM({ serializableCheck: false }).concat(baseApi.middleware),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }).concat(baseApi.middleware),
 });
 
 export const persistor = persistStore(store);
