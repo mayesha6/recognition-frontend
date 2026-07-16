@@ -10,7 +10,7 @@ import { useGetMeQuery } from "@/redux/api/authApi"; // RTK Query এর জন�
 import Cookies from "js-cookie"; // Cookies লাইব্রেরির জন্য
 
 export default function Header() {
-  const token = useSelector((state: RootState) => state.auth?.token);
+  const token = useSelector((state: RootState) => state.auth?.token) || Cookies.get("accessToken");
   const { data: profileData, isLoading } = useGetMeQuery(undefined, { skip: !token });
   
   console.log({isLoading})

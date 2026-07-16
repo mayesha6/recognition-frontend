@@ -30,11 +30,13 @@ import {
 import { RootState } from "../store";
 import { logout, setUser } from "../features/authSlice";
 
+import Cookies from "js-cookie";
+
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
   // credentials: "include",
   prepareHeaders: (headers, { getState }) => {
-    const token = (getState() as RootState).auth.token;
+    const token = (getState() as RootState).auth.token || Cookies.get("accessToken");
 
     if (token) {
       headers.set("authorization", `Bearer ${token}`);

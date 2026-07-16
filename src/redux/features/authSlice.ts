@@ -33,20 +33,57 @@ const authSlice = createSlice({
   initialState: getInitialState(),
   reducers: {
     setUser: (state, action: PayloadAction<{ token: string; user: any }>) => {
+      const isProduction =
+        process.env.NODE_ENV === "production" &&
+        typeof window !== "undefined" &&
+        !window.location.hostname.includes("localhost") &&
+        !window.location.hostname.includes("127.0.0.1");
+
+      const cookieOptions = {
+        domain: isProduction ? ".greetely.com" : undefined,
+        secure: isProduction,
+        sameSite: isProduction ? ("None" as const) : ("Lax" as const),
+        path: "/",
+      };
+
       state.token = action.payload.token;
       state.user = action.payload.user;
       state.isAuthenticated = true;
-      Cookies.set("accessToken", action.payload.token);
+      Cookies.set("accessToken", action.payload.token, cookieOptions);
       localStorage.setItem("accessToken", action.payload.token);
       localStorage.setItem("user", JSON.stringify(action.payload.user));
     },
     logout: (state) => {
+      const isProduction =
+        process.env.NODE_ENV === "production" &&
+        typeof window !== "undefined" &&
+        !window.location.hostname.includes("localhost") &&
+        !window.location.hostname.includes("127.0.0.1");
+
+      const cookieOptions = {
+        domain: isProduction ? ".greetely.com" : undefined,
+        secure: isProduction,
+        sameSite: isProduction ? ("None" as const) : ("Lax" as const),
+        path: "/",
+      };
+
       state.token = null;
       state.user = null;
       state.isAuthenticated = false;
-      Cookies.remove("accessToken");
+      Cookies.remove("accessToken", cookieOptions);
       localStorage.clear();
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase("persist/REHYDRATE", (state: any, action: any) => {
+      if (typeof window !== "undefined") {
+        const token = Cookies.get("accessToken");
+        if (token) {
+          state.token = token;
+          state.isAuthenticated = true;
+        }
+      }
+    });
   },
 });
 

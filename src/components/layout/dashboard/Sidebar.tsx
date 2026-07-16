@@ -79,55 +79,66 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 
 import { sidebarConfig } from "@/config/sidebar.config";
-// import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { UserRole } from "@/types/auth";
 import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import Cookies from "js-cookie";
+import { logout } from "@/redux/features/authSlice";
+import { useGetMeQuery } from "@/redux/api/authApi";
 
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
-  // const user = useCurrentUser();
+  // Get current user profile from RTK Query / auth state
+  const token = useAppSelector((state) => state.auth?.token) || Cookies.get("accessToken");
+  const { data: profileData } = useGetMeQuery(undefined, { skip: !token });
+  const currentUser = profileData?.data;
 
-  // if (!user) return null;
-
-  // const navItems = sidebarConfig[user.role];
-
-
-const [mounted, setMounted] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [role, setRole] = useState<UserRole>("user");
-useEffect(() => {
+
+  useEffect(() => {
     // ২. ক্লায়েন্ট সাইডে লোড হলে লোকাল স্টোরেজ থেকে রোল সেট করুন
     const storedRole = localStorage.getItem("role") as UserRole || "user";
     setRole(storedRole);
     setMounted(true);
   }, []);
 
+  // Update role dynamically based on logged in user's role from backend
+  const activeRole: UserRole = currentUser?.role
+    ? (currentUser.role.toLowerCase().replace("_", "-") as UserRole)
+    : role;
+
   // ৩. মাউন্ট না হওয়া পর্যন্ত কিছুই রেন্ডার করবেন না বা লোডিং দেখান
   if (!mounted) return <aside className="hidden lg:flex w-64 bg-white border-r h-full" />;
-const navItems = sidebarConfig[role];
 
-const user = {
-  name: "Saifur Rahman",
-  role: role,
-};
+  const navItems = sidebarConfig[activeRole] || sidebarConfig["user"];
+
+  const user = {
+    name: currentUser?.name || "Saifur Rahman",
+    role: activeRole,
+  };
 
   const initials = user.name
-    ?.split(" ")
-    .map((item) => item[0])
-    .join("")
-    .toUpperCase();
+    ? user.name
+        .split(" ")
+        .map((item: string) => item[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2)
+    : "U";
 
-  // const handleLogout = async () => {
-  //   // TODO:
-  //   // await logout();
-
-  //   router.push("/login");
-  // };
+  const handleLogout = () => {
+    dispatch(logout());
+    window.location.href = "http://localhost:3041/login";
+  };
 
   return (
     <>
@@ -162,8 +173,18 @@ const user = {
 
         <div className="p-4 border border-gray rounded-xl m-4">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold">
-              {initials}
+            <div className="w-10 h-10 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold overflow-hidden border border-gray-200 shrink-0">
+              {currentUser?.picture ? (
+                <Image
+                  src={currentUser.picture}
+                  alt={user.name}
+                  width={40}
+                  height={40}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span>{initials}</span>
+              )}
             </div>
 
             <div>
@@ -176,8 +197,8 @@ const user = {
           </div>
 
           <button
-            // onClick={handleLogout}
-            className="flex items-center gap-2 bg-[#F3F4F6] w-full text-sm text-gray-600 rounded-xl text-center justify-center py-1"
+            onClick={handleLogout}
+            className="flex items-center gap-2 bg-[#F3F4F6] w-full text-sm text-gray-600 rounded-xl text-center justify-center py-1 hover:bg-gray-200 transition-colors cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
             Logout
@@ -202,8 +223,8 @@ const user = {
         ))}
 
         <button
-          // onClick={handleLogout}
-          className="flex flex-col items-center gap-1 text-gray-500"
+          onClick={handleLogout}
+          className="flex flex-col items-center gap-1 text-gray-500 cursor-pointer"
         >
           <LogOut className="w-6 h-6" />
 
