@@ -14,7 +14,15 @@ export default function SendRecognitionWizard({ prefilledUser, onClose }: any) {
   const [step, setStep] = useState(1);
   const methods = useForm<SendRecognitionFormValues>({
     resolver: zodResolver(sendRecognitionSchema),
-    defaultValues: { recipientId: prefilledUser?.id || "", valueIds: [], points: 100 }
+    defaultValues: {
+      recipientId: prefilledUser?._id || prefilledUser?.id || "",
+      receiverEmail: prefilledUser?.email || "",
+      departmentId: prefilledUser?.departmentId || prefilledUser?.department || "",
+      recipientName: prefilledUser?.name || "",
+      department: prefilledUser?.department || prefilledUser?.departmentName || "",
+      valueIds: [],
+      points: 100
+    }
   });
 
   return (

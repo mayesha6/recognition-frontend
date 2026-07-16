@@ -4,16 +4,10 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus, Search, Bell } from "lucide-react";
 import { Input } from "@/components/ui/input";
-// import SendRecognitionWizard from "@/modules/recognition/components/SendRecognitionWizard";
 import { RecipientUser } from "@/types/recognition";
 import SendRecognitionWizard from "@/modules/user/recognition/components/SendRecognitionWizard";
 import { useGetDepartmentUsersQuery } from "@/redux/api/userApi";
 
-// Dummy data representing users in the logged-in user's department
-// const departmentUsers: RecipientUser[] = [
-//   { id: "1", name: "Saifur Rahman", email: "saifur@example.com", departmentId: "d1", departmentName: "Engineering", points: 50 },
-//   { id: "2", name: "Ralph Edwards", email: "ralph@example.com", departmentId: "d1", departmentName: "Engineering", points: 50 },
-// ];
 
 export default function SendRecognitionPage() {
   const [isWizardOpen, setIsWizardOpen] = useState(false);
@@ -32,7 +26,7 @@ export default function SendRecognitionPage() {
   };
 
   // Flow 2: Table Row Button Clicked (Prefilled)
-  const handleOpenUserRecognition = (user: RecipientUser) => {
+  const handleOpenUserRecognition = (user: any) => {
     setSelectedUser(user);
     setIsWizardOpen(true);
   };
@@ -75,7 +69,6 @@ export default function SendRecognitionPage() {
         </div>
       </div>
 
-      {/* Department Users Table - Wrapper added for responsiveness */}
       <div className="bg-white rounded-lg border border-gray overflow-hidden">
         {isLoading ? (
           <p className="p-6 text-center">Loading...</p>

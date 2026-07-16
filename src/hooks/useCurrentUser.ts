@@ -1,10 +1,9 @@
-// "use client";
+"use client";
 
-// import { useAppSelector } from "@/redux/hooks";
-// import { CurrentUser } from "@/types/auth";
+import { useAppSelector } from "@/redux/hook";
 
-// export const useCurrentUser = (): CurrentUser | null => {
-//   const user = useAppSelector((state) => state.auth.user);
+export const useCurrentUser = (): any => {
+  const user = useAppSelector((state) => state.auth.user);
 
-//   return user;
-// };
+  return user;
+};

@@ -2,7 +2,10 @@ import { z } from "zod";
 
 export const sendRecognitionSchema = z.object({
   recipientId: z.string().min(1, "Please select a recipient"),
+  receiverEmail: z.string().email("Invalid email address").min(1, "Email is required"),
   departmentId: z.string().optional(),
+  recipientName: z.string().min(1, "Name is required"),
+  department: z.string().optional(),
   categoryId: z.string().min(1, "Category is required"),
   toneId: z.string().min(1, "Tone of value is required"),
   valueIds: z
