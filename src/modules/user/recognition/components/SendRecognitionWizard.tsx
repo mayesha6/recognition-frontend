@@ -20,8 +20,11 @@ export default function SendRecognitionWizard({ prefilledUser, onClose }: any) {
       departmentId: prefilledUser?.departmentId || prefilledUser?.department || "",
       recipientName: prefilledUser?.name || "",
       department: prefilledUser?.department || prefilledUser?.departmentName || "",
+      categoryId: "",
+      toneId: "",
       valueIds: [],
-      points: 100
+      points: 100,
+      imageId: ""
     }
   });
 
@@ -30,7 +33,7 @@ export default function SendRecognitionWizard({ prefilledUser, onClose }: any) {
       <div className="mx-auto p-6">
         {step === 1 && <SelectUser prefilledUser={prefilledUser} onContinue={() => setStep(2)} onClose={onClose} />}
         {step === 2 && <Configuration onNext={() => setStep(4)} onBack={() => setStep(1)} />}
-        {step === 4 && <Preview onBack={() => setStep(2)} />}
+        {step === 4 && <Preview onBack={() => setStep(2)} onClose={onClose} />}
       </div>
     </FormProvider>
   );
