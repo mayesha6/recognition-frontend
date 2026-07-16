@@ -1,12 +1,36 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { Lock } from "lucide-react"; // লক আইকনের জন্য
+import { useEffect } from "react";
+import { Lock } from "lucide-react";
+import { useUpdateMyProfileMutation } from "@/redux/api/authApi";
+import { toast } from "react-toastify";
+import { formatErrorMessage } from "@/utils/formatError";
 
 export default function ContactInfo({ user }: any) {
-    const { register, handleSubmit } = useForm({ defaultValues: user });
+    const { register, handleSubmit, reset } = useForm({ defaultValues: user });
+    const [updateProfile, { isLoading }] = useUpdateMyProfileMutation();
 
-    const onSubmit = (data: any) => {
-        console.log(data);
+    useEffect(() => {
+        reset(user);
+    }, [user, reset]);
+
+    const onSubmit = async (formDataFields: any) => {
+        try {
+            const formData = new FormData();
+            
+            const payload = {
+                name: formDataFields.fullName,
+                phone: formDataFields.phone
+            };
+            
+            formData.append("data", JSON.stringify(payload));
+            
+            await updateProfile(formData).unwrap();
+            toast.success("Contact info updated successfully!");
+        } catch (error) {
+            console.error("Failed to update contact info:", error);
+            toast.error(formatErrorMessage(error, "Failed to update contact info. Please try again."));
+        }
     };
 
     // ইনপুট স্টাইল (টেক্সট কালার text-red-500 করা হয়েছে)
@@ -15,7 +39,7 @@ export default function ContactInfo({ user }: any) {
     const divStyle = "flex border border-gray-200 rounded-lg px-3 py-2 justify-between items-center w-full"
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm w-full">
+        <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm w-full h-full">
             <h3 className="font-light text-2xl mb-4">Contact Info</h3>
             <div className="flex flex-col gap-4">
 
@@ -60,8 +84,19 @@ export default function ContactInfo({ user }: any) {
                     </div>
                 </div>
 
-                <button type="submit" className="bg-gradient hover:bg-indigo-600 text-white py-2.5 rounded-lg transition-colors mt-2">
-                    Save
+                <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="bg-gradient hover:bg-indigo-600 text-white py-2.5 rounded-lg transition-colors mt-2 flex items-center justify-center gap-2"
+                >
+                    {isLoading ? (
+                        <>
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            Saving...
+                        </>
+                    ) : (
+                        "Save"
+                    )}
                 </button>
             </div>
         </form>

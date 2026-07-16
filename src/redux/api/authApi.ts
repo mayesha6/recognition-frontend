@@ -16,9 +16,18 @@ export const authApi = baseApi.injectEndpoints({
                 body: payload
             }
         }
-    })
+    }),
+
+    updateMyProfile: builder.mutation({
+      query: (data) => ({
+        url: "/user/update-my-profile",
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["User"],
+    }),
 
   }),
 });
 
-export const { useGetMeQuery, useChangePasswordMutation } = authApi;
+export const { useGetMeQuery, useChangePasswordMutation, useUpdateMyProfileMutation } = authApi;

@@ -1,29 +1,40 @@
+"use client";
 import ChangePassword from "@/modules/user/setting/components/ChangePassword";
 import ContactInfo from "@/modules/user/setting/components/ContactInfo";
 import GeneralSettings from "@/modules/user/setting/components/GeneralSettings";
+import { useGetMeQuery } from "@/redux/api/authApi";
 
 export default function SettingsPage() {
-  // const { data: user } = useGetMeQuery(undefined);
-const user = {
-  // General Settings
-  profilePicture: "",
-  
-  // Contact Info
-  fullName: "Saifur Rahman",
-  email: "saifur.rahman@quotexstudio.com",
-  phoneNumber: "+880 1711 000000",
-  department: "Engineering",
-  organization: "Quotex Studio",
-  
-  // Status flags (if needed)
-  isEmailVerified: true,
-  lastUpdated: "June 25, 2026"
-};
+  const { data: userRes, isLoading } = useGetMeQuery(undefined);
+  const user = userRes?.data;
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[300px] gap-2">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-gray-500 font-medium">Loading settings...</p>
+      </div>
+    );
+  }
+
+  const userData = {
+    fullName: user?.name || "",
+    email: user?.email || "",
+    phone: user?.phone || "",
+    department: user?.department || "Personal Account",
+    organization: user?.organizationId?.name || user?.organizationId || "Greetely",
+    profilePicture: user?.picture || "",
+  };
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-6">
-      <GeneralSettings user={user} />
-      <ContactInfo user={user}/>
-      <ChangePassword />
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-stretch">
+        <GeneralSettings user={userData} />
+        <ContactInfo user={userData}/>
+      </div>
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <ChangePassword />
+      </div>
     </div>
   );
 }
