@@ -12,7 +12,7 @@ export const sendRecognitionSchema = z.object({
     .array(z.string())
     .min(1, "Select at least 1 value")
     .max(3, "You can choose a maximum of 3 values"),
-  points: z.number().min(0, "Points must be at least 0"),
+  points: z.number().min(1, "Points must be at least 1 to send recognition"),
   imageId: z.string().min(1, "Please select a category image"),
   userPrompt: z.string().optional(),
 });

@@ -144,7 +144,18 @@ export default function Step4Preview({ onBack, onClose }: any) {
       if (onClose) onClose();
     } catch (err: any) {
       console.error("Error sending recognition:", err);
-      toast.error(err?.data?.message || "Failed to send recognition. Please generate AI message first.");
+      let errMsg = err?.data?.message || "Failed to send recognition. Please generate AI message first.";
+      if (typeof errMsg === "string" && errMsg.startsWith("[") && errMsg.endsWith("]")) {
+        try {
+          const parsed = JSON.parse(errMsg);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            errMsg = parsed.map((item: any) => item.message).join(", ");
+          }
+        } catch (e) {
+          // ignore
+        }
+      }
+      toast.error(errMsg);
     }
   };
 
