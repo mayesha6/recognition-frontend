@@ -72,11 +72,10 @@ export default function Configuration({ onNext, onBack }: any) {
               <Button
                 key={cat._id}
                 type="button"
-                className={`px-6 py-2 rounded-lg font-medium transition-all ${
-                  selectedCategory === cat._id
+                className={`px-6 py-2 rounded-lg font-medium transition-all ${selectedCategory === cat._id
                     ? "bg-gradient text-white shadow-md border-transparent"
                     : "bg-white text-gray-700 border border-gray hover:border-primary hover:text-white"
-                }`}
+                  }`}
                 onClick={() => {
                   setValue("categoryId", cat._id);
                   setValue("imageId", ""); // image selections are category dependent
@@ -99,11 +98,10 @@ export default function Configuration({ onNext, onBack }: any) {
               <Button
                 key={tone._id}
                 type="button"
-                className={`px-6 py-2 rounded-lg font-medium transition-all ${
-                  selectedTone === tone._id
+                className={`px-6 py-2 rounded-lg font-medium transition-all ${selectedTone === tone._id
                     ? "bg-gradient text-white shadow-md border-transparent"
                     : "bg-white text-gray-700 border border-gray hover:border-primary hover:text-white"
-                }`}
+                  }`}
                 onClick={() => setValue("toneId", tone._id)}
               >
                 {tone.name}
@@ -120,11 +118,10 @@ export default function Configuration({ onNext, onBack }: any) {
               <Button
                 key={val._id}
                 type="button"
-                className={`px-6 py-2 rounded-lg font-medium transition-all ${
-                  selectedValues.includes(val._id)
+                className={`px-6 py-2 rounded-lg font-medium transition-all ${selectedValues.includes(val._id)
                     ? "bg-gradient text-white shadow-md border-transparent"
                     : "bg-white text-gray-700 border border-gray hover:border-primary hover:text-white"
-                }`}
+                  }`}
                 onClick={() => toggleValue(val._id)}
               >
                 {val.name}
@@ -135,14 +132,21 @@ export default function Configuration({ onNext, onBack }: any) {
 
         {/* Modal Logic */}
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-          <DialogContent className="max-w-3xl max-h-[85vh] flex flex-col p-6">
-            <div className="mb-4">
-              <h2 className="text-2xl font-semibold text-gray-900">Select Image Card</h2>
-              <p className="text-gray-500 text-sm mt-1">Choose a background card for {selectedCategoryObj?.name}</p>
-            </div>
+          <DialogContent className="max-w-xl bg-white p-6">
+            <style>{`
+              .no-scrollbar::-webkit-scrollbar {
+                display: none;
+              }
+              .no-scrollbar {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+              }
+            `}</style>
             
-            <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-1">
+            <h2 className="font-light text-xl mb-4">Select Image for {selectedCategoryObj?.name}</h2>
+            
+            <div className="max-h-[60vh] overflow-y-auto no-scrollbar">
+              <div className="grid grid-cols-3 gap-4">
                 {selectedCategoryObj?.images?.map((img: string) => {
                   const isSelected = watch("imageId") === img;
                   return (
@@ -152,38 +156,20 @@ export default function Configuration({ onNext, onBack }: any) {
                         setValue("imageId", img);
                         setIsModalOpen(false);
                       }}
-                      className={`relative group aspect-[4/3] rounded-xl cursor-pointer overflow-hidden border-2 transition-all duration-300 transform hover:scale-[1.03] hover:shadow-md flex items-center justify-center bg-gradient-to-tr from-[#1E293B] to-[#0F172A] ${
+                      className={`h-24 bg-gray-200 rounded-lg cursor-pointer overflow-hidden border-2 transition-all duration-200 ${
                         isSelected 
-                          ? "border-primary ring-2 ring-primary/20" 
-                          : "border-gray-200 hover:border-primary/50"
+                          ? "border-indigo-600 shadow-sm" 
+                          : "border-transparent hover:border-indigo-500 hover:shadow-sm"
                       }`}
                     >
-                      <img 
-                        src={img} 
-                        alt="Category option" 
-                        className="object-contain w-full h-full p-2 group-hover:scale-105 transition-transform duration-500" 
-                      />
-                      
-                      {/* Subtle hover overlay */}
-                      <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      
-                      {/* Checkmark badge if selected */}
-                      {isSelected && (
-                        <div className="absolute top-2 right-2 bg-primary text-white rounded-full p-1 shadow-md">
-                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                        </div>
-                      )}
+                      <img src={img} alt="Category option" className="object-cover w-full h-full" />
                     </div>
                   );
                 })}
               </div>
               
               {(!selectedCategoryObj?.images || selectedCategoryObj.images.length === 0) && (
-                <div className="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-200">
-                  <p className="text-gray-500 text-sm">No images available for this category.</p>
-                </div>
+                <p className="text-gray-500 text-sm text-center py-4">No images available for this category.</p>
               )}
             </div>
           </DialogContent>

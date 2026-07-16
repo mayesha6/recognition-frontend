@@ -22,7 +22,7 @@ export default function ImageManagerModal({ isOpen, onClose, category, images }:
     };
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-2xl w-full max-w-lg p-6">
                 <div className="flex justify-between items-center mb-6">
                     <h3 className="font-bold text-lg">{category} - Images</h3>
@@ -34,7 +34,7 @@ export default function ImageManagerModal({ isOpen, onClose, category, images }:
                         console.log(images),
                         images.map((img: any, index: number) => (
                             console.log(img),
-                            <div key={index} className="relative group border rounded-lg overflow-hidden h-24">
+                            <div key={index} className="relative group border border-gray rounded-lg overflow-hidden h-24">
                                 <Image
                                     src={img}
                                     alt={img.name || "Category Image"}
@@ -57,21 +57,21 @@ export default function ImageManagerModal({ isOpen, onClose, category, images }:
                 </div>
 
                 <div className="">
-                  <input 
-                    type="file" 
-                    ref={fileInputRef} 
-                    onChange={handleFileChange} 
-                    className="hidden" 
-                    accept="image/*" 
-                />
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        className="hidden"
+                        accept="image/*"
+                    />
 
-                {/* বাটন যা ক্লিক করলে ইনপুট ট্রিগার হবে */}
-                <button 
-                    onClick={() => fileInputRef.current?.click()}
-                    className="cursor-pointer w-full py-3 border-2 border-dashed rounded-lg flex items-center justify-center text-gray-500 hover:border-indigo-500 hover:text-indigo-600 transition-colors"
-                >
-                    <Upload size={18} className="mr-2" /> Add New Images
-                </button>
+                    {/* বাটন যা ক্লিক করলে ইনপুট ট্রিগার হবে */}
+                    <button
+                        onClick={() => fileInputRef.current?.click()}
+                        className="cursor-pointer w-full py-3 border-2 border-dashed rounded-lg flex items-center justify-center text-gray-500 hover:border-indigo-500 hover:text-indigo-600 transition-colors"
+                    >
+                        <Upload size={18} className="mr-2" /> Add New Images
+                    </button>
                 </div>
             </div>
         </div>
