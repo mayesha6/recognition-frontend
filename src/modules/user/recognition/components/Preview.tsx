@@ -17,6 +17,7 @@ import {
   useEditMessageMutation
 } from "@/redux/api/userApi";
 import { toast } from "react-toastify";
+import { formatErrorMessage } from "@/utils/formatError";
 
 export default function Step4Preview({ onBack, onClose }: any) {
   const { watch, setValue } = useFormContext();
@@ -66,6 +67,7 @@ export default function Step4Preview({ onBack, onClose }: any) {
       }
     } catch (error) {
       console.error("Failed to generate AI message:", error);
+      toast.error(formatErrorMessage(error, "Failed to generate AI message. Please try again."));
     }
   };
 
@@ -89,6 +91,7 @@ export default function Step4Preview({ onBack, onClose }: any) {
       }
     } catch (error) {
       console.error("Failed to regenerate AI message:", error);
+      toast.error(formatErrorMessage(error, "Failed to regenerate AI message. Please try again."));
     }
   };
 
@@ -118,7 +121,7 @@ export default function Step4Preview({ onBack, onClose }: any) {
       toast.success("Message updated successfully!");
     } catch (error) {
       console.error("Failed to edit message on backend:", error);
-      toast.error("Failed to save changes. Please try again.");
+      toast.error(formatErrorMessage(error, "Failed to save changes. Please try again."));
     }
   };
 
@@ -144,18 +147,7 @@ export default function Step4Preview({ onBack, onClose }: any) {
       if (onClose) onClose();
     } catch (err: any) {
       console.error("Error sending recognition:", err);
-      let errMsg = err?.data?.message || "Failed to send recognition. Please generate AI message first.";
-      if (typeof errMsg === "string" && errMsg.startsWith("[") && errMsg.endsWith("]")) {
-        try {
-          const parsed = JSON.parse(errMsg);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            errMsg = parsed.map((item: any) => item.message).join(", ");
-          }
-        } catch (e) {
-          // ignore
-        }
-      }
-      toast.error(errMsg);
+      toast.error(formatErrorMessage(err, "Failed to send recognition. Please generate AI message first."));
     }
   };
 

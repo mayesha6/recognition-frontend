@@ -5,6 +5,7 @@ import { Eye, EyeOff } from "lucide-react";
 
 import { useChangePasswordMutation } from "@/redux/api/authApi";
 import { toast } from "react-toastify";
+import { formatErrorMessage } from "@/utils/formatError";
 
 
 export default function ChangePassword() {
@@ -76,11 +77,8 @@ console.log({res})
         confirmPassword: "",
       });
     } catch (error: any) {
-        console.log(error, error.data.message)
-        toast.error("hello")
-      toast.error(
-        error?.data?.message || "Something went wrong."
-      );
+      console.error(error);
+      toast.error(formatErrorMessage(error, "Failed to update password. Please try again."));
     }
   };
 
