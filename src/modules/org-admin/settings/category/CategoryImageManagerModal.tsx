@@ -38,7 +38,7 @@ export default function ImageManagerModal({ isOpen, onClose, category, images }:
                                 <Image
                                     src={img}
                                     alt={img.name || "Category Image"}
-                                    fill // এটি দিলে ইমেজটি তার প্যারেন্ট ডিভ অনুযায়ী অটো সাইজ হবে
+                                    fill
                                     className="object-cover"
                                 />
                                 <button

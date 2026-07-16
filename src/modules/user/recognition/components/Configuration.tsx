@@ -4,6 +4,7 @@ import { useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
+import { Sparkles } from "lucide-react";
 import {
   useGetCategoriesQuery,
   useGetTonesQuery,
@@ -30,11 +31,12 @@ export default function Configuration({ onNext, onBack }: any) {
   const selectedCategory = watch("categoryId");
   const selectedTone = watch("toneId");
   const selectedValues = watch("valueIds") || [];
-  const points = watch("points") || 100;
+  const points = watch("points") ?? 100;
+  const userPrompt = watch("userPrompt") ?? "";
 
   // Ensure points are capped at available balance if balance changes
   useEffect(() => {
-    if (availableBalance > 0 && points > availableBalance) {
+    if (points > availableBalance) {
       setValue("points", availableBalance);
     }
   }, [availableBalance, points, setValue]);
@@ -130,6 +132,18 @@ export default function Configuration({ onNext, onBack }: any) {
           </div>
         </section>
 
+        {/* AI Message Control (Optional Prompt) */}
+        <section>
+          <h3 className="font-light text-xl mb-3">AI Message Control (Optional)</h3>
+          <textarea
+            className="w-full border border-gray rounded-lg p-3 text-sm bg-white outline-none focus:border-primary placeholder:text-gray-400 animate-fade-in"
+            placeholder="Optional prompt for AI (e.g. 'Make it more formal', 'Highlight leadership')"
+            value={userPrompt}
+            onChange={(e) => setValue("userPrompt", e.target.value)}
+            rows={3}
+          />
+        </section>
+
         {/* Modal Logic */}
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
           <DialogContent className="max-w-xl bg-white p-6">
@@ -183,8 +197,10 @@ export default function Configuration({ onNext, onBack }: any) {
         <div className="mb-8">
           <Slider
             value={[points]}
-            max={availableBalance || 100}
-            step={10}
+            min={0}
+            max={availableBalance}
+            step={1}
+            disabled={availableBalance === 0}
             className="mb-4"
             onValueChange={(val) => setValue("points", val[0])}
           />

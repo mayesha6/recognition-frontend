@@ -24,7 +24,8 @@ export default function SendRecognitionWizard({ prefilledUser, onClose }: any) {
       toneId: "",
       valueIds: [],
       points: 100,
-      imageId: ""
+      imageId: "",
+      userPrompt: ""
     }
   });
 
