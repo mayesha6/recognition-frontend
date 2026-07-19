@@ -24,7 +24,7 @@ export default function RecognitionTable({ title, data }: { title: string, data:
               <th className="pb-4 font-medium">{isReceived ? "Sender" : "Recipient"}</th>
               <th className="pb-4 font-medium">Email</th>
               <th className="pb-4 font-medium">Points</th>
-              <th className="pb-4 font-medium">Date & Time</th>
+              <th className="pb-4 font-medium text-right">Date & Time</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray">
@@ -38,7 +38,7 @@ export default function RecognitionTable({ title, data }: { title: string, data:
                 </td>
                 <td className="py-4">{item.email}</td>
                 <td className="py-4 font-semibold text-gray-900">{item.points}</td>
-                <td className="py-4 text-gray-400">{item.date}</td>
+                <td className="py-4 text-gray-400 text-right">{item.date}</td>
               </tr>
             ))}
           </tbody>
