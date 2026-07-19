@@ -30,7 +30,7 @@ export default function ReceiveRecognitionPage() {
       ? { 
           receiverEmail: currentUser.email,
           page: currentPage,
-          limit: 10,
+          limit: 2,
           searchTerm: searchTerm || undefined
         }
       : undefined,

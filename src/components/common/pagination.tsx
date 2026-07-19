@@ -28,7 +28,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
       </button>
 
       {/* পেজ নাম্বার রেন্ডারিং */}
-      {[1, 2, 3, 16].map((page) => (
+      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
         <button
           key={page}
           onClick={() => onPageChange(page)}
