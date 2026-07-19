@@ -1,3 +1,5 @@
+import DashboardPage from "./dashboard/page";
+
 export default function UserDashboard() {
-  return <div><h2 className="text-2xl font-bold">User Dashboard</h2></div>;
+  return <DashboardPage />;
 }
