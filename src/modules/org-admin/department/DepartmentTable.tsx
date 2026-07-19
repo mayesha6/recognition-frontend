@@ -19,7 +19,7 @@ export default function DepartmentTable({data, onDelete, onEdit }: any) {
                     <tr>
                         <th className="px-6 py-4 font-medium">Department</th>
                         <th className="px-6 py-4 font-medium">Admin</th>
-                        <th className="px-6 py-4 font-medium">Employees</th>
+                        <th className="px-6 py-4 font-medium">Users</th>
                         <th className="px-6 py-4 font-medium">Recognitions</th>
                         {/* <th className="px-6 py-4">Engagement</th>
             <th className="px-6 py-4">Status</th> */}
