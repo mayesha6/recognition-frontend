@@ -6,7 +6,7 @@ import { Plus, Search, Eye, Trash2, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import SendRecognitionWizard from "@/modules/user/recognition/components/SendRecognitionWizard";
 import { useGetMeQuery } from "@/redux/api/authApi";
-import { useGetRecognitionHistoryQuery, useDeleteRecognitionMutation } from "@/redux/api/recognitionApi";
+import { useGetRecognitionHistoryQuery, useDeleteRecognitionMutation } from "@/redux/api/userApi";
 import { toast } from "react-toastify";
 
 export default function ReceiveRecognitionPage() {

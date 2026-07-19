@@ -53,6 +53,14 @@ export const userApi = baseApi.injectEndpoints({
       providesTags: ["User"],
     }),
 
+    deleteRecognition: builder.mutation({
+      query: (id) => ({
+        url: `/recognition/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Recognition"],
+    }),
+
   }),
 });
 
@@ -62,5 +70,6 @@ export const {
   useRegenerateMessageMutation,
   useEditMessageMutation,
   useGetRecognitionHistoryQuery,
-  useGetDepartmentUsersQuery
+  useGetDepartmentUsersQuery,
+  useDeleteRecognitionMutation
 } = userApi;

@@ -26,21 +26,6 @@ export const recognitionApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
-    getRecognitionHistory: builder.query<any, Record<string, any> | void>({
-      query: (params) => ({
-        url: "/recognition/history",
-        method: "GET",
-        params: params || undefined,
-      }),
-      providesTags: ["Recognition"],
-    }),
-    deleteRecognition: builder.mutation<any, string>({
-      query: (id) => ({
-        url: `/recognition/${id}`,
-        method: "DELETE",
-      }),
-      invalidatesTags: ["Recognition"],
-    }),
   }),
 });
 
@@ -49,6 +34,4 @@ export const {
   useGetTonesQuery,
   useGetRecognitionValuesQuery,
   useGetMyBalanceQuery,
-  useGetRecognitionHistoryQuery,
-  useDeleteRecognitionMutation,
 } = recognitionApi;
