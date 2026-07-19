@@ -38,9 +38,9 @@ export default function ClaimListPage() {
     });
 
     // Calculate stats dynamically from current page or fallback to 0
-    const pendingCount = claims.filter((c: any) => c.status === "PENDING").length;
-    const approvedCount = claims.filter((c: any) => c.status === "APPROVED").length;
-    const rejectedCount = claims.filter((c: any) => c.status === "REJECTED").length;
+    const pendingCount = claims.filter((c: any) => c.status?.toUpperCase() === "PENDING").length;
+    const approvedCount = claims.filter((c: any) => c.status?.toUpperCase() === "APPROVED").length;
+    const rejectedCount = claims.filter((c: any) => c.status?.toUpperCase() === "REJECTED").length;
 
     if (isLoading) {
         return (
