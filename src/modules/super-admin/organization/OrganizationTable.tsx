@@ -18,7 +18,7 @@ export default function OrganizationTable({ orgs, onView, onSuspend, onDelete }:
         </thead>
         <tbody className="divide-y divide-gray-100">
           {orgs.map((org: any) => (
-            <tr key={org.id} className="hover:bg-gray-50/50 transition-colors">
+            <tr key={org._id || org.id} className="hover:bg-gray-50/50 transition-colors">
               <td className="px-6 py-4 text-sm font-medium text-gray-900">{org.name}</td>
               <td className="px-6 py-4"><span className="px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-medium">{org.plan}</span></td>
               <td className="px-6 py-4 text-sm text-gray-600">{org.employees}</td>
