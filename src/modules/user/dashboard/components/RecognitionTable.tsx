@@ -1,19 +1,27 @@
+import Link from "next/link";
 
 // import { Avatar, AvatarFallback } from "@/components/ui/avatar"; // shadcn ui ব্যবহার করলে
 
 export default function RecognitionTable({ title, data }: { title: string, data: any[] }) {
+  const isReceived = title.toLowerCase().includes("received");
+
   return (
     <div className="bg-white p-6 rounded-2xl border border-gray shadow-sm mt-8">
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-lg font-bold text-gray-900">{title}</h3>
-        <button className="text-sm text-indigo-600 font-medium">See All</button>
+        <Link 
+          href={isReceived ? "/user/received-recognition" : "/user/send-recognition"} 
+          className="text-sm text-indigo-600 font-medium hover:underline"
+        >
+          See All
+        </Link>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="text-gray-400 text-xs uppercase tracking-wider border-b border-gray">
-              <th className="pb-4 font-medium">Recipient</th>
+              <th className="pb-4 font-medium">{isReceived ? "Sender" : "Recipient"}</th>
               <th className="pb-4 font-medium">Email</th>
               <th className="pb-4 font-medium">Value</th>
               <th className="pb-4 font-medium">Category</th>
