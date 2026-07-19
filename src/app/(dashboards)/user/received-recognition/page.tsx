@@ -8,11 +8,13 @@ import SendRecognitionWizard from "@/modules/user/recognition/components/SendRec
 import { useGetMeQuery } from "@/redux/api/authApi";
 import { useGetRecognitionHistoryQuery, useDeleteRecognitionMutation } from "@/redux/api/userApi";
 import { toast } from "react-toastify";
+import Pagination from "@/components/common/pagination";
 
 export default function ReceiveRecognitionPage() {
   const [isWizardOpen, setIsWizardOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Modal States
   const [viewRecognition, setViewRecognition] = useState<any | null>(null);
@@ -22,9 +24,16 @@ export default function ReceiveRecognitionPage() {
   const { data: userRes, isLoading: isProfileLoading } = useGetMeQuery(undefined);
   const currentUser = userRes?.data;
 
-  // Get recognition history filtered by receiver email
+  // Get recognition history filtered by receiver email, page, limit, and search term
   const { data: historyRes, isLoading: isHistoryLoading, isError } = useGetRecognitionHistoryQuery(
-    currentUser?.email ? { receiverEmail: currentUser.email } : undefined,
+    currentUser?.email
+      ? { 
+          receiverEmail: currentUser.email,
+          page: currentPage,
+          limit: 10,
+          searchTerm: searchTerm || undefined
+        }
+      : undefined,
     { skip: !currentUser?.email }
   );
 
@@ -32,6 +41,8 @@ export default function ReceiveRecognitionPage() {
   const [deleteRecognition, { isLoading: isDeleting }] = useDeleteRecognitionMutation();
 
   const recognitions = historyRes?.data || [];
+  const meta = historyRes?.meta || {};
+  const totalPages = meta?.totalPage || 1;
 
   // Helper to format displayName from email (e.g. john.doe@company.com -> John Doe)
   const getDisplayNameFromEmail = (email: string) => {
@@ -65,19 +76,6 @@ export default function ReceiveRecognitionPage() {
     }
   };
 
-  // Filter recognitions based on search term
-  const filteredRecognitions = recognitions.filter((rec: any) => {
-    const term = searchTerm.toLowerCase();
-    return (
-      rec.senderEmail?.toLowerCase().includes(term) ||
-      rec.department?.toLowerCase().includes(term) ||
-      rec.category?.toLowerCase().includes(term) ||
-      rec.tone?.toLowerCase().includes(term) ||
-      rec.message?.toLowerCase().includes(term) ||
-      rec.recognition_values?.some((val: string) => val.toLowerCase().includes(term))
-    );
-  });
-
   // If wizard is open, hide the table and show the wizard
   if (isWizardOpen) {
     return (
@@ -100,7 +98,10 @@ export default function ReceiveRecognitionPage() {
             <Input
               placeholder="Search..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1); // Reset to page 1 on new search
+              }}
               className="w-full focus-visible:ring-0 focus-visible:ring-offset-0 border-none bg-transparent"
             />
           </div>
@@ -135,14 +136,14 @@ export default function ReceiveRecognitionPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {filteredRecognitions.length === 0 ? (
+                {recognitions.length === 0 ? (
                   <tr>
                     <td colSpan={5} className="px-6 py-10 text-center text-gray-500">
                       No received recognitions found.
                     </td>
                   </tr>
                 ) : (
-                  filteredRecognitions.map((rec: any) => {
+                  recognitions.map((rec: any) => {
                     const displayName = getDisplayNameFromEmail(rec.senderEmail);
                     return (
                       <tr key={rec._id} className="hover:bg-gray-50 align-middle">
@@ -190,6 +191,17 @@ export default function ReceiveRecognitionPage() {
           </div>
         )}
       </div>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="py-2 flex justify-end">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={(p) => setCurrentPage(p)}
+          />
+        </div>
+      )}
 
       {/* View Recognition Detail Modal */}
       {viewRecognition && (
