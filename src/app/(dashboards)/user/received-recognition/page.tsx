@@ -76,6 +76,17 @@ export default function ReceiveRecognitionPage() {
     }
   };
 
+  // Filter recognitions based on search term (supports name, email, message, etc. instantly)
+  const filteredRecognitions = recognitions.filter((rec: any) => {
+    const term = searchTerm.toLowerCase();
+    const displayName = getDisplayNameFromEmail(rec.senderEmail).toLowerCase();
+    return (
+      displayName.includes(term) ||
+      rec.senderEmail?.toLowerCase().includes(term) ||
+      rec.message?.toLowerCase().includes(term)
+    );
+  });
+
   // If wizard is open, hide the table and show the wizard
   if (isWizardOpen) {
     return (
@@ -136,14 +147,14 @@ export default function ReceiveRecognitionPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {recognitions.length === 0 ? (
+                {filteredRecognitions.length === 0 ? (
                   <tr>
                     <td colSpan={5} className="px-6 py-10 text-center text-gray-500">
                       No received recognitions found.
                     </td>
                   </tr>
                 ) : (
-                  recognitions.map((rec: any) => {
+                  filteredRecognitions.map((rec: any) => {
                     const displayName = getDisplayNameFromEmail(rec.senderEmail);
                     return (
                       <tr key={rec._id} className="hover:bg-gray-50 align-middle">
