@@ -53,7 +53,8 @@ export default function OrganizationManagement() {
     try {
       await updateOrganizationStatus({ id, isActive: nextStatus }).unwrap();
       refetch();
-    } catch (err) {
+    } catch (err: any) {
+      alert(err?.data?.message || err?.message || "Failed to update status");
       console.error("Failed to update status:", err);
     }
   };
@@ -63,7 +64,8 @@ export default function OrganizationManagement() {
       try {
         await deleteOrganization(id).unwrap();
         refetch();
-      } catch (err) {
+      } catch (err: any) {
+        alert(err?.data?.message || err?.message || "Failed to delete organization");
         console.error("Failed to delete organization:", err);
       }
     }
