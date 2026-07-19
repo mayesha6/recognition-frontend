@@ -3,6 +3,8 @@
 import { Input } from "@/components/ui/input";
 import OrganizationTable from "@/modules/super-admin/organization/OrganizationTable";
 import ViewOrganizationModal from "@/modules/super-admin/organization/ViewOrganizationModal";
+import DeleteConfirmationModal from "@/modules/super-admin/organization/DeleteConfirmationModal";
+import SuspendConfirmationModal from "@/modules/super-admin/organization/SuspendConfirmationModal";
 import Pagination from "@/components/common/pagination";
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -19,6 +21,11 @@ export default function OrganizationManagement() {
 
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [selectedOrg, setSelectedOrg] = useState(null);
+
+  // States for delete and suspend modals
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isSuspendModalOpen, setIsSuspendModalOpen] = useState(false);
+  const [selectedOrgForAction, setSelectedOrgForAction] = useState<any>(null);
 
   // Debounce search term to prevent overloading the server on quick typing
   useEffect(() => {
@@ -44,30 +51,42 @@ export default function OrganizationManagement() {
   const [deleteOrganization] = useDeleteOrganizationMutation();
   const [updateOrganizationStatus] = useUpdateOrganizationStatusMutation();
 
-  const handleSuspend = async (id: string) => {
+  const handleSuspendClick = (id: string) => {
     const org = organizations.find((o: any) => o.id === id);
     if (!org) return;
+    setSelectedOrgForAction(org);
+    setIsSuspendModalOpen(true);
+  };
 
-    // Toggle active status
-    const nextStatus = org.isActive === "ACTIVE" ? "INACTIVE" : "ACTIVE";
+  const handleSuspendConfirm = async () => {
+    if (!selectedOrgForAction) return;
+    const id = selectedOrgForAction.id;
+    const nextStatus = selectedOrgForAction.isActive === "ACTIVE" ? "INACTIVE" : "ACTIVE";
     try {
       await updateOrganizationStatus({ id, isActive: nextStatus }).unwrap();
+      setIsSuspendModalOpen(false);
       refetch();
     } catch (err: any) {
       alert(err?.data?.message || err?.message || "Failed to update status");
-      console.error("Failed to update status:", err);
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this organization?")) {
-      try {
-        await deleteOrganization(id).unwrap();
-        refetch();
-      } catch (err: any) {
-        alert(err?.data?.message || err?.message || "Failed to delete organization");
-        console.error("Failed to delete organization:", err);
-      }
+  const handleDeleteClick = (id: string) => {
+    const org = organizations.find((o: any) => o.id === id);
+    if (!org) return;
+    setSelectedOrgForAction(org);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!selectedOrgForAction) return;
+    const id = selectedOrgForAction.id;
+    try {
+      await deleteOrganization(id).unwrap();
+      setIsDeleteModalOpen(false);
+      refetch();
+    } catch (err: any) {
+      alert(err?.data?.message || err?.message || "Failed to delete organization");
     }
   };
 
@@ -104,8 +123,8 @@ export default function OrganizationManagement() {
           <OrganizationTable
             orgs={organizations}
             onView={handleView}
-            onSuspend={handleSuspend}
-            onDelete={handleDelete}
+            onSuspend={handleSuspendClick}
+            onDelete={handleDeleteClick}
           />
 
           {totalPages > 1 && (
@@ -124,6 +143,21 @@ export default function OrganizationManagement() {
         isOpen={isViewModalOpen}
         onClose={() => setIsViewModalOpen(false)}
         org={selectedOrg}
+      />
+
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDeleteConfirm}
+        orgName={selectedOrgForAction?.name || ""}
+      />
+
+      <SuspendConfirmationModal
+        isOpen={isSuspendModalOpen}
+        onClose={() => setIsSuspendModalOpen(false)}
+        onConfirm={handleSuspendConfirm}
+        orgName={selectedOrgForAction?.name || ""}
+        isActive={selectedOrgForAction?.isActive === "ACTIVE"}
       />
     </div>
   );
