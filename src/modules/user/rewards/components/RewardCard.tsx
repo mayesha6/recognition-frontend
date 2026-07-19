@@ -19,8 +19,8 @@ export default function RewardCard({ _id, name, description, points, stock, imag
       {/* উপরের কন্টেন্ট */}
       <div className="grow">
         <div className="flex justify-between items-start mb-4">
-          <div className="w-12 h-12 bg-gray-50 rounded-lg flex items-center justify-center overflow-hidden">
-            <Image src={image || "/reward.png"} alt={name} width={32} height={32} className="object-contain" />
+          <div className="relative w-12 h-12 bg-gray-50 rounded-lg flex items-center justify-center overflow-hidden">
+            <Image src={image || "/reward.png"} alt={name} fill className="object-cover" />
           </div>
           <span className="text-blue-600 font-bold text-lg">{points} pts</span>
         </div>
