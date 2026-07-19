@@ -53,6 +53,10 @@ export default function ChangePassword() {
       return toast.error("All fields are required.");
     }
 
+    if (newPassword.length < 6) {
+      return toast.error("New password must be at least 6 characters long.");
+    }
+
     if (newPassword !== confirmPassword) {
       return toast.error(
         "New password and confirm password do not match."
