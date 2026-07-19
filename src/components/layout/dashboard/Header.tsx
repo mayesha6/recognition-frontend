@@ -94,8 +94,6 @@ export default function Header() {
               <span className="text-sm font-bold text-gray-900">{user.name}</span>
               <span className="text-xs text-gray-500">{getRoleLabel(user.role)}</span>
             </div>
-            
-            <ChevronDown className="w-4 h-4 text-gray-400 cursor-pointer" />
           </div>
         )}
       </div>
