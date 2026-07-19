@@ -11,6 +11,7 @@ export default function OrganizationTable({ orgs, onView, onSuspend, onDelete }:
             <th className="px-6 py-4 font-medium">Plan</th>
             <th className="px-6 py-4 font-medium">Employees</th>
             <th className="px-6 py-4 font-medium">Departments</th>
+            <th className="px-6 py-4 font-medium">Approval</th>
             <th className="px-6 py-4 font-medium">Status</th>
             <th className="px-6 py-4 font-medium">Renewal</th>
             <th className="px-6 py-4 font-medium text-center">Action</th>
@@ -31,6 +32,16 @@ export default function OrganizationTable({ orgs, onView, onSuspend, onDelete }:
                     'bg-yellow-500'
                   }`} />
                   {org.status}
+                </span>
+              </td>
+              <td className="px-6 py-4 text-sm">
+                <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                  org.isActive === "ACTIVE" 
+                    ? "bg-green-50 text-green-700 border border-green-100" 
+                    : "bg-red-50 text-red-700 border border-red-100"
+                }`}>
+                  <span className={`w-1.5 h-1.5 rounded-full ${org.isActive === "ACTIVE" ? "bg-green-500" : "bg-red-500"}`} />
+                  {org.isActive === "ACTIVE" ? "Active" : "Suspended"}
                 </span>
               </td>
               <td className="px-6 py-4 text-sm text-gray-600">{org.renewal}</td>
