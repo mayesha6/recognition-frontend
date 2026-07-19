@@ -27,7 +27,11 @@ export default function OrganizationTable({ orgs, onView, onSuspend, onDelete }:
               <td className="px-6 py-4 text-sm text-gray-600">{org.departments}</td>
               <td className="px-6 py-4 text-sm">
                 <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusStyles(org.status)}`}>
-                  <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
+                  <span className={`w-1.5 h-1.5 rounded-full ${
+                    org.status.toLowerCase() === 'approved' || org.status.toLowerCase() === 'active' ? 'bg-green-500' : 
+                    org.status.toLowerCase() === 'rejected' || org.status.toLowerCase() === 'expired' ? 'bg-red-500' : 
+                    'bg-yellow-500'
+                  }`} />
                   {org.status}
                 </span>
               </td>
@@ -50,9 +54,16 @@ export default function OrganizationTable({ orgs, onView, onSuspend, onDelete }:
 // স্ট্যাটাস স্টাইল হেল্পার
 function getStatusStyles(status: string) {
   switch (status.toLowerCase()) {
-    case 'active': return 'bg-emerald-50 text-emerald-600';
-    case 'trial': return 'bg-amber-50 text-amber-600';
-    case 'expired': return 'bg-red-50 text-red-600';
-    default: return 'bg-gray-50 text-gray-600';
+    case 'approved':
+    case 'active':
+      return 'bg-green-50 text-green-700 border border-green-100';
+    case 'rejected':
+    case 'expired':
+      return 'bg-red-50 text-red-700 border border-red-100';
+    case 'pending':
+    case 'trial':
+      return 'bg-yellow-50 text-yellow-700 border border-yellow-100';
+    default:
+      return 'bg-gray-50 text-gray-600 border border-gray-100';
   }
 }
