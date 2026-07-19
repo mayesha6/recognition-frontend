@@ -1,117 +1,128 @@
 "use client";
+
 import { Input } from "@/components/ui/input";
 import OrganizationTable from "@/modules/super-admin/organization/OrganizationTable";
 import ViewOrganizationModal from "@/modules/super-admin/organization/ViewOrganizationModal";
+import Pagination from "@/components/common/pagination";
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useGetDepartmentUsersQuery } from "@/redux/api/userApi";
+import { 
+  useDeleteOrganizationMutation, 
+  useUpdateOrganizationStatusMutation 
+} from "@/redux/api/superAdminApi";
 
 export default function OrganizationManagement() {
-    //   const [organizations, setOrganizations] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
-    const organizations = [
-        {
-            "id": "1",
-            "name": "Acme Corporation",
-            "industry": "Technology",
-            "plan": "Enterprise",
-            "employees": 320,
-            "departments": 18,
-            "status": "Active",
-            "renewal": "Apr 12, 2026"
-        },
-        {
-            "id": "2",
-            "name": "Northwind Logistics",
-            "industry": "Logistics",
-            "plan": "Premium",
-            "employees": 180,
-            "departments": 12,
-            "status": "Trial",
-            "renewal": "Mar 02, 2026"
-        },
-        {
-            "id": "3",
-            "name": "Sterling Health",
-            "industry": "Healthcare",
-            "plan": "Professional",
-            "employees": 210,
-            "departments": 8,
-            "status": "Expired",
-            "renewal": "Mar 02, 2026"
-        },
-        {
-            "id": "4",
-            "name": "Acme Corporation",
-            "industry": "Technology",
-            "plan": "Free",
-            "employees": 320,
-            "departments": 18,
-            "status": "Active",
-            "renewal": "Apr 12, 2026"
-        },
-        {
-            "id": "5",
-            "name": "Sterling Health",
-            "industry": "Healthcare",
-            "plan": "Professional",
-            "employees": 210,
-            "departments": 8,
-            "status": "Expired",
-            "renewal": "Mar 02, 2026"
-        }
-    ]
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [selectedOrg, setSelectedOrg] = useState(null);
 
-    //   useEffect(() => {
-    //     // API থেকে ডাটা নিয়ে আসা
-    //     fetch("/api/organizations")
-    //       .then((res) => res.json())
-    //       .then((data) => setOrganizations(data));
-    //   }, []);
+  // Debounce search term to prevent overloading the server on quick typing
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+      setCurrentPage(1); // Reset to page 1 on new search
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
 
-    const handleSuspend = (id: string) => {
-        console.log("Suspending organization:", id);
-        // Suspended API logic here
-    };
+  // API query hook for fetching organizations
+  const { data: orgsRes, isLoading, refetch } = useGetDepartmentUsersQuery({
+    accountType: "ORGANIZATION",
+    page: currentPage,
+    limit: 10,
+    searchTerm: debouncedSearch || undefined,
+  });
 
-    const handleDelete = (id: string) => {
-        if (confirm("Are you sure you want to delete this organization?")) {
-            console.log("Deleting organization:", id);
-            // Delete API logic here
-        }
-    };
-    const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-    const [selectedOrg, setSelectedOrg] = useState(null);
+  const organizations = orgsRes?.data || [];
+  const meta = orgsRes?.meta || { total: 0, limit: 10, page: 1, totalPage: 1 };
+  const totalPages = meta.totalPage;
 
-    const handleView = (org: any) => {
-        setSelectedOrg(org);
-        setIsViewModalOpen(true);
-    };
+  const [deleteOrganization] = useDeleteOrganizationMutation();
+  const [updateOrganizationStatus] = useUpdateOrganizationStatusMutation();
 
-    return (
-        <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                <h2 className="text-[28px] font-medium">Organization Management</h2>
+  const handleSuspend = async (id: string) => {
+    const org = organizations.find((o: any) => o.id === id);
+    if (!org) return;
 
-                <div className="flex items-center gap-4 w-full sm:w-auto">
-                    <div className="flex items-center bg-gray-100 rounded-lg px-3 w-full sm:w-64">
-                        <Search className="w-4 h-4 text-gray-400" />
-                        <Input placeholder="Search..." className="w-full focus-visible:ring-0 focus-visible:ring-offset-0 border-none bg-transparent" />
-                    </div>
+    // Toggle active status
+    const nextStatus = org.isActive === "ACTIVE" ? "INACTIVE" : "ACTIVE";
+    try {
+      await updateOrganizationStatus({ id, isActive: nextStatus }).unwrap();
+      refetch();
+    } catch (err) {
+      console.error("Failed to update status:", err);
+    }
+  };
 
-                </div>
-            </div>
+  const handleDelete = async (id: string) => {
+    if (confirm("Are you sure you want to delete this organization?")) {
+      try {
+        await deleteOrganization(id).unwrap();
+        refetch();
+      } catch (err) {
+        console.error("Failed to delete organization:", err);
+      }
+    }
+  };
 
-            <OrganizationTable
-                orgs={organizations}
-                onView={handleView}
-                onSuspend={handleSuspend}
-                onDelete={handleDelete}
+  const handleView = (org: any) => {
+    setSelectedOrg(org);
+    setIsViewModalOpen(true);
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <h2 className="text-[28px] font-medium text-gray-900">Organization Management</h2>
+
+        <div className="flex items-center gap-4 w-full sm:w-auto">
+          <div className="flex items-center bg-gray-100 rounded-lg px-3 w-full sm:w-64 border border-gray-200">
+            <Search className="w-4 h-4 text-gray-400" />
+            <Input 
+              placeholder="Search..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full focus-visible:ring-0 focus-visible:ring-offset-0 border-none bg-transparent" 
             />
-            <ViewOrganizationModal
-                isOpen={isViewModalOpen}
-                onClose={() => setIsViewModalOpen(false)}
-                org={selectedOrg}
-            />
+          </div>
         </div>
-    );
+      </div>
+
+      {isLoading ? (
+        <div className="flex flex-col items-center justify-center min-h-[300px] gap-2">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+          <p className="text-sm text-gray-500 font-medium animate-pulse">Loading organizations...</p>
+        </div>
+      ) : (
+        <>
+          <OrganizationTable
+            orgs={organizations}
+            onView={handleView}
+            onSuspend={handleSuspend}
+            onDelete={handleDelete}
+          />
+
+          {totalPages > 1 && (
+            <div className="flex justify-end mt-4">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={(page) => setCurrentPage(page)}
+              />
+            </div>
+          )}
+        </>
+      )}
+
+      <ViewOrganizationModal
+        isOpen={isViewModalOpen}
+        onClose={() => setIsViewModalOpen(false)}
+        org={selectedOrg}
+      />
+    </div>
+  );
 }
