@@ -37,10 +37,7 @@ export default function DashboardPage() {
   const currentUser = userRes?.data;
 
   const { data: balanceRes, isLoading: isBalanceLoading } = useGetMyBalanceQuery(undefined);
-  const { data: historyRes, isLoading: isHistoryLoading } = useGetRecognitionHistoryQuery(
-    currentUser?.email ? { limit: 1000 } : undefined,
-    { skip: !currentUser?.email }
-  );
+  const { data: historyRes, isLoading: isHistoryLoading } = useGetRecognitionHistoryQuery({ limit: 100 });
   const { data: claimsRes, isLoading: isClaimsLoading } = useGetMyClaimsQuery(undefined);
 
   const isLoading = isProfileLoading || isBalanceLoading || isHistoryLoading || isClaimsLoading;
