@@ -25,7 +25,7 @@
 //         <nav className="flex-1 px-4 space-y-1">
 //   {navItems.map((item) => {
 //     const isActive = pathname === item.href;
-    
+
 //     return (
 //       <Link 
 //         key={item.name} 
@@ -69,8 +69,8 @@
 //         </div>
 //       </nav>
 
-     
-      
+
+
 //     </>
 //   );
 // }
@@ -128,16 +128,16 @@ export default function Sidebar() {
 
   const initials = user.name
     ? user.name
-        .split(" ")
-        .map((item: string) => item[0])
-        .join("")
-        .toUpperCase()
-        .slice(0, 2)
+      .split(" ")
+      .map((item: string) => item[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2)
     : "U";
 
   const handleLogout = () => {
     dispatch(logout());
-    window.location.href = "http://localhost:3041/login";
+    window.location.href = "https://greetely.com/login";
   };
 
   return (
@@ -153,16 +153,14 @@ export default function Sidebar() {
                 key={item.name}
                 href={item.href}
                 className={`flex items-center gap-3 px-4 py-3 border-l-4 transition-all duration-200
-                ${
-                  isActive
+                ${isActive
                     ? "border-l-black bg-gray-50 text-black shadow-custom-card rounded-[10px]"
                     : "border-l-transparent text-gray-600 hover:border-l-transparent hover:bg-gray-50 hover:rounded-[10px] hover:shadow-custom-card"
-                }`}
+                  }`}
               >
                 <item.icon
-                  className={`w-5 h-5 ${
-                    isActive ? "text-black" : "text-gray-600"
-                  }`}
+                  className={`w-5 h-5 ${isActive ? "text-black" : "text-gray-600"
+                    }`}
                 />
 
                 {item.name}
@@ -212,9 +210,8 @@ export default function Sidebar() {
           <Link
             key={item.name}
             href={item.href}
-            className={`flex flex-col items-center gap-1 ${
-              pathname === item.href ? "text-primary" : "text-gray-500"
-            }`}
+            className={`flex flex-col items-center gap-1 ${pathname === item.href ? "text-primary" : "text-gray-500"
+              }`}
           >
             <item.icon className="w-6 h-6" />
 

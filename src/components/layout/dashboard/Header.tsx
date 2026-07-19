@@ -106,7 +106,7 @@ export default function Header() {
     <header className="h-auto md:h-20 bg-white border-b border-b-gray flex items-center justify-between px-4 md:px-8 py-3 gap-4">
       {/* Greetely Logo */}
       <div className="flex items-center gap-2">
-        <Link href="http://localhost:3041/" className="flex items-center gap-2 shrink-0">
+        <Link href="https://greetely.com/" className="flex items-center gap-2 shrink-0">
           <Image
             src={logo} 
             alt="Greetely Logo"
