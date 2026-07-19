@@ -37,8 +37,8 @@ export default function OrganizationTable({ orgs, onView, onSuspend, onDelete }:
               <td className="px-6 py-4">
                 <div className="flex justify-center items-center gap-3">
                   <button onClick={() => onView(org)} className="text-gray-400 hover:text-indigo-600 transition-colors" title="View"><Eye size={18} /></button>
-                  <button onClick={() => onSuspend(org.id)} className="text-gray-400 hover:text-amber-600 transition-colors" title="Suspend"><Ban size={18} /></button>
-                  <button onClick={() => onDelete(org.id)} className="text-gray-400 hover:text-red-600 transition-colors" title="Delete"><Trash2 size={18} /></button>
+                  <button onClick={() => onSuspend(org._id || org.id)} className="text-gray-400 hover:text-amber-600 transition-colors" title="Suspend"><Ban size={18} /></button>
+                  <button onClick={() => onDelete(org._id || org.id)} className="text-gray-400 hover:text-red-600 transition-colors" title="Delete"><Trash2 size={18} /></button>
                 </div>
               </td>
             </tr>

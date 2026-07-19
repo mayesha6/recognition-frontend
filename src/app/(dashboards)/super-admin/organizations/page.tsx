@@ -52,7 +52,7 @@ export default function OrganizationManagement() {
   const [updateOrganizationStatus] = useUpdateOrganizationStatusMutation();
 
   const handleSuspendClick = (id: string) => {
-    const org = organizations.find((o: any) => o.id === id);
+    const org = organizations.find((o: any) => (o._id || o.id) === id);
     if (!org) return;
     setSelectedOrgForAction(org);
     setIsSuspendModalOpen(true);
@@ -60,7 +60,7 @@ export default function OrganizationManagement() {
 
   const handleSuspendConfirm = async () => {
     if (!selectedOrgForAction) return;
-    const id = selectedOrgForAction.id;
+    const id = selectedOrgForAction._id || selectedOrgForAction.id;
     const nextStatus = selectedOrgForAction.isActive === "ACTIVE" ? "INACTIVE" : "ACTIVE";
     try {
       await updateOrganizationStatus({ id, isActive: nextStatus }).unwrap();
@@ -68,11 +68,12 @@ export default function OrganizationManagement() {
       refetch();
     } catch (err: any) {
       alert(err?.data?.message || err?.message || "Failed to update status");
+      console.error("Failed to update status:", err);
     }
   };
 
   const handleDeleteClick = (id: string) => {
-    const org = organizations.find((o: any) => o.id === id);
+    const org = organizations.find((o: any) => (o._id || o.id) === id);
     if (!org) return;
     setSelectedOrgForAction(org);
     setIsDeleteModalOpen(true);
@@ -80,13 +81,14 @@ export default function OrganizationManagement() {
 
   const handleDeleteConfirm = async () => {
     if (!selectedOrgForAction) return;
-    const id = selectedOrgForAction.id;
+    const id = selectedOrgForAction._id || selectedOrgForAction.id;
     try {
       await deleteOrganization(id).unwrap();
       setIsDeleteModalOpen(false);
       refetch();
     } catch (err: any) {
       alert(err?.data?.message || err?.message || "Failed to delete organization");
+      console.error("Failed to delete organization:", err);
     }
   };
 
