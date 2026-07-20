@@ -1,116 +1,124 @@
 "use client";
-import { useEffect, useState } from "react";
-// import StatCard from "@/components/analytics/StatCard";
-// import RevenueChart from "@/components/analytics/RevenueChart";
-// import PlanDistributionChart from "@/components/analytics/PlanDistributionChart";
-// import UpgradeBarChart from "@/components/analytics/UpgradeBarChart";
-import { Calendar, Coins, Trophy } from "lucide-react";
+
+import { useGetSuperAdminDashboardQuery } from "@/redux/api/superAdminApi";
 import PlanDistributionChart from "@/modules/super-admin/revenue/PlanDistribution";
 import StatCard from "@/modules/user/rewards/components/StatCard";
 import RevenueChart from "@/modules/super-admin/revenue/RevenueChart";
 import UpgradeBarChart from "@/modules/super-admin/revenue/UpgradeBarChart";
+import { Calendar, Coins, Trophy } from "lucide-react";
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 export default function RevenuePage() {
-  // const [data, setData] = useState<any>(null);
+  const { data: dashRes, isLoading } = useGetSuperAdminDashboardQuery();
 
-  // useEffect(() => {
-  //   // API Call
-  //   fetch("/api/revenue-analytics").then(res => res.json()).then(setData);
-  // }, []);
-  const data = {
-  totalRevenue: "$1,25,221.6M",
-  monthlyRevenue: "$221.6K",
-  annualRevenue: "$1.89M",
-  
-  growthData: [
-    { month: 'Jan', revenue: 70000 },
-    { month: 'Feb', revenue: 110000 },
-    { month: 'Mar', revenue: 150000 },
-    { month: 'Apr', revenue: 130000 },
-    { month: 'May', revenue: 200000 },
-    { month: 'Jun', revenue: 180000 },
-    { month: 'Jul', revenue: 170000 },
-    { month: 'Aug', revenue: 220000 },
-    { month: 'Sep', revenue: 250000 },
-    { month: 'Oct', revenue: 300000 },
-    { month: 'Nov', revenue: 400000 },
-    { month: 'Dec', revenue: 500000 },
-  ],
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] gap-2">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+        <p className="text-sm text-gray-500 font-medium animate-pulse">Loading revenue analytics...</p>
+      </div>
+    );
+  }
 
-  planDistribution: [
-    { name: 'Premium', value: 45 },
-    { name: 'Enterprise', value: 25 },
-    { name: 'Professional', value: 20 },
-    { name: 'Free', value: 10 },
-  ],
+  const dashData = dashRes?.data || {};
+  const overview = dashData.overview || {};
+  const charts = dashData.charts || {};
 
-  upgradeData: [
-    { month: 'Jan', value: 500 },
-    { month: 'Feb', value: 360 },
-    { month: 'Mar', value: 180 },
-    { month: 'Apr', value: 120 },
-    { month: 'May', value: 220 },
-    { month: 'Jun', value: 150 },
-    { month: 'Jul', value: 280 },
-    { month: 'Aug', value: 120 },
-    { month: 'Sep', value: 160 },
-    { month: 'Oct', value: 240 },
-    { month: 'Nov', value: 360 },
-    { month: 'Dec', value: 480 },
-  ]
-};
+  const monthlyRev = overview.monthlyRevenue || 0;
 
-  if (!data) return <div>Loading...</div>;
+  // Transform monthly revenue growth chart data
+  const rawGrowth = charts.revenueGrowth || [];
+  const growthData = MONTHS.map((monthName, idx) => {
+    const monthNum = idx + 1;
+    const found = rawGrowth.find((g: any) => g._id === monthNum);
+    return {
+      month: monthName,
+      revenue: found ? found.total : 0,
+    };
+  });
+
+  const totalAnnualRev = growthData.reduce((acc, curr) => acc + curr.revenue, 0);
+
+  // Transform plan distribution data
+  const rawPlanDist = charts.planDistribution || [];
+  const planDistribution = rawPlanDist.length > 0
+    ? rawPlanDist.map((p: any) => ({
+        name: p._id || "Free",
+        value: p.count || 0,
+      }))
+    : [
+        { name: "Free", value: overview.totalOrganizations || 1 },
+      ];
+
+  // Upgrades / revenue bar chart data
+  const upgradeData = growthData.map((item) => ({
+    month: item.month,
+    value: item.revenue,
+  }));
+
+  const formatCurrency = (amount: number) => {
+    if (amount >= 1000000) return `$${(amount / 1000000).toFixed(1)}M`;
+    if (amount >= 1000) return `$${(amount / 1000).toFixed(1)}K`;
+    return `$${amount.toLocaleString()}`;
+  };
+
+  // Calculate real Month-over-Month growth percentage if data is available
+  const currentMonthIdx = new Date().getMonth(); // 0-indexed
+  const currentMonthRev = growthData[currentMonthIdx]?.revenue || 0;
+  const prevMonthRev = growthData[currentMonthIdx > 0 ? currentMonthIdx - 1 : 11]?.revenue || 0;
+
+  let monthlyTrend: string | undefined = undefined;
+  if (prevMonthRev > 0) {
+    const pct = ((currentMonthRev - prevMonthRev) / prevMonthRev) * 100;
+    monthlyTrend = `${pct >= 0 ? "+" : ""}${pct.toFixed(1)}%`;
+  }
 
   return (
     <div className="space-y-6">
-      <h1 className="text-[28px] font-medium">Revenue & Billing Analytics</h1>
-      
+      <h1 className="text-[28px] font-medium text-gray-900 font-bold">Revenue & Billing Analytics</h1>
+
       {/* Stats Cards */}
-      {/* <div className="grid grid-cols-3 gap-6">
-        <StatCard title="Total Revenue" value={data.totalRevenue} trend="+8.4%" />
-        <StatCard title="Monthly Revenue" value={data.monthlyRevenue} trend="+8.4%" />
-        <StatCard title="Annual Revenue" value={data.annualRevenue} trend="+12.6%" />
-      </div> */}
-
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
-                <StatCard
-                    title="Total Revenue"
-                    count={5}
-                    icon={<Trophy className="w-5 h-5 text-orange-500" />}
-                    iconBgColor="bg-[#FFAA00]/10"
-                />
+        <StatCard
+          title="Total Revenue"
+          count={formatCurrency(totalAnnualRev)}
+          trend={monthlyTrend}
+          icon={<Trophy className="w-5 h-5 text-orange-500" />}
+          iconBgColor="bg-[#FFAA00]/10"
+        />
 
-                <StatCard
-                    title="Monthly Revenue"
-                    count={3}
-                    icon={<Calendar className="w-5 h-5 text-green-500" />}
-                    iconBgColor="bg-[#00AC5F]/10"
-                />
+        <StatCard
+          title="Monthly Revenue"
+          count={formatCurrency(monthlyRev)}
+          trend={monthlyTrend}
+          icon={<Calendar className="w-5 h-5 text-green-500" />}
+          iconBgColor="bg-[#00AC5F]/10"
+        />
 
-                <StatCard
-                    title="Annual Revenue"
-                    count={3}
-                    // trend="+11.2%"
-                    icon={<Coins className="w-5 h-5 text-red-500" />}
-                    iconBgColor="bg-[#FF0000]/10"
-                />
-            </div>
+        <StatCard
+          title="Annual Revenue"
+          count={formatCurrency(totalAnnualRev)}
+          trend={monthlyTrend}
+          icon={<Coins className="w-5 h-5 text-red-500" />}
+          iconBgColor="bg-[#FF0000]/10"
+        />
+      </div>
 
-      <div className="grid grid-cols-3 gap-6">
-        <div className="col-span-2 bg-white p-6 rounded-2xl border border-gray">
-          <h3 className="font-light text-2xl mb-4">Revenue Growth</h3>
-          <RevenueChart data={data.growthData} />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+          <h3 className="font-medium text-xl mb-4 text-gray-900">Revenue Growth</h3>
+          <RevenueChart data={growthData} />
         </div>
-        <div className="bg-white p-6 rounded-2xl border border-gray">
-          <h3 className="font-light text-2xl mb-4">Plan Distribution</h3>
-          <PlanDistributionChart data={data.planDistribution} />
+        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+          <h3 className="font-medium text-xl mb-4 text-gray-900">Plan Distribution</h3>
+          <PlanDistributionChart data={planDistribution} />
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-2xl border border-gray">
-        <h3 className="font-light text-2xl mb-4">Subscription Upgrades</h3>
-        <UpgradeBarChart data={data.upgradeData} />
+      <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+        <h3 className="font-medium text-xl mb-4 text-gray-900">Subscription Upgrades</h3>
+        <UpgradeBarChart data={upgradeData} />
       </div>
     </div>
   );

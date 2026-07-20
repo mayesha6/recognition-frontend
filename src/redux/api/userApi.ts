@@ -53,6 +53,32 @@ export const userApi = baseApi.injectEndpoints({
       providesTags: ["User"],
     }),
 
+    createUser: builder.mutation({
+      query: (data) => ({
+        url: "/user/create",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["User"],
+    }),
+
+    updateUser: builder.mutation({
+      query: ({ id, ...data }) => ({
+        url: `/user/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["User"],
+    }),
+
+    deleteUser: builder.mutation({
+      query: (id) => ({
+        url: `/user/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["User"],
+    }),
+
     deleteRecognition: builder.mutation({
       query: (id) => ({
         url: `/recognition/${id}`,
@@ -71,5 +97,8 @@ export const {
   useEditMessageMutation,
   useGetRecognitionHistoryQuery,
   useGetDepartmentUsersQuery,
+  useCreateUserMutation,
+  useUpdateUserMutation,
+  useDeleteUserMutation,
   useDeleteRecognitionMutation
 } = userApi;
