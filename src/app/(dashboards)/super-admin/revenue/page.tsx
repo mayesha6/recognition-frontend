@@ -38,7 +38,7 @@ export default function RevenuePage() {
     };
   });
 
-  const totalAnnualRev = growthData.reduce((acc, curr) => acc + curr.revenue, 0);
+  const totalAnnualRev = overview.totalAnnualRevenue || growthData.reduce((acc, curr) => acc + curr.revenue, 0);
 
   // Transform plan distribution data
   const rawPlanDist = charts.planDistribution || [];
@@ -63,16 +63,18 @@ export default function RevenuePage() {
     return `$${amount.toLocaleString()}`;
   };
 
-  // Calculate real Month-over-Month growth percentage if data is available
-  const currentMonthIdx = new Date().getMonth(); // 0-indexed
+  // Use backend computed growth percentage or fallback
+  const currentMonthIdx = new Date().getMonth();
   const currentMonthRev = growthData[currentMonthIdx]?.revenue || 0;
   const prevMonthRev = growthData[currentMonthIdx > 0 ? currentMonthIdx - 1 : 11]?.revenue || 0;
 
-  let monthlyTrend: string | undefined = undefined;
+  let computedTrend: string | undefined = undefined;
   if (prevMonthRev > 0) {
-    const pct = ((currentMonthRev - prevMonthRev) / prevMonthRev) * 100;
-    monthlyTrend = `${pct >= 0 ? "+" : ""}${pct.toFixed(1)}%`;
+    const pct = (((currentMonthRev - prevMonthRev) / prevMonthRev) * 100).toFixed(1);
+    computedTrend = `${Number(pct) >= 0 ? "+" : ""}${pct}%`;
   }
+
+  const monthlyTrend = overview.monthlyGrowthPercentage || computedTrend || undefined;
 
   return (
     <div className="space-y-6">
