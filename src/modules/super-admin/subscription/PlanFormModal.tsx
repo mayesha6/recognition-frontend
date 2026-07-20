@@ -17,6 +17,8 @@ export default function PlanFormModal({ isOpen, onClose, initialData, onSave }: 
         price: 0,
         billingCycle: "Monthly",
         features: [""],
+        allocatedPoints: 0,
+        userLimit: 1,
     });
 
     // Edit মোডে ডাটা পপুলেট করার জন্য
@@ -24,7 +26,7 @@ export default function PlanFormModal({ isOpen, onClose, initialData, onSave }: 
         if (initialData) {
             setFormData(initialData);
         } else {
-            setFormData({ name: "", description: "", price: 0, billingCycle: "Monthly", features: [""] });
+            setFormData({ name: "", description: "", price: 0, billingCycle: "Monthly", features: [""], allocatedPoints: 0, userLimit: 1 });
         }
     }, [initialData, isOpen]);
 
@@ -78,6 +80,29 @@ export default function PlanFormModal({ isOpen, onClose, initialData, onSave }: 
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
                                 </svg>
                             </div>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="text-xs text-gray-500 mb-1 block">Allocated Points</label>
+                            <input 
+                                type="number" 
+                                value={formData.allocatedPoints ?? 0} 
+                                onChange={(e) => setFormData({ ...formData, allocatedPoints: Number(e.target.value) })} 
+                                className="w-full border border-gray rounded-lg px-3 py-2 text-sm outline-none" 
+                                placeholder="e.g. 500" 
+                            />
+                        </div>
+                        <div>
+                            <label className="text-xs text-gray-500 mb-1 block">User/Employee Limit</label>
+                            <input 
+                                type="number" 
+                                value={formData.userLimit ?? 1} 
+                                onChange={(e) => setFormData({ ...formData, userLimit: Number(e.target.value) })} 
+                                className="w-full border border-gray rounded-lg px-3 py-2 text-sm outline-none" 
+                                placeholder="e.g. 50" 
+                            />
                         </div>
                     </div>
 

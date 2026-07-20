@@ -6,7 +6,7 @@ export const departmentApi = baseApi.injectEndpoints({
       query: (params) => ({
         url: "/department",
         method: "GET",
-        params,
+        params: params || undefined,
       }),
       providesTags: ["User", "Recognition"],
     }),

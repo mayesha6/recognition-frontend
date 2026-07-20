@@ -43,7 +43,7 @@ export default function DepartmentTable({data, onDelete, onEdit }: any) {
                                     <button onClick={() => onEdit(dept)} className="text-gray-400 hover:text-indigo-600">
                                         <Pencil size={18} />
                                     </button>
-                                    <button onClick={() => onDelete(dept.id)} className="text-gray-400 hover:text-red-600">
+                                    <button onClick={() => onDelete(dept.id || dept._id)} className="text-gray-400 hover:text-red-600">
                                         <Trash2 size={18} />
                                     </button>
                                 </div>

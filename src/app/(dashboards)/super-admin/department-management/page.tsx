@@ -60,7 +60,7 @@ export default function DepartmentManagementPage() {
   );
 
   const handleDeleteClick = (id: string) => {
-    const dept = rawDepartments.find((d: any) => d.id === id);
+    const dept = rawDepartments.find((d: any) => (d.id || d._id) === id);
     if (!dept) return;
     setDepartmentToDelete(dept);
     setIsDeleteModalOpen(true);
@@ -68,8 +68,9 @@ export default function DepartmentManagementPage() {
 
   const handleDeleteConfirm = async () => {
     if (!departmentToDelete) return;
+    const targetId = departmentToDelete.id || departmentToDelete._id;
     try {
-      await deleteDepartment(departmentToDelete.id).unwrap();
+      await deleteDepartment(targetId).unwrap();
       setIsDeleteModalOpen(false);
       refetch();
     } catch (err: any) {
@@ -94,8 +95,9 @@ export default function DepartmentManagementPage() {
 
   const handleEditSave = async (data: any) => {
     if (!selectedDepartment) return;
+    const targetId = selectedDepartment.id || selectedDepartment._id;
     try {
-      await updateDepartment({ id: selectedDepartment.id, name: data.name }).unwrap();
+      await updateDepartment({ id: targetId, name: data.name }).unwrap();
       setIsEditModalOpen(false);
       refetch();
     } catch (err: any) {

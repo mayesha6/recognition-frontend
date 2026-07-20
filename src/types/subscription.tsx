@@ -5,4 +5,6 @@ export interface Plan {
   price: number | "Free" | string;
   billingCycle: string;
   features: string[];
+  allocatedPoints?: number;
+  userLimit?: number;
 }

@@ -1,53 +1,40 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Plus } from "lucide-react";
 import { Plan } from "@/types/subscription";
 import PlanCard from "@/modules/super-admin/subscription/PlanCard";
 import PlanFormModal from "@/modules/super-admin/subscription/PlanFormModal";
-
-// Demo Data (API থেকে এভাবেই আসবে)
-const demoPlans: Plan[] = [
-  {
-    id: "1",
-    name: "Starter",
-    description: "Best for small teams and startups.",
-    price: "Free",
-    billingCycle: "Monthly",
-    features: ["AI Recognition Messages", "Employee Points System", "Peer-to-Peer Recognition", "Reward Redemption"]
-  },
-  {
-    id: "2",
-    name: "Professional",
-    description: "Best for growing teams.",
-    price: 8,
-    billingCycle: "Monthly",
-    features: ["Everything in Starter", "Advanced Analytics", "Department Insights", "Custom Rewards Catalog"]
-  },
-  {
-    id: "3",
-    name: "Premium",
-    description: "Best for large organizations.",
-    price: 20,
-    billingCycle: "Monthly",
-    features: ["Everything in Pro", "Enterprise-Level Security", "Dedicated Account Manager", "API Access"]
-  }
-];
+import {
+  useGetPlansQuery,
+  useCreatePlanMutation,
+  useUpdatePlanMutation,
+  useDeletePlanMutation,
+} from "@/redux/api/planApi";
 
 export default function SubscriptionPage() {
-  const [plans, setPlans] = useState<Plan[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  
+  const { data: plansRes, isLoading, refetch } = useGetPlansQuery();
+  const [createPlan] = useCreatePlanMutation();
+  const [updatePlan] = useUpdatePlanMutation();
+  const [deletePlan] = useDeletePlanMutation();
+
   // Modals State
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
 
-  useEffect(() => {
-    // API Call Simulation
-    setTimeout(() => {
-      setPlans(demoPlans);
-      setIsLoading(false);
-    }, 1000); // 1 second fake delay
-  }, []);
+  // Convert backend fields to frontend format
+  const getPlansList = (): Plan[] => {
+    if (!plansRes?.data) return [];
+    return plansRes.data.map((plan: any) => ({
+      id: plan._id,
+      name: plan.name,
+      description: plan.description || "",
+      price: plan.price === 0 ? "Free" : plan.price,
+      billingCycle: plan.interval === "MONTH" ? "Monthly" : plan.interval === "YEAR" ? "Yearly" : plan.interval,
+      features: plan.features || [],
+      allocatedPoints: plan.allocatedPoints || 0,
+      userLimit: plan.userLimit || 1,
+    }));
+  };
 
   const handleCreate = () => {
     setEditingPlan(null);
@@ -59,29 +46,45 @@ export default function SubscriptionPage() {
     setIsFormModalOpen(true);
   };
 
-  const handleDelete = (plan: Plan) => {
+  const handleDelete = async (plan: Plan) => {
     if (confirm(`Are you sure you want to delete the ${plan.name} plan?`)) {
-      // Call Delete API here
-      setPlans(plans.filter(p => p.id !== plan.id));
-      console.log("Deleted Plan:", plan.id);
+      try {
+        await deletePlan(plan.id).unwrap();
+        refetch();
+      } catch (err: any) {
+        alert(err?.data?.message || err?.message || "Failed to delete plan");
+      }
     }
   };
 
-  const handleSave = (planData: Partial<Plan>) => {
-    if (editingPlan) {
-      // Call Update API here
-      console.log("Update API Payload:", planData);
-      setPlans(plans.map(p => p.id === editingPlan.id ? { ...p, ...planData } as Plan : p));
-    } else {
-      // Call Create API here
-      const newPlan = { ...planData, id: Date.now().toString() } as Plan;
-      console.log("Create API Payload:", newPlan);
-      setPlans([...plans, newPlan]);
+  const handleSave = async (planData: Partial<Plan>) => {
+    // Format data back to backend requirements
+    const payload = {
+      name: planData.name,
+      description: planData.description,
+      price: planData.price === "Free" || Number(planData.price) === 0 ? 0 : Number(planData.price),
+      interval: planData.billingCycle === "Monthly" ? "MONTH" : "YEAR",
+      features: planData.features,
+      allocatedPoints: planData.allocatedPoints || 0,
+      userLimit: planData.userLimit || 1,
+    };
+
+    try {
+      if (editingPlan) {
+        await updatePlan({ id: editingPlan.id, ...payload }).unwrap();
+      } else {
+        await createPlan(payload).unwrap();
+      }
+      setIsFormModalOpen(false);
+      refetch();
+    } catch (err: any) {
+      alert(err?.data?.message || err?.message || "Failed to save plan");
     }
-    setIsFormModalOpen(false);
   };
 
   if (isLoading) return <div className="p-8 text-gray-500">Loading plans...</div>;
+
+  const plans = getPlansList();
 
   return (
     <div className="space-y-6">

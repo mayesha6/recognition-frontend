@@ -1,5 +1,5 @@
 "use client";
-import { X, Building2, Users, Briefcase, Calendar, ShieldCheck } from "lucide-react";
+import { X, Building2, Users, Briefcase, Calendar, ShieldCheck, Mail } from "lucide-react";
 
 export default function ViewOrganizationModal({ isOpen, onClose, org }: any) {
   if (!isOpen || !org) return null;
@@ -17,11 +17,14 @@ export default function ViewOrganizationModal({ isOpen, onClose, org }: any) {
 
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
+            <div className="col-span-2">
+              <InfoItem icon={<Mail size={16} />} label="Email" value={org.email || "N/A"} />
+            </div>
             <InfoItem icon={<Briefcase size={16} />} label="Industry" value={org.industry} />
             <InfoItem icon={<ShieldCheck size={16} />} label="Plan" value={org.plan} />
             <InfoItem icon={<Users size={16} />} label="Employees" value={org.employees} />
             <InfoItem icon={<Users size={16} />} label="Departments" value={org.departments} />
-            <InfoItem icon={<Calendar size={16} />} label="Renewal Date" value={org.renewal} />
+            <InfoItem icon={<Calendar size={16} />} label="Renewal Date" value={formatRenewalDate(org.renewal)} />
             <InfoItem icon={<ShieldCheck size={16} />} label="Status" value={org.status} />
           </div>
         </div>
@@ -42,4 +45,22 @@ function InfoItem({ icon, label, value }: any) {
       <p className="text-sm font-semibold text-gray-900">{value}</p>
     </div>
   );
+}
+
+// রিনিউয়াল ডেট ফরম্যাট হেল্পার
+function formatRenewalDate(renewal: any) {
+  if (!renewal || renewal === "N/A") return "N/A";
+  try {
+    const date = new Date(renewal);
+    if (!isNaN(date.getTime())) {
+      return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    }
+  } catch (e) {
+    // Ignore error
+  }
+  return renewal;
 }

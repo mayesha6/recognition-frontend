@@ -8,6 +8,7 @@ export default function OrganizationTable({ orgs, onView, onSuspend, onDelete }:
         <thead className="bg-gray-50/50 text-gray-400 text-xs uppercase tracking-wider border-b border-gray-100">
           <tr>
             <th className="px-6 py-4 font-medium">Organization</th>
+            <th className="px-6 py-4 font-medium">Email</th>
             <th className="px-6 py-4 font-medium">Plan</th>
             <th className="px-6 py-4 font-medium">Employees</th>
             <th className="px-6 py-4 font-medium">Departments</th>
@@ -21,6 +22,7 @@ export default function OrganizationTable({ orgs, onView, onSuspend, onDelete }:
           {orgs.map((org: any) => (
             <tr key={org._id || org.id} className="hover:bg-gray-50/50 transition-colors">
               <td className="px-6 py-4 text-sm font-medium text-gray-900">{org.name}</td>
+              <td className="px-6 py-4 text-sm text-gray-600">{org.email || "N/A"}</td>
               <td className="px-6 py-4"><span className="px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-medium">{org.plan}</span></td>
               <td className="px-6 py-4 text-sm text-gray-600">{org.employees}</td>
               <td className="px-6 py-4 text-sm text-gray-600">{org.departments}</td>
@@ -44,7 +46,7 @@ export default function OrganizationTable({ orgs, onView, onSuspend, onDelete }:
                   {org.isActive === "ACTIVE" ? "Active" : "Suspended"}
                 </span>
               </td>
-              <td className="px-6 py-4 text-sm text-gray-600">{org.renewal}</td>
+              <td className="px-6 py-4 text-sm text-gray-600">{formatRenewalDate(org.renewal)}</td>
               <td className="px-6 py-4">
                 <div className="flex justify-center items-center gap-3">
                   <button onClick={() => onView(org)} className="text-gray-400 hover:text-indigo-600 transition-colors" title="View"><Eye size={18} /></button>
@@ -85,4 +87,22 @@ function getStatusStyles(status: string) {
     default:
       return 'bg-gray-50 text-gray-600 border border-gray-100';
   }
+}
+
+// রিনিউয়াল ডেট ফরম্যাট হেল্পার
+function formatRenewalDate(renewal: any) {
+  if (!renewal || renewal === "N/A") return "N/A";
+  try {
+    const date = new Date(renewal);
+    if (!isNaN(date.getTime())) {
+      return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    }
+  } catch (e) {
+    // Ignore error
+  }
+  return renewal;
 }
