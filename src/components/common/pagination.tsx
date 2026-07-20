@@ -7,42 +7,33 @@ interface PaginationProps {
 }
 
 export default function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
-  // সাধারণ বাটন স্টাইল
-  const baseStyle = "px-4 py-2 rounded-lg transition-all duration-200 text-sm";
-  
-  // অ্যাক্টিভ বাটন স্টাইল
-  const activeStyle = "bg-[#0B3C5D] text-white";
-  
-  // ইনঅ্যাক্টিভ বাটন স্টাইল (hover সহ)
-  const inactiveStyle = "hover:bg-[#0B3C5D] hover:text-white text-gray-700";
+  const baseStyle = "px-4 py-2 rounded-lg transition-all duration-200 text-sm font-medium";
+  const activeStyle = "bg-[#0B3C5D] text-white font-semibold shadow-sm";
+  const inactiveStyle = "hover:bg-[#0B3C5D] hover:text-white text-[#0B3C5D] font-medium";
 
   return (
     <div className="flex items-center gap-2">
       {/* Previous Button */}
       <button 
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        className={`${baseStyle} ${inactiveStyle} disabled:opacity-50`}
+        type="button"
+        onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+        disabled={currentPage <= 1}
+        className={`${baseStyle} ${inactiveStyle} disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[#0B3C5D]`}
       >
         {"< Previous"}
       </button>
 
-      {/* পেজ নাম্বার রেন্ডারিং */}
-      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-        <button
-          key={page}
-          onClick={() => onPageChange(page)}
-          className={`${baseStyle} ${currentPage === page ? activeStyle : inactiveStyle}`}
-        >
-          {page}
-        </button>
-      ))}
+      {/* Show only current active page */}
+      <span className={`${baseStyle} ${activeStyle} min-w-[40px] text-center`}>
+        {currentPage}
+      </span>
 
       {/* Next Button */}
       <button 
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className={`${baseStyle} ${inactiveStyle} ${activeStyle} disabled:opacity-50`}
+        type="button"
+        onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
+        disabled={currentPage >= totalPages}
+        className={`${baseStyle} ${inactiveStyle} disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[#0B3C5D]`}
       >
         {"Next >"}
       </button>

@@ -28,12 +28,12 @@ export default function RecognitionChart({ data }: { data: any[] }) {
             axisLine={false} 
             tickLine={false} 
             tick={{fontSize: 12, fill: '#9ca3af'}} 
-            tickFormatter={(value) => `$${value / 1000}k`}
+            tickFormatter={(value) => value >= 1000 ? `${(value / 1000).toFixed(1)}k` : `${value}`}
           />
           
           <Tooltip 
             contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-            formatter={(value: any) => [`$${value / 1000}k`, 'Value']}
+            formatter={(value: any) => [value >= 1000 ? `${(value / 1000).toFixed(1)}k` : `${value}`, 'Recognitions']}
           />
           
           <Area 
