@@ -17,13 +17,21 @@ export const rewardApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Reward", "User", "Claim"],
     }),
-    getMyClaims: builder.query<any, { page?: number; limit?: number } | void>({
+    getMyClaims: builder.query<any, { page?: number; limit?: number; status?: string; search?: string } | void>({
       query: (params) => ({
         url: "/redeem",
         method: "GET",
         params: params || undefined,
       }),
       providesTags: ["Claim"],
+    }),
+    updateClaimStatus: builder.mutation<any, { id: string; status: "Approved" | "Rejected" }>({
+      query: ({ id, status }) => ({
+        url: `/redeem/${id}/status`,
+        method: "PATCH",
+        body: { status },
+      }),
+      invalidatesTags: ["Claim", "Reward", "User"],
     }),
     createReward: builder.mutation<any, Partial<any>>({
       query: (data) => {
@@ -85,6 +93,7 @@ export const {
   useGetRewardsQuery,
   useClaimRewardMutation,
   useGetMyClaimsQuery,
+  useUpdateClaimStatusMutation,
   useCreateRewardMutation,
   useUpdateRewardMutation,
   useDeleteRewardMutation,
