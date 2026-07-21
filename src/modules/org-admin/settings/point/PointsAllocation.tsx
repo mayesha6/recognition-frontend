@@ -119,7 +119,7 @@ export default function PointsManager({ initialData, onSave }: any) {
           }
         } catch (err: any) {
           failCount++;
-          toast.error(`Error for ${item.label}: ${formatErrorMessage(err, "Failed to allocate")}`);
+          toast.error(formatErrorMessage(err, `Failed to allocate points for ${item.label}`));
         }
       }
 

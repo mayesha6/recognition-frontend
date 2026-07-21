@@ -1,13 +1,14 @@
 "use client"; 
 
 import Image from "next/image";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useUpdateMyProfileMutation } from "@/redux/api/authApi";
 import { toast } from "sonner";
 import { formatErrorMessage } from "@/utils/formatError";
 
 export default function GeneralSettings({ user }: any) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [updateProfile, { isLoading }] = useUpdateMyProfileMutation();
 
   const handleButtonClick = () => {
@@ -18,6 +19,9 @@ export default function GeneralSettings({ user }: any) {
     const files = event.target.files;
     if (files && files.length > 0) {
       const file = files[0];
+      const localUrl = URL.createObjectURL(file);
+      setPreviewUrl(localUrl);
+
       const formData = new FormData();
       formData.append("files", file);
 
@@ -27,9 +31,12 @@ export default function GeneralSettings({ user }: any) {
       } catch (error) {
         console.error("Failed to upload profile picture:", error);
         toast.error(formatErrorMessage(error, "Failed to upload profile picture. Please try again."));
+        setPreviewUrl(null);
       }
     }
   };
+
+  const displayImage = previewUrl || user?.profilePicture || user?.picture || "/default-avatar.png";
 
   return (
     <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm h-full">
@@ -37,7 +44,7 @@ export default function GeneralSettings({ user }: any) {
       <div className="flex items-center gap-6">
         <div className="relative w-57.5 h-57.5 overflow-hidden rounded-xl bg-gray-100 border border-gray-200">
           <Image
-            src={user?.profilePicture || "/default-avatar.png"}
+            src={displayImage}
             alt="Profile Photo"
             fill
             className="object-cover"
