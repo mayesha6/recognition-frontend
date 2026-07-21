@@ -3,16 +3,9 @@
 import PointsManager from "@/modules/org-admin/settings/point/PointsAllocation";
 
 export default function PointsAllocationPage() {
-  const handleSave = (data: any) => {
-    console.log("API এ পাঠানো ডাটা:", data);
-  };
-
   return (
     <div className="space-y-6">
-      <PointsManager 
-        initialData={[]} 
-        onSave={handleSave} 
-      />
+      <PointsManager initialData={[]} />
     </div>
   );
 }
