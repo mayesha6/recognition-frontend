@@ -5,9 +5,9 @@ import { useState } from "react";
 import ImageManagerModal from "./CategoryImageManagerModal";
 
 export default function CategoryTable({ data, onDelete, onEdit }: any) {
-    const [modal, setModal] = useState({ isOpen: false, category: null, images: [] });
+    const [modal, setModal] = useState({ isOpen: false, categoryData: null });
     return (
-        <div className=" overflow-hidden">
+        <div className="overflow-hidden">
             <table className="w-full text-left">
                 <thead className="bg-gray-50/50 text-gray-400 text-xs uppercase tracking-wider border-b border-gray">
                     <tr>
@@ -17,19 +17,19 @@ export default function CategoryTable({ data, onDelete, onEdit }: any) {
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                    {data.map((category: any, index: number) => (
-                        <tr key={category.id} className="hover:bg-gray-50/50 border-b border-gray transition-colors">
+                    {data.map((category: any) => (
+                        <tr key={category._id || category.id} className="hover:bg-gray-50/50 border-b border-gray transition-colors">
                             <td className="px-6 py-4 text-sm font-medium text-gray-600">{category.name}</td>
                             <td className="px-6 py-4 text-sm text-indigo-600 font-medium cursor-pointer"
-                                onClick={() => setModal({ isOpen: true, category: category.name, images: category.images })}>
-                                {category.name}'s Images
+                                onClick={() => setModal({ isOpen: true, categoryData: category })}>
+                                {category.name}'s Images ({category.images?.length || 0})
                             </td>
                             <td className="px-6 py-4 text-gray-500 text-end">
                                 <div className="flex justify-end gap-3">
                                     <button onClick={() => onEdit(category)} className="text-gray-400 hover:text-indigo-600">
                                         <Pencil size={18} />
                                     </button>
-                                    <button onClick={() => onDelete(category.id)} className="text-gray-400 hover:text-red-600">
+                                    <button onClick={() => onDelete(category._id || category.id, category.name)} className="text-gray-400 hover:text-red-600">
                                         <Trash2 size={18} />
                                     </button>
                                 </div>
@@ -41,9 +41,8 @@ export default function CategoryTable({ data, onDelete, onEdit }: any) {
 
             <ImageManagerModal
                 isOpen={modal.isOpen}
-                category={modal.category}
-                images={modal.images}
-                onClose={() => setModal({ isOpen: false, category: null, images: [] })}
+                categoryData={modal.categoryData}
+                onClose={() => setModal({ isOpen: false, categoryData: null })}
             />
         </div>
     );

@@ -1,36 +1,70 @@
 "use client";
 import { useState } from "react";
-import { X } from "lucide-react";
+import { X, Loader2 } from "lucide-react";
+import { useCreateCategoryMutation } from "@/redux/api/categoryApi";
+import { toast } from "sonner";
+import { formatErrorMessage } from "@/utils/formatError";
 
-export default function AddCategoryModal({ isOpen, onClose, onSave }: any) {
-    const [formData, setFormData] = useState({
-        name: ""
-    });
+export default function AddCategoryModal({ isOpen, onClose }: any) {
+  const [name, setName] = useState("");
+  const [createCategory, { isLoading }] = useCreateCategoryMutation();
 
-    if (!isOpen) return null;
+  if (!isOpen) return null;
 
-    return (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-50 p-4">
-            <div className="bg-white p-6 rounded-2xl w-full max-w-lg shadow-xl max-h-[90vh] overflow-y-auto">
-                <div className="flex justify-between items-center mb-6">
-                    <h3 className="font-light text-xl">Create New Category</h3>
-                    <button onClick={onClose} className="text-gray-400"><X size={20} /></button>
-                </div>
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim()) {
+      toast.error("Category name is required.");
+      return;
+    }
 
-                <div className="">
+    try {
+      await createCategory({ name: name.trim() }).unwrap();
+      toast.success("Category created successfully!");
+      setName("");
+      onClose();
+    } catch (error: any) {
+      toast.error(formatErrorMessage(error, "Failed to create category"));
+    }
+  };
 
-                    <label className="text-sm text-gray-500">Category Name</label>
-                    <input className="w-full border rounded-lg px-3 py-2 mt-1 text-sm border-gray outline-0 focus:ring-1 focus:ring-indigo-500" onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
-
-                </div>
-
-                <button
-                    onClick={() => onSave(formData)}
-                    className="w-full mt-8 bg-gradient font-normal text-[16px] text-white py-3 rounded-lg hover:bg-indigo-700 transition"
-                >
-                    Add Category
-                </button>
-            </div>
+  return (
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-50 p-4">
+      <div className="bg-white p-6 rounded-2xl w-full max-w-lg shadow-xl">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="font-light text-xl">Create New Category</h3>
+          <button type="button" onClick={onClose} className="text-gray-400 hover:text-gray-600">
+            <X size={20} />
+          </button>
         </div>
-    );
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="text-sm text-gray-500 mb-1 block">Category Name</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g. Peer-to-Peer"
+              className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm bg-white outline-none focus:border-indigo-500 h-10"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full mt-4 bg-gradient font-medium text-[16px] text-white py-3 rounded-xl hover:opacity-90 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" /> Adding...
+              </>
+            ) : (
+              "Add Category"
+            )}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
 }
