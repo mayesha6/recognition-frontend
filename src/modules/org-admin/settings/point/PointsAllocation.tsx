@@ -47,7 +47,7 @@ export default function PointsManager({ initialData, onSave }: any) {
   const departments = deptRes?.data || (Array.isArray(deptRes) ? deptRes : []);
   const users = usersRes?.data || [];
 
-  const handleAdd = async () => {
+  const handleAdd = () => {
     const pointsNum = Number(pointsInput);
     if (!pointsNum || pointsNum <= 0) {
       toast.error("Please enter a valid points amount (> 0).");
@@ -61,25 +61,19 @@ export default function PointsManager({ initialData, onSave }: any) {
         return;
       }
 
-      try {
-        await distributePoints({ department: deptName, points: pointsNum }).unwrap();
-        toast.success(`Point allocated successfully to ${deptName} department!`);
-        setAllocations((prev) => [
-          ...prev,
-          {
-            id: `dept-${Date.now()}-${Math.random()}`,
-            type: "department",
-            label: `Department: ${deptName}`,
-            department: deptName,
-            points: pointsNum,
-          },
-        ]);
-        setSelectedDept("");
-        setCustomDept("");
-        setPointsInput("");
-      } catch (err: any) {
-        toast.error(formatErrorMessage(err, `No user found in department "${deptName}"`));
-      }
+      setAllocations((prev) => [
+        ...prev,
+        {
+          id: `dept-${Date.now()}-${Math.random()}`,
+          type: "department",
+          label: `Department: ${deptName}`,
+          department: deptName,
+          points: pointsNum,
+        },
+      ]);
+      setSelectedDept("");
+      setCustomDept("");
+      setPointsInput("");
     } else {
       const email = selectedUserEmail || customUserEmail.trim();
       if (!email) {
@@ -87,25 +81,19 @@ export default function PointsManager({ initialData, onSave }: any) {
         return;
       }
 
-      try {
-        await setUserPoints({ email, points: pointsNum }).unwrap();
-        toast.success(`Point allocated successfully to ${email}!`);
-        setAllocations((prev) => [
-          ...prev,
-          {
-            id: `user-${Date.now()}-${Math.random()}`,
-            type: "user",
-            label: `Individual User: ${email}`,
-            email: email,
-            points: pointsNum,
-          },
-        ]);
-        setSelectedUserEmail("");
-        setCustomUserEmail("");
-        setPointsInput("");
-      } catch (err: any) {
-        toast.error(formatErrorMessage(err, `No user found with email "${email}"`));
-      }
+      setAllocations((prev) => [
+        ...prev,
+        {
+          id: `user-${Date.now()}-${Math.random()}`,
+          type: "user",
+          label: `Individual User: ${email}`,
+          email: email,
+          points: pointsNum,
+        },
+      ]);
+      setSelectedUserEmail("");
+      setCustomUserEmail("");
+      setPointsInput("");
     }
   };
 
@@ -134,7 +122,7 @@ export default function PointsManager({ initialData, onSave }: any) {
           successCount++;
         }
       } catch (err: any) {
-        toast.error(formatErrorMessage(err, "No user found"));
+        toast.error(formatErrorMessage(err, `Failed to allocate points for ${item.label}`));
       }
     }
 
