@@ -46,7 +46,7 @@ export default function EmployeeManagementPage() {
 
   const [createUser] = useCreateUserMutation();
   const [updateUser] = useUpdateUserMutation();
-  const [deleteUser] = useDeleteUserMutation();
+  const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
 
   const usersList = usersRes?.data || [];
   const meta = usersRes?.meta || { total: 0, limit: 10, page: 1, totalPage: 1 };

@@ -41,7 +41,7 @@ export default function DepartmentManagementPage() {
   const { data: deptsRes, isLoading, refetch } = useGetDepartmentsQuery();
   const [createDepartment] = useCreateDepartmentMutation();
   const [updateDepartment] = useUpdateDepartmentMutation();
-  const [deleteDepartment] = useDeleteDepartmentMutation();
+  const [deleteDepartment, { isLoading: isDeleting }] = useDeleteDepartmentMutation();
 
   const rawDepartments = deptsRes?.data || deptsRes || []; // handle data wrapper
 
