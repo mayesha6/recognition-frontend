@@ -20,7 +20,7 @@ export default function RewardCard({ _id, name, description, points, stock, imag
       <div className="grow">
         <div className="flex justify-between items-start mb-4">
           <div className="relative w-12 h-12 bg-gray-50 rounded-lg flex items-center justify-center overflow-hidden">
-            <Image src={image || "/reward.png"} alt={name} fill className="object-cover" />
+            <Image src={image || "/reward.png"} alt={name} fill sizes="48px" className="object-cover" />
           </div>
           <span className="text-blue-600 font-bold text-lg">{points} pts</span>
         </div>

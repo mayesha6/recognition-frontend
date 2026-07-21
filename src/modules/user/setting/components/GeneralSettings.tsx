@@ -47,6 +47,7 @@ export default function GeneralSettings({ user }: any) {
             src={displayImage}
             alt="Profile Photo"
             fill
+            sizes="230px"
             className="object-cover"
             onError={(e) => {
               (e.target as HTMLImageElement).src = "/default-avatar.png";

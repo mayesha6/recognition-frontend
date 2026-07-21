@@ -66,6 +66,7 @@ export default function ImageManagerModal({ isOpen, onClose, categoryData }: any
                     src={img}
                     alt={`${categoryName} image ${index + 1}`}
                     fill
+                    sizes="(max-width: 640px) 33vw, 160px"
                     className="object-cover"
                   />
                   <button
