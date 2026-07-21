@@ -1,6 +1,8 @@
 import { baseApi } from "./baseApi";
 
-export const rewardApi = baseApi.injectEndpoints({
+export const rewardApi = baseApi
+  .enhanceEndpoints({ addTagTypes: ["Reward", "Claim"] })
+  .injectEndpoints({
   endpoints: (builder) => ({
     getRewards: builder.query<any, void>({
       query: () => ({
