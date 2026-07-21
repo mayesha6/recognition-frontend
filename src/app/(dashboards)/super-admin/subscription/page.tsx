@@ -28,15 +28,15 @@ export default function SubscriptionPage() {
   const rawPlans = plansRes?.data || plansRes?.result || plansRes || [];
   const plans: Plan[] = Array.isArray(rawPlans)
     ? rawPlans.map((p: any) => ({
-        id: p._id || p.id,
-        name: p.name,
-        price: p.price === 0 ? "Free" : String(p.price),
-        billingCycle: p.duration === "YEARLY" ? "yearly" : "monthly",
-        description: p.description || "",
-        features: p.features || [],
-        userLimit: p.userLimit ?? 0,
-        isPopular: p.isPopular || false,
-      }))
+      id: p._id || p.id,
+      name: p.name,
+      price: p.price === 0 ? "Free" : String(p.price),
+      billingCycle: p.duration === "YEARLY" ? "yearly" : "monthly",
+      description: p.description || "",
+      features: p.features || [],
+      userLimit: p.userLimit ?? 0,
+      isPopular: p.isPopular || false,
+    }))
     : [];
 
   const handleAddNew = () => {
@@ -73,7 +73,7 @@ export default function SubscriptionPage() {
       name: planData.name,
       description: planData.description,
       price: planData.price === "Free" || Number(planData.price) === 0 ? 0 : Number(planData.price),
-      duration: planData.billingCycle === "yearly" ? "YEARLY" : "MONTHLY",
+      duration: planData.billingCycle === "year" ? "YEAR" : "MONTH",
       userLimit: Number(planData.userLimit) || 0,
       features: planData.features || [],
       isPopular: Boolean((planData as any).isPopular),
@@ -108,7 +108,7 @@ export default function SubscriptionPage() {
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <h2 className="text-[28px] font-semibold text-gray-900">Subscription Plan</h2>
-        <button 
+        <button
           onClick={handleAddNew}
           className="bg-gradient hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium transition-colors"
         >
@@ -119,17 +119,17 @@ export default function SubscriptionPage() {
       {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
         {plans.map((plan) => (
-          <PlanCard 
-            key={plan.id} 
-            plan={plan} 
-            onEdit={handleEdit} 
-            onDelete={handleDeleteClick} 
+          <PlanCard
+            key={plan.id}
+            plan={plan}
+            onEdit={handleEdit}
+            onDelete={handleDeleteClick}
           />
         ))}
       </div>
 
       {/* Form Modal */}
-      <PlanFormModal 
+      <PlanFormModal
         isOpen={isFormModalOpen}
         onClose={() => setIsFormModalOpen(false)}
         initialData={editingPlan}
