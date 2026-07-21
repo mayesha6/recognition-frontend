@@ -8,6 +8,7 @@ import TicketTable from "@/modules/org-admin/support-ticket/TicketTable";
 import AddTicketModal from "@/modules/org-admin/support-ticket/AddTicketModal";
 import TicketResponseModal from "@/modules/org-admin/support-ticket/TicketResponseModal";
 import TicketViewModal from "@/modules/org-admin/support-ticket/TicketViewModal";
+import DeleteConfirmationModal from "@/components/common/DeleteConfirmationModal";
 import Pagination from "@/components/common/pagination";
 import {
   useGetTicketsQuery,
@@ -26,6 +27,7 @@ export default function SupportPage() {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isResponseModalOpen, setIsResponseModalOpen] = useState(false);
     const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     const [selectedTicket, setSelectedTicket] = useState<any>(null);
     const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -39,7 +41,7 @@ export default function SupportPage() {
     const { data: ticketsRes, isLoading, isFetching } = useGetTicketsQuery(queryParams);
     const [createTicket, { isLoading: isCreating }] = useCreateTicketMutation();
     const [respondToTicket, { isLoading: isResponding }] = useRespondToTicketMutation();
-    const [deleteTicket] = useDeleteTicketMutation();
+    const [deleteTicket, { isLoading: isDeleting }] = useDeleteTicketMutation();
 
     const tickets = ticketsRes?.data || [];
     const meta = ticketsRes?.meta || {};
@@ -70,12 +72,17 @@ export default function SupportPage() {
         }
     };
 
-    const handleDeleteTicket = async (id: string) => {
-        if (!confirm("Are you sure you want to delete this ticket?")) return;
+    const handleDeleteClick = (id: string) => {
+        setDeletingId(id);
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!deletingId) return;
         try {
-            setDeletingId(id);
-            await deleteTicket(id).unwrap();
+            await deleteTicket(deletingId).unwrap();
             toast.success("Ticket deleted successfully!");
+            setIsDeleteModalOpen(false);
         } catch (error: any) {
             toast.error(formatErrorMessage(error, "Failed to delete ticket"));
         } finally {
@@ -109,7 +116,7 @@ export default function SupportPage() {
                     tickets={tickets}
                     isLoading={isLoading || isFetching}
                     deletingId={deletingId}
-                    onDelete={handleDeleteTicket}
+                    onDelete={handleDeleteClick}
                     onView={(t: any) => { setSelectedTicket(t); setIsViewModalOpen(true); }}
                     onResponse={(t: any) => { setSelectedTicket(t); setIsResponseModalOpen(true); }}
                 />
@@ -144,6 +151,19 @@ export default function SupportPage() {
                 isOpen={isViewModalOpen} 
                 onClose={() => setIsViewModalOpen(false)} 
                 ticket={selectedTicket} 
+            />
+
+            <DeleteConfirmationModal
+                isOpen={isDeleteModalOpen}
+                onClose={() => {
+                    setIsDeleteModalOpen(false);
+                    setDeletingId(null);
+                }}
+                onConfirm={handleConfirmDelete}
+                title="Delete Support Ticket"
+                itemName={deletingId || undefined}
+                description="Are you sure you want to delete this ticket? This action is permanent and cannot be undone."
+                isLoading={isDeleting}
             />
         </div>
     );
