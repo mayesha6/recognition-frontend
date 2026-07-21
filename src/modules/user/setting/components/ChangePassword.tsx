@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
 import { useChangePasswordMutation } from "@/redux/api/authApi";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { formatErrorMessage } from "@/utils/formatError";
 
 

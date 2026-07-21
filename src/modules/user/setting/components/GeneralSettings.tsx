@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useRef } from "react";
 import { useUpdateMyProfileMutation } from "@/redux/api/authApi";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { formatErrorMessage } from "@/utils/formatError";
 
 export default function GeneralSettings({ user }: any) {
