@@ -105,37 +105,31 @@ export default function PointsManager({ initialData, onSave }: any) {
 
     setIsSubmitting(true);
     let successCount = 0;
-    let failCount = 0;
 
-    try {
-      for (const item of allocations) {
-        try {
-          if (item.type === "department" && item.department) {
-            await distributePoints({ department: item.department, points: item.points }).unwrap();
-            successCount++;
-          } else if (item.type === "user" && item.email) {
-            await setUserPoints({ email: item.email, points: item.points }).unwrap();
-            successCount++;
-          }
-        } catch (err: any) {
-          failCount++;
-          toast.error(formatErrorMessage(err, `Failed to allocate points for ${item.label}`));
+    for (const item of allocations) {
+      try {
+        if (item.type === "department" && item.department) {
+          await distributePoints({ department: item.department, points: item.points }).unwrap();
+          toast.success(`Point allocated successfully to ${item.department} department!`);
+          successCount++;
+        } else if (item.type === "user" && item.email) {
+          await setUserPoints({ email: item.email, points: item.points }).unwrap();
+          toast.success(`Point allocated successfully to ${item.email}!`);
+          successCount++;
         }
+      } catch (err: any) {
+        toast.error(formatErrorMessage(err, "No user found"));
       }
-
-      if (successCount > 0) {
-        toast.success(`Successfully processed ${successCount} point allocation(s)!`);
-        setAllocations([]);
-      }
-
-      if (onSave) {
-        onSave(allocations);
-      }
-    } catch (error: any) {
-      toast.error(formatErrorMessage(error, "Failed to process allocations"));
-    } finally {
-      setIsSubmitting(false);
     }
+
+    if (successCount > 0) {
+      setAllocations([]);
+    }
+
+    if (onSave) {
+      onSave(allocations);
+    }
+    setIsSubmitting(false);
   };
 
   const handleResetDeptPoints = async () => {
