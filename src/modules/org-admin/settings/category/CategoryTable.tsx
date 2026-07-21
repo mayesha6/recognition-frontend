@@ -5,7 +5,12 @@ import { useState } from "react";
 import ImageManagerModal from "./CategoryImageManagerModal";
 
 export default function CategoryTable({ data, onDelete, onEdit }: any) {
-    const [modal, setModal] = useState({ isOpen: false, categoryData: null });
+    const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+
+    const activeCategory = data?.find(
+        (category: any) => (category._id || category.id) === selectedCategoryId
+    );
+
     return (
         <div className="overflow-hidden">
             <table className="w-full text-left">
@@ -21,7 +26,7 @@ export default function CategoryTable({ data, onDelete, onEdit }: any) {
                         <tr key={category._id || category.id} className="hover:bg-gray-50/50 border-b border-gray transition-colors">
                             <td className="px-6 py-4 text-sm font-medium text-gray-600">{category.name}</td>
                             <td className="px-6 py-4 text-sm text-indigo-600 font-medium cursor-pointer"
-                                onClick={() => setModal({ isOpen: true, categoryData: category })}>
+                                onClick={() => setSelectedCategoryId(category._id || category.id)}>
                                 {category.name}'s Images ({category.images?.length || 0})
                             </td>
                             <td className="px-6 py-4 text-gray-500 text-end">
@@ -40,9 +45,9 @@ export default function CategoryTable({ data, onDelete, onEdit }: any) {
             </table>
 
             <ImageManagerModal
-                isOpen={modal.isOpen}
-                categoryData={modal.categoryData}
-                onClose={() => setModal({ isOpen: false, categoryData: null })}
+                isOpen={!!selectedCategoryId}
+                categoryData={activeCategory}
+                onClose={() => setSelectedCategoryId(null)}
             />
         </div>
     );
