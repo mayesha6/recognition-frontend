@@ -1,50 +1,79 @@
 "use client";
-import { X } from "lucide-react";
-import { useState, useEffect } from "react"; // useState এবং useEffect ইমপোর্ট করুন
+import { X, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useUpdateToneMutation } from "@/redux/api/toneApi";
+import { toast } from "sonner";
+import { formatErrorMessage } from "@/utils/formatError";
 
 export default function EditToneModal({
   isOpen,
   onClose,
   toneData,
-  onSave,
 }: any) {
-  // লোকাল স্টেট তৈরি করুন
-  const [formData, setFormData] = useState(toneData);
+  const [name, setName] = useState("");
+  const [updateTone, { isLoading }] = useUpdateToneMutation();
 
-  // যখনই toneData প্রপ পরিবর্তন হবে, লোকাল স্টেট আপডেট হবে
   useEffect(() => {
-    setFormData(toneData);
+    if (toneData) {
+      setName(toneData.name || "");
+    }
   }, [toneData]);
 
   if (!isOpen) return null;
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const id = toneData?._id || toneData?.id;
+    if (!id) return;
+    if (!name.trim()) {
+      toast.error("Tone name is required.");
+      return;
+    }
+
+    try {
+      await updateTone({ id, name: name.trim() }).unwrap();
+      toast.success("Tone updated successfully!");
+      onClose();
+    } catch (error: any) {
+      toast.error(formatErrorMessage(error, "Failed to update tone"));
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-50 p-4">
-      <div className="bg-white p-6 rounded-2xl w-full max-w-md shadow-xl">
+      <div className="bg-white p-6 rounded-2xl w-full max-w-md shadow-xl border border-gray-100">
         <div className="flex justify-between items-center mb-6">
           <h3 className="font-light text-xl">Tone Information</h3>
-          <button onClick={onClose}><X size={20} /></button>
+          <button type="button" onClick={onClose} className="text-gray-400 hover:text-gray-600">
+            <X size={20} />
+          </button>
         </div>
 
-        <div className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-sm text-gray-500">Tone Name</label>
+            <label className="text-sm text-gray-500 mb-1 block">Tone Name</label>
             <input 
-              value={formData?.name || ""} 
-              // এখন লোকাল স্টেট ফাংশনটি ব্যবহার করুন
-              onChange={(e) => setFormData({...formData, name: e.target.value})} 
-              className="w-full border rounded-lg px-3 py-2 mt-1" 
+              type="text"
+              value={name} 
+              onChange={(e) => setName(e.target.value)} 
+              className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm bg-white outline-none focus:border-indigo-500 h-10" 
             />
           </div>
-          
-        </div>
 
-        <button
-          onClick={() => onSave(formData)} 
-          className="w-full mt-6 bg-gradient text-white py-3 rounded-lg font-bold hover:opacity-90"
-        >
-          Update Tone
-        </button>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full mt-6 bg-gradient text-white py-3 rounded-xl font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" /> Updating...
+              </>
+            ) : (
+              "Update Tone"
+            )}
+          </button>
+        </form>
       </div>
     </div>
   );

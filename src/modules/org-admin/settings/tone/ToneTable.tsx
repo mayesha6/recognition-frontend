@@ -13,15 +13,15 @@ export default function ToneTable({ data, onDelete, onEdit }: any) {
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                    {data.map((tone: any, index: number) => (
-                        <tr key={tone.id} className="hover:bg-gray-50/50 border-b border-gray transition-colors">
+                    {data.map((tone: any) => (
+                        <tr key={tone._id || tone.id} className="hover:bg-gray-50/50 border-b border-gray transition-colors">
                             <td className="px-6 py-4 text-sm font-medium text-gray-600">{tone.name}</td>
                             <td className="px-6 py-4 text-gray-500 text-end">
                                 <div className="flex justify-end gap-3">
                                     <button onClick={() => onEdit(tone)} className="text-gray-400 hover:text-indigo-600">
                                         <Pencil size={18} />
                                     </button>
-                                    <button onClick={() => onDelete(tone.id)} className="text-gray-400 hover:text-red-600">
+                                    <button onClick={() => onDelete(tone._id || tone.id, tone.name)} className="text-gray-400 hover:text-red-600">
                                         <Trash2 size={18} />
                                     </button>
                                 </div>
