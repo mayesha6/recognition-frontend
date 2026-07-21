@@ -39,14 +39,15 @@ export default function PointsManager({ initialData, onSave }: any) {
   // RTK Query hooks
   const { data: deptRes, isLoading: isDeptLoading } = useGetDepartmentsQuery();
   const { data: usersRes, isLoading: isUsersLoading } = useGetDepartmentUsersQuery({ limit: 100 });
-  const [distributePoints] = useDistributePointsMutation();
-  const [setUserPoints] = useSetUserPointsMutation();
+  const [distributePoints, { isLoading: isDistributing }] = useDistributePointsMutation();
+  const [setUserPoints, { isLoading: isSettingUser }] = useSetUserPointsMutation();
   const [resetPoints, { isLoading: isResetting }] = useResetPointsMutation();
+  const isAdding = isDistributing || isSettingUser;
 
   const departments = deptRes?.data || (Array.isArray(deptRes) ? deptRes : []);
   const users = usersRes?.data || [];
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     const pointsNum = Number(pointsInput);
     if (!pointsNum || pointsNum <= 0) {
       toast.error("Please enter a valid points amount (> 0).");
@@ -59,38 +60,53 @@ export default function PointsManager({ initialData, onSave }: any) {
         toast.error("Please select or type a department name.");
         return;
       }
-      setAllocations((prev) => [
-        ...prev,
-        {
-          id: `dept-${Date.now()}-${Math.random()}`,
-          type: "department",
-          label: `Department: ${deptName}`,
-          department: deptName,
-          points: pointsNum,
-        },
-      ]);
-      setSelectedDept("");
-      setCustomDept("");
+
+      try {
+        await distributePoints({ department: deptName, points: pointsNum }).unwrap();
+        toast.success(`Point allocated successfully to ${deptName} department!`);
+        setAllocations((prev) => [
+          ...prev,
+          {
+            id: `dept-${Date.now()}-${Math.random()}`,
+            type: "department",
+            label: `Department: ${deptName}`,
+            department: deptName,
+            points: pointsNum,
+          },
+        ]);
+        setSelectedDept("");
+        setCustomDept("");
+        setPointsInput("");
+      } catch (err: any) {
+        toast.error(formatErrorMessage(err, `No user found in department "${deptName}"`));
+      }
     } else {
       const email = selectedUserEmail || customUserEmail.trim();
       if (!email) {
         toast.error("Please select or enter a user email address.");
         return;
       }
-      setAllocations((prev) => [
-        ...prev,
-        {
-          id: `user-${Date.now()}-${Math.random()}`,
-          type: "user",
-          label: `Individual User: ${email}`,
-          email: email,
-          points: pointsNum,
-        },
-      ]);
-      setSelectedUserEmail("");
-      setCustomUserEmail("");
+
+      try {
+        await setUserPoints({ email, points: pointsNum }).unwrap();
+        toast.success(`Point allocated successfully to ${email}!`);
+        setAllocations((prev) => [
+          ...prev,
+          {
+            id: `user-${Date.now()}-${Math.random()}`,
+            type: "user",
+            label: `Individual User: ${email}`,
+            email: email,
+            points: pointsNum,
+          },
+        ]);
+        setSelectedUserEmail("");
+        setCustomUserEmail("");
+        setPointsInput("");
+      } catch (err: any) {
+        toast.error(formatErrorMessage(err, `No user found with email "${email}"`));
+      }
     }
-    setPointsInput("");
   };
 
   const handleRemove = (id: string) => {
@@ -254,8 +270,8 @@ export default function PointsManager({ initialData, onSave }: any) {
                 placeholder="100"
               />
             </div>
-            <Button onClick={handleAdd} className="bg-gradient text-white whitespace-nowrap shrink-0 h-10 px-4 rounded-xl">
-              <Plus className="w-4 h-4 mr-1" /> Add
+            <Button onClick={handleAdd} disabled={isAdding} className="bg-gradient text-white whitespace-nowrap shrink-0 h-10 px-4 rounded-xl disabled:opacity-50">
+              {isAdding ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Plus className="w-4 h-4 mr-1" />} Add
             </Button>
           </div>
         </div>
