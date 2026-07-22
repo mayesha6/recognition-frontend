@@ -112,8 +112,15 @@ export default function Sidebar() {
   }, []);
 
   // Update role dynamically based on logged in user's role from backend
+  const getMappedRole = (r: string): UserRole => {
+    if (r === "SUPER_ADMIN") return "super-admin";
+    if (r === "ORGANIZATION_ADMIN") return "org-admin";
+    if (r === "DEPARTMENT_ADMIN") return "dept-admin";
+    return "user";
+  };
+
   const activeRole: UserRole = currentUser?.role
-    ? (currentUser.role.toLowerCase().replace("_", "-") as UserRole)
+    ? getMappedRole(currentUser.role)
     : role;
 
   // ৩. মাউন্ট না হওয়া পর্যন্ত কিছুই রেন্ডার করবেন না বা লোডিং দেখান
