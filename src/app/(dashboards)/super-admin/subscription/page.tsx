@@ -31,11 +31,12 @@ export default function SubscriptionPage() {
       id: p._id || p.id,
       name: p.name,
       price: p.price === 0 ? "Free" : String(p.price),
-      billingCycle: p.duration === "YEARLY" ? "yearly" : "monthly",
+      billingCycle: p.interval === "YEAR" ? "year" : "month",
       description: p.description || "",
       features: p.features || [],
       userLimit: p.userLimit ?? 0,
       isPopular: p.isPopular || false,
+      allocatedPoints: p.allocatedPoints ?? 0,
     }))
     : [];
 
@@ -73,10 +74,11 @@ export default function SubscriptionPage() {
       name: planData.name,
       description: planData.description,
       price: planData.price === "Free" || Number(planData.price) === 0 ? 0 : Number(planData.price),
-      duration: planData.billingCycle === "year" ? "YEAR" : "MONTH",
+      interval: planData.billingCycle === "year" ? "YEAR" : "MONTH",
       userLimit: Number(planData.userLimit) || 0,
       features: planData.features || [],
       isPopular: Boolean((planData as any).isPopular),
+      allocatedPoints: Number(planData.allocatedPoints) || 0,
     };
 
     try {

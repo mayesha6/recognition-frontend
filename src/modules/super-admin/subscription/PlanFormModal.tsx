@@ -15,7 +15,7 @@ export default function PlanFormModal({ isOpen, onClose, initialData, onSave }: 
         name: "",
         description: "",
         price: 0,
-        billingCycle: "Monthly",
+        billingCycle: "month",
         features: [""],
         allocatedPoints: 0,
         userLimit: 1,
@@ -26,7 +26,7 @@ export default function PlanFormModal({ isOpen, onClose, initialData, onSave }: 
         if (initialData) {
             setFormData(initialData);
         } else {
-            setFormData({ name: "", description: "", price: 0, billingCycle: "Monthly", features: [""], allocatedPoints: 0, userLimit: 1 });
+            setFormData({ name: "", description: "", price: 0, billingCycle: "month", features: [""], allocatedPoints: 0, userLimit: 1 });
         }
     }, [initialData, isOpen]);
 
@@ -70,8 +70,8 @@ export default function PlanFormModal({ isOpen, onClose, initialData, onSave }: 
                                 onChange={(e) => setFormData({ ...formData, billingCycle: e.target.value })}
                                 className="w-full appearance-none border border-gray rounded-lg px-3 py-2 text-sm outline-none bg-white pr-8"
                             >
-                                <option>Monthly</option>
-                                <option>Yearly</option>
+                                <option value="month">Monthly</option>
+                                <option value="year">Yearly</option>
                             </select>
 
                             {/* কাস্টম অ্যারো আইকন */}
@@ -86,22 +86,22 @@ export default function PlanFormModal({ isOpen, onClose, initialData, onSave }: 
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="text-xs text-gray-500 mb-1 block">Allocated Points</label>
-                            <input 
-                                type="number" 
-                                value={formData.allocatedPoints ?? 0} 
-                                onChange={(e) => setFormData({ ...formData, allocatedPoints: Number(e.target.value) })} 
-                                className="w-full border border-gray rounded-lg px-3 py-2 text-sm outline-none" 
-                                placeholder="e.g. 500" 
+                            <input
+                                type="number"
+                                value={formData.allocatedPoints ?? 0}
+                                onChange={(e) => setFormData({ ...formData, allocatedPoints: Number(e.target.value) })}
+                                className="w-full border border-gray rounded-lg px-3 py-2 text-sm outline-none"
+                                placeholder="e.g. 500"
                             />
                         </div>
                         <div>
                             <label className="text-xs text-gray-500 mb-1 block">User/Employee Limit</label>
-                            <input 
-                                type="number" 
-                                value={formData.userLimit ?? 1} 
-                                onChange={(e) => setFormData({ ...formData, userLimit: Number(e.target.value) })} 
-                                className="w-full border border-gray rounded-lg px-3 py-2 text-sm outline-none" 
-                                placeholder="e.g. 50" 
+                            <input
+                                type="number"
+                                value={formData.userLimit ?? 1}
+                                onChange={(e) => setFormData({ ...formData, userLimit: Number(e.target.value) })}
+                                className="w-full border border-gray rounded-lg px-3 py-2 text-sm outline-none"
+                                placeholder="e.g. 50"
                             />
                         </div>
                     </div>
