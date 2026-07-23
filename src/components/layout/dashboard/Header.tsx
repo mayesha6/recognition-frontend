@@ -56,6 +56,16 @@ export default function Header() {
   const tokenKeep = Cookies.get("accessToken");
   const isAuthenticated = !!tokenKeep && !!user;
 
+  const initials = user?.name
+    ? user.name
+      .split(" ")
+      .filter((word: string) => /^[a-zA-Z0-9]/.test(word))
+      .map((item: string) => item[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2) || user.name.charAt(0).toUpperCase()
+    : "U";
+
   // Notification states & query hooks
   const [showNotifications, setShowNotifications] = useState(false);
 
@@ -76,7 +86,8 @@ export default function Header() {
 
   const getRoleLabel = (role?: string) => {
     if (role === "SUPER_ADMIN") return "Super Admin";
-    if (role === "ADMIN") return "Administrator";
+    if (role === "ORGANIZATION_ADMIN") return "Org Admin";
+    if (role === "DEPARTMENT_ADMIN") return "Dept Admin";
     return "User";
   };
 
@@ -218,7 +229,7 @@ export default function Header() {
                   />
                 ) : (
                   <span className="text-orange-600 font-bold text-sm">
-                    {user.name?.charAt(0).toUpperCase()}
+                    {initials}
                   </span>
                 )}
               </div>

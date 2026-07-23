@@ -15,6 +15,7 @@ import {
   useUpdateDepartmentMutation,
   useDeleteDepartmentMutation,
 } from "@/redux/api/departmentApi";
+import { toast } from "sonner";
 
 export default function DepartmentManagementPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -73,9 +74,10 @@ export default function DepartmentManagementPage() {
     try {
       await deleteDepartment(targetId).unwrap();
       setIsDeleteModalOpen(false);
+      toast.success("Department deleted successfully");
       refetch();
     } catch (err: any) {
-      alert(err?.data?.message || err?.message || "Failed to delete department");
+      toast.error(err?.data?.message || err?.message || "Failed to delete department");
     }
   };
 
@@ -88,9 +90,10 @@ export default function DepartmentManagementPage() {
     try {
       await createDepartment({ name: data.name }).unwrap();
       setIsAddDepartmentModalOpen(false);
+      toast.success("Department created successfully");
       refetch();
     } catch (err: any) {
-      alert(err?.data?.message || err?.message || "Failed to create department");
+      toast.error(err?.data?.message || err?.message || "Failed to create department");
     }
   };
 
@@ -100,9 +103,10 @@ export default function DepartmentManagementPage() {
     try {
       await updateDepartment({ id: targetId, name: data.name }).unwrap();
       setIsEditModalOpen(false);
+      toast.success("Department updated successfully");
       refetch();
     } catch (err: any) {
-      alert(err?.data?.message || err?.message || "Failed to update department");
+      toast.error(err?.data?.message || err?.message || "Failed to update department");
     }
   };
 

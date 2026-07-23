@@ -9,6 +9,7 @@ import StatCard from "@/modules/user/rewards/components/StatCard";
 import DeleteConfirmationModal from "@/components/common/DeleteConfirmationModal";
 import { Plus, Search, Users, AlertTriangle, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import {
   useGetDepartmentUsersQuery,
   useCreateUserMutation,
@@ -69,9 +70,10 @@ export default function EmployeeManagementPage() {
     try {
       await deleteUser(id).unwrap();
       setIsDeleteModalOpen(false);
+      toast.success("User deleted successfully");
       refetch();
     } catch (err: any) {
-      alert(err?.data?.message || err?.message || "Failed to delete user");
+      toast.error(err?.data?.message || err?.message || "Failed to delete user");
     }
   };
 
@@ -90,9 +92,10 @@ export default function EmployeeManagementPage() {
         password: "DefaultPassword123!",
       }).unwrap();
       setIsAddEmployeeModalOpen(false);
+      toast.success("User created successfully");
       refetch();
     } catch (err: any) {
-      alert(err?.data?.message || err?.message || "Failed to create user");
+      toast.error(err?.data?.message || err?.message || "Failed to create user");
     }
   };
 
@@ -102,9 +105,10 @@ export default function EmployeeManagementPage() {
     try {
       await updateUser({ id, ...data }).unwrap();
       setIsEditModalOpen(false);
+      toast.success("User updated successfully");
       refetch();
     } catch (err: any) {
-      alert(err?.data?.message || err?.message || "Failed to update user");
+      toast.error(err?.data?.message || err?.message || "Failed to update user");
     }
   };
 

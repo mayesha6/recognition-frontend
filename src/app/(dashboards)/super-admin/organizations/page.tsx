@@ -8,6 +8,7 @@ import SuspendConfirmationModal from "@/modules/super-admin/organization/Suspend
 import Pagination from "@/components/common/pagination";
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { useGetDepartmentUsersQuery } from "@/redux/api/userApi";
 import { 
   useDeleteOrganizationMutation, 
@@ -65,9 +66,10 @@ export default function OrganizationManagement() {
     try {
       await updateOrganizationStatus({ id, isActive: nextStatus }).unwrap();
       setIsSuspendModalOpen(false);
+      toast.success("Organization status updated successfully");
       refetch();
     } catch (err: any) {
-      alert(err?.data?.message || err?.message || "Failed to update status");
+      toast.error(err?.data?.message || err?.message || "Failed to update status");
       console.error("Failed to update status:", err);
     }
   };
@@ -85,9 +87,10 @@ export default function OrganizationManagement() {
     try {
       await deleteOrganization(id).unwrap();
       setIsDeleteModalOpen(false);
+      toast.success("Organization deleted successfully");
       refetch();
     } catch (err: any) {
-      alert(err?.data?.message || err?.message || "Failed to delete organization");
+      toast.error(err?.data?.message || err?.message || "Failed to delete organization");
       console.error("Failed to delete organization:", err);
     }
   };

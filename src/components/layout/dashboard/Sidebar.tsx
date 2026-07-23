@@ -136,10 +136,11 @@ export default function Sidebar() {
   const initials = user.name
     ? user.name
       .split(" ")
+      .filter((word: string) => /^[a-zA-Z0-9]/.test(word))
       .map((item: string) => item[0])
       .join("")
       .toUpperCase()
-      .slice(0, 2)
+      .slice(0, 2) || user.name.charAt(0).toUpperCase()
     : "U";
 
   const handleLogout = () => {
