@@ -16,6 +16,8 @@ import {
   useUpdateUserMutation,
   useDeleteUserMutation,
 } from "@/redux/api/userApi";
+import { useGetDepartmentsQuery } from "@/redux/api/departmentApi";
+import { useSetUserPointsMutation } from "@/redux/api/walletApi";
 
 export default function EmployeeManagementPage() {
     const [currentPage, setCurrentPage] = useState(1);
@@ -45,9 +47,13 @@ export default function EmployeeManagementPage() {
         searchTerm: debouncedSearch || undefined,
     });
 
+    const { data: deptRes } = useGetDepartmentsQuery();
+    const departments = deptRes?.data || [];
+
     const [createUser] = useCreateUserMutation();
     const [updateUser] = useUpdateUserMutation();
     const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
+    const [setUserPoints] = useSetUserPointsMutation();
 
     const usersList = usersRes?.data || [];
     const meta = usersRes?.meta || { total: 0, limit: 10, page: 1, totalPage: 1 };
@@ -88,9 +94,18 @@ export default function EmployeeManagementPage() {
             await createUser({
                 name,
                 email: data.email,
-                department: data.department || "Engineering",
+                department: data.department,
                 password: "DefaultPassword123!",
             }).unwrap();
+
+            const initialPoints = Number(data.points);
+            if (initialPoints > 0) {
+                await setUserPoints({
+                    email: data.email,
+                    points: initialPoints
+                }).unwrap();
+            }
+
             setIsAddEmployeeModalOpen(false);
             toast.success("Employee created successfully");
             refetch();
@@ -103,7 +118,7 @@ export default function EmployeeManagementPage() {
         if (!selectedUser) return;
         const id = selectedUser._id || selectedUser.id;
         try {
-            await updateUser({ id, ...data }).unwrap();
+            await updateUser({ id, name: data.name, email: data.email, department: data.department, status: data.status }).unwrap();
             setIsModalOpen(false);
             toast.success("Employee details updated successfully");
             refetch();
@@ -174,6 +189,7 @@ export default function EmployeeManagementPage() {
                     isOpen={isAddEmployeeModalOpen} 
                     onClose={() => setIsAddEmployeeModalOpen(false)} 
                     onSave={handleSaveUser}
+                    departments={departments}
                 />
             )}
 
@@ -184,6 +200,7 @@ export default function EmployeeManagementPage() {
                     userData={selectedUser}
                     type="employee"
                     onSave={handleEditSave}
+                    departments={departments}
                 />
             )}
 

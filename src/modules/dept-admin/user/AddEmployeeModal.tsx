@@ -1,11 +1,16 @@
-"use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 
-export default function AddEmployeeModal({ isOpen, onClose, onSave }: any) {
+export default function AddEmployeeModal({ isOpen, onClose, onSave, departments = [] }: any) {
     const [formData, setFormData] = useState({
         firstName: "", lastName: "", email: "", phone: "", points: "", department: "", status: "Active"
     });
+
+    useEffect(() => {
+        if (departments.length > 0 && !formData.department) {
+            setFormData(prev => ({ ...prev, department: departments[0].name }));
+        }
+    }, [departments, formData.department]);
 
     if (!isOpen) return null;
 
@@ -57,14 +62,20 @@ export default function AddEmployeeModal({ isOpen, onClose, onSave }: any) {
                     </div>
                     <div>
                         <label className="text-sm text-gray-500">Department</label>
-                        <div className="relative w-full">
+                        <div className="relative w-full mt-1">
                             <select
-                                className="w-full appearance-none border border-gray rounded-lg pl-4 pr-10 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer text-sm" onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-
+                                className="w-full appearance-none border border-gray rounded-lg pl-4 pr-10 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer text-sm"
+                                value={formData.department}
+                                onChange={(e) => setFormData({ ...formData, department: e.target.value })}
                             >
-                                <option value="Engineering">Engineering</option>
-                                <option value="HR">HR</option>
-                                <option value="Marketing">Marketing</option>
+                                {departments.map((dept: any) => (
+                                    <option key={dept._id || dept.id} value={dept.name}>
+                                        {dept.name}
+                                    </option>
+                                ))}
+                                {departments.length === 0 && (
+                                    <option value="">No departments available</option>
+                                )}
                             </select>
 
                             <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
