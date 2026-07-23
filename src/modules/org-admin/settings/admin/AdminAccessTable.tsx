@@ -18,7 +18,7 @@ export default function AdminAccessTable({ data, onDelete, onEdit }: any) {
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                     {data.map((admin: any, index: number) => (
-                        <tr key={admin.id} className="hover:bg-gray-50/50 border-b border-gray transition-colors">
+                        <tr key={admin._id || admin.id} className="hover:bg-gray-50/50 border-b border-gray transition-colors">
                             <td className="px-6 py-4 text-sm text-gray-500">{index + 1}</td>
                             <td className="px-6 py-4 text-sm font-medium text-gray-900">{admin.name}</td>
                             <td className="px-6 py-4 text-sm text-gray-600">{admin.email}</td>
@@ -29,7 +29,7 @@ export default function AdminAccessTable({ data, onDelete, onEdit }: any) {
                                     <button onClick={() => onEdit(admin)} className="text-gray-400 hover:text-indigo-600">
                                         <Pencil size={18} />
                                     </button>
-                                    <button onClick={() => onDelete(admin.id)} className="text-gray-400 hover:text-red-600">
+                                    <button onClick={() => onDelete(admin._id || admin.id)} className="text-gray-400 hover:text-red-600">
                                         <Trash2 size={18} />
                                     </button>
                                 </div>
