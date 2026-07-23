@@ -11,7 +11,7 @@ export const departmentApi = baseApi.injectEndpoints({
       providesTags: ["User", "Recognition"],
     }),
 
-    createDepartment: builder.mutation<any, { name: string }>({
+    createDepartment: builder.mutation<any, { name: string; adminId?: string }>({
       query: (data) => ({
         url: "/department",
         method: "POST",
@@ -20,7 +20,7 @@ export const departmentApi = baseApi.injectEndpoints({
       invalidatesTags: ["User", "Recognition"],
     }),
 
-    updateDepartment: builder.mutation<any, { id: string; name: string }>({
+    updateDepartment: builder.mutation<any, { id: string; name: string; adminId?: string }>({
       query: ({ id, ...data }) => ({
         url: `/department/${id}`,
         method: "PATCH",
