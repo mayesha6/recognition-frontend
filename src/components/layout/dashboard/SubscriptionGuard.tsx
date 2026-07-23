@@ -31,8 +31,14 @@ export default function SubscriptionGuard({ children }: { children: React.ReactN
   };
 
   const handleUpgrade = () => {
-    // Redirect to the main landing page pricing section
-    window.location.href = "https://greetely.com";
+    let landingPageUrl = "https://greetely.com";
+    if (typeof window !== "undefined") {
+      if (window.location.hostname.includes("localhost")) {
+        landingPageUrl = "http://localhost:3000";
+      }
+    }
+    // Redirect to landing page pricing page with token for auto-login
+    window.location.href = `${landingPageUrl}/pricing?token=${token}`;
   };
 
   if (isLoading) {
