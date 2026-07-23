@@ -12,7 +12,7 @@ export default function SubscriptionGuard({ children }: { children: React.ReactN
   const router = useRouter();
   const dispatch = useDispatch();
   const token = useSelector((state: RootState) => state.auth?.token) || Cookies.get("accessToken");
-  
+
   const { data: profileData, isLoading } = useGetMeQuery(undefined, { skip: !token });
   const user = profileData?.data;
 
@@ -34,7 +34,7 @@ export default function SubscriptionGuard({ children }: { children: React.ReactN
     let landingPageUrl = "https://greetely.com";
     if (typeof window !== "undefined") {
       if (window.location.hostname.includes("localhost")) {
-        landingPageUrl = "http://localhost:3000";
+        landingPageUrl = "http://localhost:3041";
       }
     }
     // Redirect to landing page pricing page with token for auto-login
@@ -60,7 +60,7 @@ export default function SubscriptionGuard({ children }: { children: React.ReactN
           </div>
 
           <h2 className="text-2xl font-bold text-gray-900 mb-3">Subscription Inactive</h2>
-          
+
           <p className="text-gray-500 text-sm mb-8 leading-relaxed max-w-[280px]">
             Organization subscription is not active. Please upgrade your plan to access the dashboard.
           </p>
@@ -73,7 +73,7 @@ export default function SubscriptionGuard({ children }: { children: React.ReactN
               Upgrade Plan
               <ArrowUpRight size={16} />
             </button>
-            
+
             <button
               onClick={handleLogout}
               className="w-full bg-gray-50 hover:bg-gray-100 text-gray-700 py-3.5 rounded-xl font-medium text-sm transition-all border border-gray-200 flex items-center justify-center gap-2"
