@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import AddAdminModal from "@/modules/org-admin/settings/admin/AddAdminModal";
 import AdminAccessTable from "@/modules/org-admin/settings/admin/AdminAccessTable";
 import EditAdminModal from "@/modules/org-admin/settings/admin/EditAdminModal";
+import DeleteConfirmationModal from "@/components/common/DeleteConfirmationModal";
 import { Search, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
 import {
@@ -23,6 +24,7 @@ export default function AdminAccessPage() {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAddAdminModalOpen, setIsAddAdminModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedAdmin, setSelectedAdmin] = useState(null);
 
     // Debounce search term
@@ -50,15 +52,23 @@ export default function AdminAccessPage() {
     const meta = adminsRes?.meta || { total: 0, limit: 10, page: 1, totalPage: 1 };
     const totalPages = meta.totalPage;
 
-    const handleDelete = async (id: string) => {
-        if (confirm("Are you sure you want to delete this department admin?")) {
-            try {
-                await deleteUser(id).unwrap();
-                toast.success("Department admin deleted successfully");
-                refetch();
-            } catch (err: any) {
-                toast.error(err?.data?.message || err?.message || "Failed to delete admin");
-            }
+    const handleDelete = (admin: any) => {
+        setSelectedAdmin(admin);
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        const id = (selectedAdmin as any)?._id || (selectedAdmin as any)?.id;
+        if (!id) return;
+        try {
+            await deleteUser(id).unwrap();
+            toast.success("Department admin deleted successfully");
+            refetch();
+        } catch (err: any) {
+            toast.error(err?.data?.message || err?.message || "Failed to delete admin");
+        } finally {
+            setIsDeleteModalOpen(false);
+            setSelectedAdmin(null);
         }
     };
 
@@ -156,6 +166,17 @@ export default function AdminAccessPage() {
                 onClose={() => setIsModalOpen(false)}
                 adminData={selectedAdmin}
                 onSave={handleEditSave}
+            />
+
+            <DeleteConfirmationModal
+                isOpen={isDeleteModalOpen}
+                onClose={() => {
+                    setIsDeleteModalOpen(false);
+                    setSelectedAdmin(null);
+                }}
+                onConfirm={handleConfirmDelete}
+                itemName={(selectedAdmin as any)?.name}
+                title="Delete Department Admin"
             />
         </div>
     );

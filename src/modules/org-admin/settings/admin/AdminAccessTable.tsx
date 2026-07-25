@@ -29,7 +29,7 @@ export default function AdminAccessTable({ data, onDelete, onEdit }: any) {
                                     <button onClick={() => onEdit(admin)} className="text-gray-400 hover:text-indigo-600">
                                         <Pencil size={18} />
                                     </button>
-                                    <button onClick={() => onDelete(admin._id || admin.id)} className="text-gray-400 hover:text-red-600">
+                                    <button onClick={() => onDelete(admin)} className="text-gray-400 hover:text-red-600">
                                         <Trash2 size={18} />
                                     </button>
                                 </div>

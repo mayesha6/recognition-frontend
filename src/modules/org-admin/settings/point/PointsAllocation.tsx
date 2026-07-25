@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Plus, Trash2, Save, Building2, User as UserIcon, Loader2, ChevronDown } from "lucide-react";
+import { Plus, Trash2, Save, Building2, User as UserIcon, Loader2, ChevronDown, Coins } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useGetDepartmentsQuery } from "@/redux/api/departmentApi";
@@ -10,6 +10,7 @@ import {
   useSetUserPointsMutation,
   useResetPointsMutation 
 } from "@/redux/api/walletApi";
+import { useGetMeQuery } from "@/redux/api/authApi";
 import { toast } from "sonner";
 import { formatErrorMessage } from "@/utils/formatError";
 
@@ -37,6 +38,9 @@ export default function PointsManager({ initialData, onSave }: any) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // RTK Query hooks
+  const { data: profileRes } = useGetMeQuery(undefined);
+  const userWallet = profileRes?.data?.wallet;
+
   const { data: deptRes, isLoading: isDeptLoading } = useGetDepartmentsQuery();
   const { data: usersRes, isLoading: isUsersLoading } = useGetDepartmentUsersQuery({ limit: 100 });
   const [distributePoints, { isLoading: isDistributing }] = useDistributePointsMutation();
@@ -151,11 +155,24 @@ export default function PointsManager({ initialData, onSave }: any) {
   return (
     <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-4">
-        <div>
-          <h3 className="text-2xl font-light text-gray-900">Points Allocation</h3>
-          <p className="text-xs text-gray-400 mt-1">
-            Allocate points to standalone departments or individual users not bound to an organization.
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between w-full gap-4">
+          <div>
+            <h3 className="text-2xl font-light text-gray-900">Points Allocation</h3>
+            <p className="text-xs text-gray-400 mt-1">
+              Allocate points to departments or individual users.
+            </p>
+          </div>
+
+          {/* Available Points Badge */}
+          <div className="flex items-center gap-2.5 bg-gradient-to-r from-indigo-50 to-indigo-100/50 border border-indigo-100/80 rounded-2xl px-5 py-3 text-indigo-700 shadow-sm shrink-0">
+            <div className="p-1.5 bg-indigo-600 text-white rounded-lg">
+              <Coins className="w-4 h-4" />
+            </div>
+            <div>
+              <p className="text-[10px] uppercase font-bold tracking-wider text-indigo-500/80">Available Points</p>
+              <p className="text-lg font-bold leading-tight">{userWallet?.pointsBalance ?? 0} Pts</p>
+            </div>
+          </div>
         </div>
 
         {/* Mode Toggle Tabs */}

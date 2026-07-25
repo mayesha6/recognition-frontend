@@ -31,9 +31,8 @@ export default function EditAdminModal({
             <label className="text-sm text-gray-500">Admin Name</label>
             <input 
               value={formData?.name || ""} 
-              // এখন লোকাল স্টেট ফাংশনটি ব্যবহার করুন
               onChange={(e) => setFormData({...formData, name: e.target.value})} 
-              className="w-full border rounded-lg px-3 py-2 mt-1" 
+              className="w-full border rounded-lg px-3 py-2 mt-1 text-sm border-gray outline-0 focus:ring-1 focus:ring-indigo-500" 
             />
           </div>
           <div>
@@ -41,7 +40,15 @@ export default function EditAdminModal({
             <input 
               disabled 
               defaultValue={formData?.email} 
-              className="w-full bg-gray-50 border rounded-lg px-3 py-2 mt-1 text-gray-400" 
+              className="w-full bg-gray-50 border rounded-lg px-3 py-2 mt-1 text-sm text-gray-400 cursor-not-allowed outline-none" 
+            />
+          </div>
+          <div>
+            <label className="text-sm text-gray-500">Phone</label>
+            <input 
+              value={formData?.phone || ""} 
+              onChange={(e) => setFormData({...formData, phone: e.target.value})} 
+              className="w-full border rounded-lg px-3 py-2 mt-1 text-sm border-gray outline-0 focus:ring-1 focus:ring-indigo-500" 
             />
           </div>    
         </div>
