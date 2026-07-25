@@ -7,7 +7,7 @@ import AddEmployeeModal from "@/modules/dept-admin/user/AddEmployeeModal";
 import EmployeeTable from "@/modules/dept-admin/user/EmployeeTable";
 import StatCard from "@/modules/user/rewards/components/StatCard";
 import DeleteConfirmationModal from "@/components/common/DeleteConfirmationModal";
-import { Plus, Search, Users } from "lucide-react";
+import { Plus, Search, Users, ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
@@ -23,6 +23,8 @@ export default function EmployeeManagementPage() {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
+    const [selectedDept, setSelectedDept] = useState("");
+    const [selectedRole, setSelectedRole] = useState("");
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAddEmployeeModalOpen, setIsAddEmployeeModalOpen] = useState(false);
@@ -45,6 +47,8 @@ export default function EmployeeManagementPage() {
         page: currentPage,
         limit: 10,
         searchTerm: debouncedSearch || undefined,
+        role: selectedRole || undefined,
+        department: selectedDept || undefined,
     });
 
     const { data: deptRes } = useGetDepartmentsQuery();
@@ -149,21 +153,68 @@ export default function EmployeeManagementPage() {
                 />
             </div>
 
-            {/* Search & Add Button */}
-            <div className="flex items-center justify-end mb-4 gap-4 w-full sm:w-auto">
-                <div className="flex items-center bg-gray-100 rounded-lg px-3 w-full sm:w-64">
-                    <Search className="w-4 h-4 text-gray-400" />
-                    <Input 
-                        placeholder="Search..." 
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full focus-visible:ring-0 focus-visible:ring-offset-0 border-none bg-transparent" 
-                    />
+            {/* Filters Row */}
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+                {/* Left: Filters */}
+                <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                    {/* Department Filter */}
+                    <div className="relative min-w-[160px]">
+                        <select
+                            value={selectedDept}
+                            onChange={(e) => {
+                                setSelectedDept(e.target.value);
+                                setCurrentPage(1);
+                            }}
+                            className="w-full appearance-none bg-white border border-gray-200 rounded-xl px-4 py-2.5 pr-10 text-sm outline-none focus:border-indigo-500 text-gray-700 shadow-sm cursor-pointer h-10"
+                        >
+                            <option value="">All Departments</option>
+                            {departments.map((dept: any) => (
+                                <option key={dept._id || dept.id} value={dept.name}>
+                                    {dept.name}
+                                </option>
+                            ))}
+                        </select>
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
+                            <ChevronDown size={16} />
+                        </div>
+                    </div>
+
+                    {/* Role Filter */}
+                    <div className="relative min-w-[140px]">
+                        <select
+                            value={selectedRole}
+                            onChange={(e) => {
+                                setSelectedRole(e.target.value);
+                                setCurrentPage(1);
+                            }}
+                            className="w-full appearance-none bg-white border border-gray-200 rounded-xl px-4 py-2.5 pr-10 text-sm outline-none focus:border-indigo-500 text-gray-700 shadow-sm cursor-pointer h-10"
+                        >
+                            <option value="">All Roles</option>
+                            <option value="DEPARTMENT_ADMIN">Dept Admin</option>
+                            <option value="USER">User (Employee)</option>
+                        </select>
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
+                            <ChevronDown size={16} />
+                        </div>
+                    </div>
                 </div>
-                <Button onClick={() => setIsAddEmployeeModalOpen(true)} className="bg-gradient hover:opacity-90 text-white whitespace-nowrap">
-                    <Plus className="w-4 h-4" />
-                    Add Employee
-                </Button>                   
+
+                {/* Right: Search & Add */}
+                <div className="flex items-center gap-4 w-full sm:w-auto justify-end">
+                    <div className="flex items-center bg-gray-100 rounded-xl px-3 w-full sm:w-64 border border-gray-200 h-10 shadow-sm">
+                        <Search className="w-4 h-4 text-gray-400 ml-1" />
+                        <Input 
+                            placeholder="Search..." 
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full focus-visible:ring-0 focus-visible:ring-offset-0 border-none bg-transparent text-gray-900" 
+                        />
+                    </div>
+                    <Button onClick={() => setIsAddEmployeeModalOpen(true)} className="bg-gradient hover:opacity-90 text-white whitespace-nowrap rounded-xl h-10 py-0 flex items-center justify-center gap-2">
+                        <Plus className="w-4 h-4" />
+                        Add Employee
+                    </Button>                   
+                </div>
             </div>
 
             {/* Tables & Modals */}
