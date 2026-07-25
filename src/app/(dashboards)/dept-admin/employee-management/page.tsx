@@ -6,28 +6,116 @@ import EditPointModal from "@/modules/dept-admin/pointDistribution/components/Ed
 import AddEmployeeModal from "@/modules/dept-admin/user/AddEmployeeModal";
 import EmployeeTable from "@/modules/dept-admin/user/EmployeeTable";
 import StatCard from "@/modules/user/rewards/components/StatCard";
-import { Plus, Search, User, Users } from "lucide-react";
-import { useState } from "react";
-
-const employees = [
-    { initials: "SR", name: "Saifur Rahman", email: "saifur@example.com", department: "Engineering", points: 1002, engagement: 92, lastActive: "9 min ago" },
-    { initials: "SR", name: "Saifur Rahman", email: "saifur@example.com", department: "Engineering", points: 1002, engagement: 92, lastActive: "9 min ago" },
-];
+import DeleteConfirmationModal from "@/components/common/DeleteConfirmationModal";
+import { Plus, Search, Users } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  useGetDepartmentUsersQuery,
+  useCreateUserMutation,
+  useUpdateUserMutation,
+  useDeleteUserMutation,
+} from "@/redux/api/userApi";
+import { useGetOrgDashboardQuery } from "@/redux/api/orgAdminApi";
+import { toast } from "sonner";
 
 export default function EmployeeManagementPage() {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [debouncedSearch, setDebouncedSearch] = useState("");
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAddEmployeeModalOpen, setIsAddEmployeeModalOpen] = useState(false);
-    const [selectedUser, setSelectedUser] = useState(null);
+    const [selectedUser, setSelectedUser] = useState<any>(null);
 
-    const handleDelete = async (id: string) => {
-        if (confirm("Are you sure you want to delete this?")) {
-            // await deleteEmployee(id);
+    // States for delete confirmation modal
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [userToDelete, setUserToDelete] = useState<any>(null);
+
+    // Debounce search term
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedSearch(searchTerm);
+            setCurrentPage(1);
+        }, 300);
+        return () => clearTimeout(handler);
+    }, [searchTerm]);
+
+    // Fetch dashboard overview to get total/active counts
+    const { data: dashboardRes } = useGetOrgDashboardQuery();
+
+    // Fetch paginated users
+    const { data: usersRes, isLoading, refetch } = useGetDepartmentUsersQuery({
+        page: currentPage,
+        limit: 10,
+        searchTerm: debouncedSearch || undefined,
+    });
+
+    const [createUser] = useCreateUserMutation();
+    const [updateUser] = useUpdateUserMutation();
+    const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
+
+    const usersList = usersRes?.data || [];
+    const meta = usersRes?.meta || { total: 0, limit: 10, page: 1, totalPage: 1 };
+    const totalPages = meta.totalPage;
+
+    const overview = dashboardRes?.data?.overview || {
+        totalEmployees: 0,
+        activeEmployees: 0,
+    };
+
+    const handleDeleteClick = (id: string) => {
+        const usr = usersList.find((u: any) => (u._id || u.id) === id);
+        if (!usr) return;
+        setUserToDelete(usr);
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleDeleteConfirm = async () => {
+        if (!userToDelete) return;
+        const id = userToDelete._id || userToDelete.id;
+        try {
+            await deleteUser(id).unwrap();
+            setIsDeleteModalOpen(false);
+            toast.success("Employee deleted successfully");
+            refetch();
+        } catch (err: any) {
+            toast.error(err?.data?.message || err?.message || "Failed to delete user");
         }
     };
 
     const handleEdit = (user: any) => {
         setSelectedUser(user);
         setIsModalOpen(true);
+    };
+
+    const handleSaveUser = async (data: any) => {
+        try {
+            const name = `${data.firstName || ""} ${data.lastName || ""}`.trim() || data.name;
+            await createUser({
+                name,
+                email: data.email,
+                department: data.department || "Engineering",
+                password: "DefaultPassword123!",
+            }).unwrap();
+            setIsAddEmployeeModalOpen(false);
+            toast.success("Employee created successfully");
+            refetch();
+        } catch (err: any) {
+            toast.error(err?.data?.message || err?.message || "Failed to create user");
+        }
+    };
+
+    const handleEditSave = async (data: any) => {
+        if (!selectedUser) return;
+        const id = selectedUser._id || selectedUser.id;
+        try {
+            await updateUser({ id, ...data }).unwrap();
+            setIsModalOpen(false);
+            toast.success("Employee details updated successfully");
+            refetch();
+        } catch (err: any) {
+            toast.error(err?.data?.message || err?.message || "Failed to update user");
+        }
     };
 
     return (
@@ -40,13 +128,13 @@ export default function EmployeeManagementPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
                 <StatCard
                     title="Total Employees"
-                    count={5}
+                    count={overview.totalEmployees}
                     icon={<Users className="w-5 h-5 text-orange-500" />}
                     iconBgColor="bg-[#FFAA00]/10"
                 />
                 <StatCard
                     title="Active Employees"
-                    count={3}
+                    count={overview.activeEmployees}
                     icon={<Users className="w-5 h-5 text-green-500" />}
                     iconBgColor="bg-[#00AC5F]/10"
                 />
@@ -56,9 +144,13 @@ export default function EmployeeManagementPage() {
             <div className="flex items-center justify-end mb-4 gap-4 w-full sm:w-auto">
                 <div className="flex items-center bg-gray-100 rounded-lg px-3 w-full sm:w-64">
                     <Search className="w-4 h-4 text-gray-400" />
-                    <Input placeholder="Search..." className="w-full focus-visible:ring-0 focus-visible:ring-offset-0 border-none bg-transparent" />
+                    <Input 
+                        placeholder="Search..." 
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full focus-visible:ring-0 focus-visible:ring-offset-0 border-none bg-transparent text-gray-900" 
+                    />
                 </div>
-                {/* বাটনটি মোডালের বাইরে রাখা হয়েছে */}
                 <Button onClick={() => setIsAddEmployeeModalOpen(true)} className="bg-gradient hover:opacity-90 text-white whitespace-nowrap">
                     <Plus className="w-4 h-4" />
                     Add Employee
@@ -66,34 +158,50 @@ export default function EmployeeManagementPage() {
             </div>
 
             {/* Tables & Modals */}
-            <EmployeeTable
-                data={employees}
-                onDelete={handleDelete}
-                onEdit={handleEdit}
+            {isLoading ? (
+                <div className="flex flex-col items-center justify-center min-h-[300px] gap-2">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                    <p className="text-sm text-gray-500 font-medium animate-pulse">Loading employees...</p>
+                </div>
+            ) : (
+                <EmployeeTable
+                    data={usersList}
+                    onDelete={handleDeleteClick}
+                    onEdit={handleEdit}
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={(p: number) => setCurrentPage(p)}
+                />
+            )}
+
+            {/* Modals */}
+            {isAddEmployeeModalOpen && (
+                <AddEmployeeModal 
+                    isOpen={isAddEmployeeModalOpen} 
+                    onClose={() => setIsAddEmployeeModalOpen(false)} 
+                    onSave={handleSaveUser}
+                />
+            )}
+
+            {isModalOpen && (
+                <EditPointModal 
+                    isOpen={isModalOpen} 
+                    onClose={() => setIsModalOpen(false)} 
+                    userData={selectedUser}
+                    type="employee"
+                    onSave={handleEditSave}
+                />
+            )}
+
+            <DeleteConfirmationModal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={handleDeleteConfirm}
+                title="Delete User"
+                itemName={userToDelete?.name}
+                description={`Are you sure you want to delete user "${userToDelete?.name}" (${userToDelete?.email})? This action is permanent and cannot be undone.`}
+                isLoading={isDeleting}
             />
-
-            {/* মোডালগুলো পেজের নিচে রাখা হয়েছে */}
-            <AddEmployeeModal 
-                isOpen={isAddEmployeeModalOpen} 
-                onClose={() => setIsAddEmployeeModalOpen(false)} 
-                onSave={(data: any) => {
-                    console.log("Saving new employee:", data);
-                    setIsAddEmployeeModalOpen(false);
-                }}
-            />
-
-            <EditPointModal 
-                isOpen={isModalOpen} 
-                onClose={() => setIsModalOpen(false)} 
-                userData={selectedUser}
-                type="employee"
-                onSave={(data: any) => {
-                    console.log("Saving new point:", data);
-                    setIsModalOpen(false);
-                }}
-            />
-
-
         </div>
     );
 }

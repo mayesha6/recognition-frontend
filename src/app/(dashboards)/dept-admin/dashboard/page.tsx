@@ -9,7 +9,7 @@ import EditPointModal from "@/modules/dept-admin/pointDistribution/components/Ed
 import AddEmployeeModal from "@/modules/dept-admin/user/AddEmployeeModal";
 import StatCard from "@/modules/user/rewards/components/StatCard";
 import DeleteConfirmationModal from "@/components/common/DeleteConfirmationModal";
-import { Coins, Plus, Search, Trophy, User } from "lucide-react";
+import { Coins, Plus, Search, Trophy, User, Users, Settings } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
@@ -20,6 +20,7 @@ import {
   useUpdateUserMutation,
   useDeleteUserMutation,
 } from "@/redux/api/userApi";
+import { useGetOrgDashboardQuery } from "@/redux/api/orgAdminApi";
 import { toast } from "sonner";
 
 const dashboardData = {
@@ -50,6 +51,9 @@ export default function DepartmentAdminDashboard() {
         }, 300);
         return () => clearTimeout(handler);
     }, [searchTerm]);
+
+    // Fetch dashboard overview & tables
+    const { data: dashboardRes } = useGetOrgDashboardQuery();
 
     const { data: usersRes, isLoading, refetch } = useGetDepartmentUsersQuery({
         page: currentPage,
@@ -120,37 +124,106 @@ export default function DepartmentAdminDashboard() {
         }
     };
 
+    const overview = dashboardRes?.data?.overview || {
+        totalEmployees: 0,
+        activeEmployees: 0,
+        recognitionsSent: 0,
+        pointsInCirculation: 0,
+    };
+    const topPerformers = dashboardRes?.data?.topPerformers || [];
+    const recentActivities = dashboardRes?.data?.recentActivities || [];
+    const recognitionByCategory = dashboardRes?.data?.recognitionByCategory || [];
+
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const trendChartData = months.map((monthName, index) => {
+        const trendItem = (dashboardRes?.data?.recognitionTrends || []).find((t: any) => t._id === index + 1);
+        return {
+            name: monthName,
+            value: trendItem ? trendItem.total : 0
+        };
+    });
+
     return (
         <div className="bg-gray-50/50 min-h-screen">
             <h2 className="text-[28px] font-medium mb-6">Department Overview</h2>
 
             {/* Stat Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
                 <StatCard
                     title="Total Employees"
-                    count={meta.total || usersList.length}
+                    count={overview.totalEmployees}
                     icon={<User className="w-5 h-5 text-orange-500" />}
                     iconBgColor="bg-[#FFAA00]/10"
                 />
                 <StatCard
-                    title="Distributed Points"
-                    count={3}
+                    title="Recognitions Sent"
+                    count={overview.recognitionsSent}
+                    icon={<Trophy className="w-5 h-5 text-amber-500" />}
+                    iconBgColor="bg-amber-500/10"
+                />
+                <StatCard
+                    title="Points Distributed"
+                    count={overview.pointsInCirculation}
                     icon={<Coins className="w-5 h-5 text-green-500" />}
                     iconBgColor="bg-[#00AC5F]/10"
                 />
                 <StatCard
                     title="Top Performer"
-                    count={3}
-                    icon={<Trophy className="w-5 h-5 text-green-500" />}
-                    iconBgColor="bg-[#00AC5F]/10"
+                    count={topPerformers[0]?.name || "N/A"}
+                    icon={<Trophy className="w-5 h-5 text-indigo-500" />}
+                    iconBgColor="bg-indigo-500/10"
                 />
             </div>
 
             {/* ২. চার্ট এবং কুইক অ্যাকশন */}
-            <div className="grid grid-cols-3 gap-6 mb-8">
-                <div className="col-span-2 bg-white p-6 rounded-2xl border shadow-sm border-gray">
-                    <h3 className="font-bold mb-4">Employee Engagement</h3>
-                    <RecognitionChart data={trendData} />
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
+                <div className="xl:col-span-2 bg-white p-6 rounded-2xl border shadow-sm border-gray">
+                    <h3 className="font-bold mb-4 text-gray-900">Employee Engagement</h3>
+                    <RecognitionChart data={trendChartData} />
+                </div>
+                
+                {/* Quick Actions Panel */}
+                <div className="bg-white p-6 rounded-2xl border border-gray shadow-sm flex flex-col justify-between">
+                    <h3 className="font-bold text-gray-900 mb-4">Quick Actions</h3>
+                    <div className="grid grid-cols-2 gap-4 h-full">
+                        <button 
+                            onClick={() => setIsAddEmployeeModalOpen(true)}
+                            type="button"
+                            className="flex flex-col items-center justify-center p-4 border border-gray-100 rounded-2xl hover:bg-indigo-50/30 hover:border-indigo-100 transition-all text-center gap-2 group cursor-pointer"
+                        >
+                            <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                                <Plus size={18} />
+                            </div>
+                            <span className="text-xs font-semibold text-gray-700">Add Employee</span>
+                        </button>
+                        <a 
+                            href="/dept-admin/recognition"
+                            className="flex flex-col items-center justify-center p-4 border border-gray-100 rounded-2xl hover:bg-indigo-50/30 hover:border-indigo-100 transition-all text-center gap-2 group cursor-pointer"
+                        >
+                            <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                                <Trophy size={18} />
+                            </div>
+                            <span className="text-xs font-semibold text-gray-700">Send Recognition</span>
+                        </a>
+                        <a 
+                            href="/dept-admin/point-distribution"
+                            className="flex flex-col items-center justify-center p-4 border border-gray-100 rounded-2xl hover:bg-indigo-50/30 hover:border-indigo-100 transition-all text-center gap-2 group cursor-pointer"
+                        >
+                            <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                                <Coins size={18} />
+                            </div>
+                            <span className="text-xs font-semibold text-gray-700">Distribute Points</span>
+                        </a>
+                        <a 
+                            href="/dept-admin/settings"
+                            className="flex flex-col items-center justify-center p-4 border border-gray-100 rounded-2xl hover:bg-indigo-50/30 hover:border-indigo-100 transition-all text-center gap-2 group cursor-pointer"
+                        >
+                            <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                                <Settings size={18} />
+                            </div>
+                            <span className="text-xs font-semibold text-gray-700">Settings</span>
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -223,9 +296,9 @@ export default function DepartmentAdminDashboard() {
 
             {/* ৪. বটম সেকশন: চার্ট, পারফর্মার, অ্যাক্টিভিটি */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <RecognitionMix />
-                <TopPerformers performers={dashboardData.performers} />
-                <RecentActivity activities={dashboardData.activities} />
+                <RecognitionMix categoryMix={recognitionByCategory} />
+                <TopPerformers performers={topPerformers} />
+                <RecentActivity activities={recentActivities} />
             </div>
         </div>
     );
