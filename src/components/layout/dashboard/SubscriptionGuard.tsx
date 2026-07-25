@@ -7,11 +7,29 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { ShieldAlert, LogOut, ArrowUpRight } from "lucide-react";
 import { RootState } from "@/redux/store";
+import { useEffect } from "react";
 
 export default function SubscriptionGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const token = useSelector((state: RootState) => state.auth?.token) || Cookies.get("accessToken");
+
+  // Determine landing page URL for redirection
+  let landingPageUrl = "https://greetely.com";
+  if (typeof window !== "undefined") {
+    if (window.location.hostname.includes("localhost")) {
+      landingPageUrl = "http://localhost:3041";
+    } else if (window.location.hostname.includes("127.0.0.1")) {
+      landingPageUrl = "http://127.0.0.1:3041";
+    }
+  }
+
+  // Redirect to landing page login if no token is found
+  useEffect(() => {
+    if (!token) {
+      window.location.href = `${landingPageUrl}/login`;
+    }
+  }, [token, landingPageUrl]);
 
   const { data: profileData, isLoading } = useGetMeQuery(undefined, { skip: !token });
   const user = profileData?.data;
@@ -27,19 +45,29 @@ export default function SubscriptionGuard({ children }: { children: React.ReactN
     dispatch(logout());
     Cookies.remove("accessToken");
     Cookies.remove("refreshToken");
-    router.push("/login");
+    window.location.href = `${landingPageUrl}/login`;
   };
 
   const handleUpgrade = () => {
-    let landingPageUrl = "https://greetely.com";
+    let upgradeLandingUrl = "https://greetely.com";
     if (typeof window !== "undefined") {
       if (window.location.hostname.includes("localhost")) {
-        landingPageUrl = "http://localhost:3041";
+        upgradeLandingUrl = "http://localhost:3041";
+      } else if (window.location.hostname.includes("127.0.0.1")) {
+        upgradeLandingUrl = "http://127.0.0.1:3041";
       }
     }
-    // Redirect to landing page pricing page with token for auto-login
-    window.location.href = `${landingPageUrl}/pricing?token=${token}`;
+    window.location.href = `${upgradeLandingUrl}/pricing?token=${token}`;
   };
+
+  if (!token) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 gap-2">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"></div>
+        <p className="text-sm text-gray-500 font-medium animate-pulse">Redirecting to login...</p>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
