@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 
 export default function AddEmployeeModal({ isOpen, onClose, onSave, departments = [] }: any) {
     const [formData, setFormData] = useState({
-        firstName: "", lastName: "", email: "", phone: "", points: "", department: "", status: "Active"
+        name: "", email: "", password: "", points: "", department: "", status: "Active"
     });
 
     useEffect(() => {
@@ -25,7 +25,7 @@ export default function AddEmployeeModal({ isOpen, onClose, onSave, departments 
                 <div className="">
 
                     <label className="text-sm text-gray-500">Employee Name</label>
-                    <input className="w-full border rounded-lg px-3 py-2 mt-1 text-sm border-gray outline-0 focus:ring-1 focus:ring-indigo-500" onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} />
+                    <input className="w-full border rounded-lg px-3 py-2 mt-1 text-sm border-gray outline-0 focus:ring-1 focus:ring-indigo-500" onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
 
                 </div>
 
@@ -33,6 +33,10 @@ export default function AddEmployeeModal({ isOpen, onClose, onSave, departments 
                     <div>
                         <label className="text-sm text-gray-500">Email Address</label>
                         <input className="w-full border rounded-lg px-3 py-2 mt-1 text-sm border-gray outline-0 focus:ring-1 focus:ring-indigo-500" onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+                    </div>
+                    <div>
+                        <label className="text-sm text-gray-500">Password</label>
+                        <input className="w-full border rounded-lg px-3 py-2 mt-1 text-sm border-gray outline-0 focus:ring-1 focus:ring-indigo-500" type="password" onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div>

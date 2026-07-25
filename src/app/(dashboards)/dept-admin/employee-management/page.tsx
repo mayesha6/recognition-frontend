@@ -2,8 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import EditPointModal from "@/modules/dept-admin/pointDistribution/components/EditPointModal";
+import dynamic from "next/dynamic";
 import AddEmployeeModal from "@/modules/dept-admin/user/AddEmployeeModal";
+
+const EditPointModal = dynamic(
+    () => import("@/modules/dept-admin/pointDistribution/components/EditPointModal").then(m => m.EditPointModal),
+    { ssr: false }
+);
 import EmployeeTable from "@/modules/dept-admin/user/EmployeeTable";
 import StatCard from "@/modules/user/rewards/components/StatCard";
 import DeleteConfirmationModal from "@/components/common/DeleteConfirmationModal";
@@ -16,6 +21,9 @@ import {
   useDeleteUserMutation,
 } from "@/redux/api/userApi";
 import { useGetOrgDashboardQuery } from "@/redux/api/orgAdminApi";
+import { useSetUserPointsMutation } from "@/redux/api/walletApi";
+import { useGetMeQuery } from "@/redux/api/authApi";
+import { useGetDepartmentsQuery } from "@/redux/api/departmentApi";
 import { toast } from "sonner";
 
 export default function EmployeeManagementPage() {
@@ -40,6 +48,11 @@ export default function EmployeeManagementPage() {
         return () => clearTimeout(handler);
     }, [searchTerm]);
 
+    // Fetch logged in admin details & departments
+    const { data: profileRes } = useGetMeQuery(undefined);
+    const adminDept = profileRes?.data?.department || "";
+    const { data: deptRes } = useGetDepartmentsQuery();
+
     // Fetch dashboard overview to get total/active counts
     const { data: dashboardRes } = useGetOrgDashboardQuery();
 
@@ -53,6 +66,7 @@ export default function EmployeeManagementPage() {
     const [createUser] = useCreateUserMutation();
     const [updateUser] = useUpdateUserMutation();
     const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
+    const [setUserPoints] = useSetUserPointsMutation();
 
     const usersList = usersRes?.data || [];
     const meta = usersRes?.meta || { total: 0, limit: 10, page: 1, totalPage: 1 };
@@ -94,9 +108,18 @@ export default function EmployeeManagementPage() {
             await createUser({
                 name,
                 email: data.email,
-                department: data.department || "Engineering",
-                password: "DefaultPassword123!",
+                department: data.department || adminDept || "Engineering",
+                password: data.password || "DefaultPassword123!",
             }).unwrap();
+
+            const initialPoints = Number(data.points);
+            if (initialPoints > 0) {
+                await setUserPoints({
+                    email: data.email,
+                    points: initialPoints
+                }).unwrap();
+            }
+
             setIsAddEmployeeModalOpen(false);
             toast.success("Employee created successfully");
             refetch();
@@ -109,7 +132,25 @@ export default function EmployeeManagementPage() {
         if (!selectedUser) return;
         const id = selectedUser._id || selectedUser.id;
         try {
-            await updateUser({ id, ...data }).unwrap();
+            await updateUser({
+                id,
+                name: data.name,
+                email: data.email,
+                department: data.department,
+                status: data.status
+            }).unwrap();
+
+            const currentPoints = selectedUser.point || selectedUser.wallet?.pointsBalance || 0;
+            const newPoints = Number(data.point);
+            const pointsDiff = newPoints - currentPoints;
+
+            if (pointsDiff > 0) {
+                await setUserPoints({
+                    email: data.email,
+                    points: pointsDiff
+                }).unwrap();
+            }
+
             setIsModalOpen(false);
             toast.success("Employee details updated successfully");
             refetch();
@@ -180,6 +221,8 @@ export default function EmployeeManagementPage() {
                     isOpen={isAddEmployeeModalOpen} 
                     onClose={() => setIsAddEmployeeModalOpen(false)} 
                     onSave={handleSaveUser}
+                    departments={deptRes?.data || []}
+                    defaultDepartment={adminDept}
                 />
             )}
 
@@ -189,6 +232,7 @@ export default function EmployeeManagementPage() {
                     onClose={() => setIsModalOpen(false)} 
                     userData={selectedUser}
                     type="employee"
+                    departments={deptRes?.data || []}
                     onSave={handleEditSave}
                 />
             )}

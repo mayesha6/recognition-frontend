@@ -1,13 +1,17 @@
 "use client";
 
 import RecognitionChart from "@/modules/dept-admin/recognition/RecognitionChart";
-import { trendData } from "../recognition/page";
 import RecognitionMix from "@/modules/dept-admin/dashboard/RecognitionMix";
 import TopPerformers from "@/modules/dept-admin/dashboard/PerformerList";
 import RecentActivity from "@/modules/dept-admin/dashboard/RecentRecognition";
-import EditPointModal from "@/modules/dept-admin/pointDistribution/components/EditPointModal";
+import dynamic from "next/dynamic";
 import AddEmployeeModal from "@/modules/dept-admin/user/AddEmployeeModal";
 import StatCard from "@/modules/user/rewards/components/StatCard";
+
+const EditPointModal = dynamic(
+    () => import("@/modules/dept-admin/pointDistribution/components/EditPointModal").then(m => m.EditPointModal),
+    { ssr: false }
+);
 import DeleteConfirmationModal from "@/components/common/DeleteConfirmationModal";
 import { Coins, Plus, Search, Trophy, User, Users, Settings } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -21,6 +25,7 @@ import {
   useDeleteUserMutation,
 } from "@/redux/api/userApi";
 import { useGetOrgDashboardQuery } from "@/redux/api/orgAdminApi";
+import { useSetUserPointsMutation } from "@/redux/api/walletApi";
 import { toast } from "sonner";
 
 const dashboardData = {
@@ -64,6 +69,7 @@ export default function DepartmentAdminDashboard() {
     const [createUser] = useCreateUserMutation();
     const [updateUser] = useUpdateUserMutation();
     const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
+    const [setUserPoints] = useSetUserPointsMutation();
 
     const usersList = usersRes?.data || [];
     const meta = usersRes?.meta || { total: 0, limit: 10, page: 1, totalPage: 1 };
@@ -101,8 +107,17 @@ export default function DepartmentAdminDashboard() {
                 name,
                 email: data.email,
                 department: data.department || "Engineering",
-                password: "DefaultPassword123!",
+                password: data.password || "DefaultPassword123!",
             }).unwrap();
+
+            const initialPoints = Number(data.points);
+            if (initialPoints > 0) {
+                await setUserPoints({
+                    email: data.email,
+                    points: initialPoints
+                }).unwrap();
+            }
+
             setIsAddEmployeeModalOpen(false);
             toast.success("Employee created successfully");
             refetch();
