@@ -7,10 +7,10 @@ import EditRewardModal from "@/modules/org-admin/reward/EditRewardModal";
 import RewardTable from "@/modules/org-admin/reward/RewardTable";
 import StatCard from "@/modules/user/rewards/components/StatCard";
 import { Gift, ShoppingBag, CreditCard, Search, Plus, Coins } from "lucide-react";
-import { 
-  useGetRewardsQuery, 
-  useCreateRewardMutation, 
-  useUpdateRewardMutation, 
+import {
+  useGetRewardsQuery,
+  useCreateRewardMutation,
+  useUpdateRewardMutation,
   useDeleteRewardMutation,
   useGetMyClaimsQuery
 } from "@/redux/api/rewardApi";
@@ -123,7 +123,7 @@ export default function RewardsPage() {
           iconBgColor="bg-green-500/10"
         />
         <StatCard
-          title="Top Reward"
+          title="Latest Reward"
           count={topRewardName}
           icon={<CreditCard className="w-5 h-5 text-indigo-500" />}
           iconBgColor="bg-indigo-500/10"
@@ -137,11 +137,11 @@ export default function RewardsPage() {
           <div className="flex items-center justify-end gap-4 w-full sm:w-auto">
             <div className="flex items-center bg-gray-100 rounded-lg px-3 w-full sm:w-64 border border-gray-200">
               <Search className="w-4 h-4 text-gray-400" />
-              <Input 
-                placeholder="Search..." 
+              <Input
+                placeholder="Search..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full focus-visible:ring-0 focus-visible:ring-offset-0 border-none bg-transparent" 
+                className="w-full focus-visible:ring-0 focus-visible:ring-offset-0 border-none bg-transparent"
               />
             </div>
             <Button onClick={() => setIsAddRewardModalOpen(true)} className="bg-gradient hover:opacity-90 text-white whitespace-nowrap">
