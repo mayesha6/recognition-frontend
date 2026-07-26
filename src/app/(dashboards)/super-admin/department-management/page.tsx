@@ -15,6 +15,7 @@ import {
   useUpdateDepartmentMutation,
   useDeleteDepartmentMutation,
 } from "@/redux/api/departmentApi";
+import { useGetDepartmentUsersQuery } from "@/redux/api/userApi";
 import { toast } from "sonner";
 
 export default function DepartmentManagementPage() {
@@ -40,6 +41,13 @@ export default function DepartmentManagementPage() {
   }, [searchTerm]);
 
   const { data: deptsRes, isLoading, refetch } = useGetDepartmentsQuery();
+  const { data: adminsRes } = useGetDepartmentUsersQuery({
+    role: "DEPARTMENT_ADMIN",
+    organizationId: "null",
+    limit: 100,
+  });
+  const adminsList = adminsRes?.data || [];
+
   const [createDepartment] = useCreateDepartmentMutation();
   const [updateDepartment] = useUpdateDepartmentMutation();
   const [deleteDepartment, { isLoading: isDeleting }] = useDeleteDepartmentMutation();
@@ -88,7 +96,7 @@ export default function DepartmentManagementPage() {
 
   const handleCreateSave = async (data: any) => {
     try {
-      await createDepartment({ name: data.name }).unwrap();
+      await createDepartment({ name: data.name, adminId: data.adminId }).unwrap();
       setIsAddDepartmentModalOpen(false);
       toast.success("Department created successfully");
       refetch();
@@ -101,7 +109,7 @@ export default function DepartmentManagementPage() {
     if (!selectedDepartment) return;
     const targetId = selectedDepartment.id || selectedDepartment._id;
     try {
-      await updateDepartment({ id: targetId, name: data.name }).unwrap();
+      await updateDepartment({ id: targetId, name: data.name, adminId: data.adminId }).unwrap();
       setIsEditModalOpen(false);
       toast.success("Department updated successfully");
       refetch();
@@ -163,6 +171,7 @@ export default function DepartmentManagementPage() {
           isOpen={isAddDepartmentModalOpen}
           onClose={() => setIsAddDepartmentModalOpen(false)}
           onSave={handleCreateSave}
+          admins={adminsList}
         />
       )}
 
@@ -173,6 +182,7 @@ export default function DepartmentManagementPage() {
           onClose={() => setIsEditModalOpen(false)}
           departmentData={selectedDepartment}
           onSave={handleEditSave}
+          admins={adminsList}
         />
       )}
 
