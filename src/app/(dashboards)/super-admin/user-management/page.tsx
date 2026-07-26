@@ -40,6 +40,7 @@ export default function EmployeeManagementPage() {
   }, [searchTerm]);
 
   const { data: usersRes, isLoading, refetch } = useGetDepartmentUsersQuery({
+    role: "USER",
     page: currentPage,
     limit: 10,
     searchTerm: debouncedSearch || undefined,
