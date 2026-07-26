@@ -115,7 +115,7 @@ export default function DashboardPage() {
 
   // Table Data Mapping
   const sentTableData = sentRecognitions.slice(0, 5).map((rec: any) => {
-    const name = getDisplayNameFromEmail(rec.receiverEmail);
+    const name = rec.recipientName || getDisplayNameFromEmail(rec.receiverEmail);
     return {
       initials: name.charAt(0),
       name,
@@ -128,7 +128,7 @@ export default function DashboardPage() {
   });
 
   const receivedTableData = receivedRecognitions.slice(0, 5).map((rec: any) => {
-    const name = getDisplayNameFromEmail(rec.senderEmail);
+    const name = rec.senderName || getDisplayNameFromEmail(rec.senderEmail);
     return {
       initials: name.charAt(0),
       name,

@@ -79,7 +79,7 @@ export default function ReceiveRecognitionPage() {
   // Filter recognitions based on search term (supports name, email, message, etc. instantly)
   const filteredRecognitions = recognitions.filter((rec: any) => {
     const term = searchTerm.toLowerCase();
-    const displayName = getDisplayNameFromEmail(rec.senderEmail).toLowerCase();
+    const displayName = (rec.senderName || getDisplayNameFromEmail(rec.senderEmail)).toLowerCase();
     return (
       displayName.includes(term) ||
       rec.senderEmail?.toLowerCase().includes(term) ||
@@ -155,7 +155,7 @@ export default function ReceiveRecognitionPage() {
                   </tr>
                 ) : (
                   filteredRecognitions.map((rec: any) => {
-                    const displayName = getDisplayNameFromEmail(rec.senderEmail);
+                    const displayName = rec.senderName || getDisplayNameFromEmail(rec.senderEmail);
                     return (
                       <tr key={rec._id} className="hover:bg-gray-50 align-middle">
                         <td className="px-6 py-3">
@@ -243,7 +243,7 @@ export default function ReceiveRecognitionPage() {
                   <div className="space-y-0.5">
                     <p className="text-xs uppercase tracking-wider text-white/60 font-semibold">From:</p>
                     <p className="text-2xl font-black text-white leading-tight">
-                      {getDisplayNameFromEmail(viewRecognition.senderEmail)}
+                      {viewRecognition.senderName || getDisplayNameFromEmail(viewRecognition.senderEmail)}
                     </p>
                     <p className="text-sm font-medium text-white/85">{viewRecognition.senderEmail}</p>
                   </div>
