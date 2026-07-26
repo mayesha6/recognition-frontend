@@ -57,7 +57,11 @@ export default function SubscriptionGuard({ children }: { children: React.ReactN
         upgradeLandingUrl = "http://127.0.0.1:3041";
       }
     }
-    window.location.href = `${upgradeLandingUrl}/pricing?token=${token}`;
+    const refreshToken = Cookies.get("refreshToken");
+    const params = new URLSearchParams();
+    if (token) params.set("token", token);
+    if (refreshToken) params.set("refreshToken", refreshToken);
+    window.location.href = `${upgradeLandingUrl}/pricing?${params.toString()}`;
   };
 
   if (!token) {
