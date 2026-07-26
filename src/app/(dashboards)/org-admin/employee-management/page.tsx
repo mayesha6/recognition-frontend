@@ -122,7 +122,27 @@ export default function EmployeeManagementPage() {
         if (!selectedUser) return;
         const id = selectedUser._id || selectedUser.id;
         try {
-            await updateUser({ id, name: data.name, email: data.email, department: data.department, status: data.status }).unwrap();
+            // 1. Update basic info (isActive maps to data.status)
+            await updateUser({
+                id,
+                name: data.name,
+                email: data.email,
+                department: data.department,
+                isActive: data.status,
+            }).unwrap();
+
+            // 2. Update points if changed
+            const currentPoints = selectedUser.points ?? selectedUser.pointsBalance ?? selectedUser.wallet?.pointsBalance ?? selectedUser.wallet?.pointsAllocated ?? 0;
+            const newPoints = Number(data.point);
+            const pointsDiff = newPoints - currentPoints;
+
+            if (pointsDiff !== 0) {
+                await setUserPoints({
+                    email: selectedUser.email,
+                    points: pointsDiff
+                }).unwrap();
+            }
+
             setIsModalOpen(false);
             toast.success("Employee details updated successfully");
             refetch();

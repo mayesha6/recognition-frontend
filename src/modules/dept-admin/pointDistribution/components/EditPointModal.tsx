@@ -14,20 +14,31 @@ export function EditPointModal({
 
   const isPointMode = type === "point";
 
+  const getInitialStatus = (user: any) => {
+    if (!user) return "ACTIVE";
+    const active = user.isActive === "ACTIVE" || user.isActive === true || user.status === "ACTIVE";
+    return active ? "ACTIVE" : "INACTIVE";
+  };
+
+  const getPointsValue = (user: any) => {
+    if (!user) return 0;
+    return user.point ?? user.points ?? user.pointsBalance ?? user.wallet?.pointsBalance ?? user.wallet?.pointsAllocated ?? 0;
+  };
+
   // স্ট্যাটাস ও অন্যান্য ইনফো হ্যান্ডল করার জন্য লোকাল স্টেট
   const [name, setName] = useState(userData?.name || "");
   const [email, setEmail] = useState(userData?.email || "");
   const [department, setDepartment] = useState(userData?.department || "");
-  const [point, setPoint] = useState(userData?.point || userData?.points || 0);
-  const [status, setStatus] = useState(userData?.status || "Active");
+  const [point, setPoint] = useState(getPointsValue(userData));
+  const [status, setStatus] = useState(getInitialStatus(userData));
 
   useEffect(() => {
     if (userData) {
       setName(userData.name || "");
       setEmail(userData.email || "");
       setDepartment(userData.department || "");
-      setPoint(userData.point || userData.points || 0);
-      setStatus(userData.status || "Active");
+      setPoint(getPointsValue(userData));
+      setStatus(getInitialStatus(userData));
     }
   }, [userData]);
 
@@ -67,7 +78,10 @@ export function EditPointModal({
                       {dept.name}
                     </option>
                   ))}
-                  {departments.length === 0 && (
+                  {userData?.department && !departments.some((d: any) => d.name === userData.department) && (
+                    <option value={userData.department}>{userData.department}</option>
+                  )}
+                  {departments.length === 0 && !userData?.department && (
                     <option value="">No departments available</option>
                   )}
                 </select>
@@ -101,8 +115,8 @@ export function EditPointModal({
                   ${isPointMode ? "bg-gray-50 text-gray-400 border-gray-200" : "border-indigo-500 text-gray-900"}
                 `}
               >
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
+                <option value="ACTIVE">Active</option>
+                <option value="INACTIVE">Inactive</option>
               </select>
 
               {/* অ্যারো আইকন - এটি সবসময় ডানে ফিক্সড থাকবে */}

@@ -16,6 +16,8 @@ import {
   useUpdateUserMutation,
   useDeleteUserMutation,
 } from "@/redux/api/userApi";
+import { useGetDepartmentsQuery } from "@/redux/api/departmentApi";
+import { useSetUserPointsMutation } from "@/redux/api/walletApi";
 
 export default function EmployeeManagementPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -41,14 +43,19 @@ export default function EmployeeManagementPage() {
 
   const { data: usersRes, isLoading, refetch } = useGetDepartmentUsersQuery({
     role: "USER",
+    organizationId: "null",
     page: currentPage,
     limit: 10,
     searchTerm: debouncedSearch || undefined,
   });
 
+  const { data: deptsRes } = useGetDepartmentsQuery();
+  const departmentsList = deptsRes?.data || deptsRes || [];
+
   const [createUser] = useCreateUserMutation();
   const [updateUser] = useUpdateUserMutation();
   const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
+  const [setUserPoints] = useSetUserPointsMutation();
 
   const usersList = usersRes?.data || [];
   const meta = usersRes?.meta || { total: 0, limit: 10, page: 1, totalPage: 1 };
@@ -104,7 +111,27 @@ export default function EmployeeManagementPage() {
     if (!selectedUser) return;
     const id = selectedUser._id || selectedUser.id;
     try {
-      await updateUser({ id, ...data }).unwrap();
+      // 1. Update basic info (isActive maps to data.status)
+      await updateUser({
+        id,
+        name: data.name,
+        email: data.email,
+        department: data.department,
+        isActive: data.status,
+      }).unwrap();
+
+      // 2. Update points if changed
+      const currentPoints = selectedUser.points ?? selectedUser.pointsBalance ?? selectedUser.wallet?.pointsBalance ?? selectedUser.wallet?.pointsAllocated ?? 0;
+      const newPoints = Number(data.point);
+      const pointsDiff = newPoints - currentPoints;
+
+      if (pointsDiff !== 0) {
+        await setUserPoints({
+          email: selectedUser.email,
+          points: pointsDiff
+        }).unwrap();
+      }
+
       setIsEditModalOpen(false);
       toast.success("User updated successfully");
       refetch();
@@ -190,6 +217,7 @@ export default function EmployeeManagementPage() {
           userData={selectedUser}
           type="employee"
           onSave={handleEditSave}
+          departments={departmentsList}
         />
       )}
 
