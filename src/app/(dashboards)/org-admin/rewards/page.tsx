@@ -117,7 +117,7 @@ export default function RewardsPage() {
           iconBgColor="bg-green-500/10"
         />
         <StatCard
-          title="Top Reward"
+          title="Latest Reward"
           count={topRewardName}
           icon={<CreditCard className="w-5 h-5 text-indigo-500" />}
           iconBgColor="bg-indigo-500/10"

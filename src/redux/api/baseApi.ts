@@ -53,9 +53,17 @@ const baseQueryWithRefreshToken: BaseQueryFn<
 > = async (args, api, extraOptions): Promise<any> => {
   let result = await baseQuery(args, api, extraOptions);
   if (result?.error?.status === 401) {
+    const refreshTokenVal = Cookies.get("refreshToken");
     const refreshTokenReq = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/auth/refresh-token`,
-      { method: "POST", credentials: "include" }
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ refreshToken: refreshTokenVal }),
+        credentials: "include",
+      }
     );
     const refreshToken = await refreshTokenReq.json();
 
