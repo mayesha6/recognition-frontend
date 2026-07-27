@@ -123,6 +123,7 @@ export default function Header() {
             alt="Greetely Logo"
             width={500}
             height={500}
+            priority
             className="w-32 h-12 object-contain"
           />
         </Link>
@@ -218,14 +219,14 @@ export default function Header() {
           ) : isAuthenticated && user && (
             <div className="flex items-center gap-3">
               {/* Profile image */}
-              <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center border border-gray-200 overflow-hidden">
+              <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center border border-gray-200 overflow-hidden relative">
                 {user.picture ? (
                   <Image
                     src={user.picture}
                     alt={user.name}
-                    width={40}
-                    height={40}
-                    className="w-full h-full object-cover"
+                    fill
+                    sizes="40px"
+                    className="object-cover"
                   />
                 ) : (
                   <span className="text-orange-600 font-bold text-sm">

@@ -16,9 +16,7 @@ const getInitialState = (): AuthState => {
     };
   }
 
-  const token =
-    Cookies.get("accessToken") ||
-    localStorage.getItem("accessToken");
+  const token = Cookies.get("accessToken") || null;
 
   const user = localStorage.getItem("user");
 
@@ -50,7 +48,6 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.isAuthenticated = true;
       Cookies.set("accessToken", action.payload.token, cookieOptions);
-      localStorage.setItem("accessToken", action.payload.token);
       localStorage.setItem("user", JSON.stringify(action.payload.user));
     },
     logout: (state) => {

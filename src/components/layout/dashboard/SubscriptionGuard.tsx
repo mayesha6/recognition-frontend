@@ -25,11 +25,26 @@ export default function SubscriptionGuard({ children }: { children: React.ReactN
   }
 
   // Redirect to landing page login if no token is found
+  // Also check periodically and on window focus if the cookie is gone (e.g. logged out from landing page in another tab)
   useEffect(() => {
-    if (!token) {
-      window.location.href = `${landingPageUrl}/login`;
-    }
-  }, [token, landingPageUrl]);
+    const checkToken = () => {
+      const activeToken = Cookies.get("accessToken");
+      if (!activeToken) {
+        dispatch(logout());
+        window.location.href = `${landingPageUrl}/login`;
+      }
+    };
+
+    checkToken();
+
+    window.addEventListener("focus", checkToken);
+    const interval = setInterval(checkToken, 3000); // Check every 3 seconds
+
+    return () => {
+      window.removeEventListener("focus", checkToken);
+      clearInterval(interval);
+    };
+  }, [landingPageUrl, dispatch]);
 
   const { data: profileData, isLoading } = useGetMeQuery(undefined, { skip: !token });
   const user = profileData?.data;

@@ -143,8 +143,8 @@ export default function DashboardPage() {
                 {organizations.map((org: any, idx: number) => (
                   <tr key={org._id || idx}>
                     <td className="py-3 flex items-center gap-2">
-                      <div className="w-6 h-6 rounded bg-indigo-50 flex items-center justify-center text-[10px] font-bold text-indigo-600 overflow-hidden shrink-0">
-                        {org.picture ? <Image src={org.picture} alt={org.name} width={24} height={24} className="object-cover" /> : org.name[0]}
+                      <div className="w-6 h-6 rounded bg-indigo-50 flex items-center justify-center text-[10px] font-bold text-indigo-600 overflow-hidden shrink-0 relative">
+                        {org.picture ? <Image src={org.picture} alt={org.name} fill sizes="24px" className="object-cover" /> : org.name[0]}
                       </div>
                       <div className="min-w-0">
                         <p className="font-semibold text-gray-900 truncate">{org.name}</p>
@@ -284,8 +284,8 @@ export default function DashboardPage() {
                 return (
                   <tr key={usr._id || idx}>
                     <td className="py-3 flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-xs font-bold text-orange-600 overflow-hidden shrink-0 border border-gray-100">
-                        {usr.picture ? <Image src={usr.picture} alt={usr.name} width={32} height={32} className="object-cover" /> : usr.name[0]}
+                      <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-xs font-bold text-orange-600 overflow-hidden shrink-0 border border-gray-100 relative">
+                        {usr.picture ? <Image src={usr.picture} alt={usr.name} fill sizes="32px" className="object-cover" /> : usr.name[0]}
                       </div>
                       <div>
                         <p className="font-semibold text-gray-900">{usr.name}</p>

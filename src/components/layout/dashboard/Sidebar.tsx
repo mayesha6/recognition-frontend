@@ -179,14 +179,14 @@ export default function Sidebar() {
 
         <div className="p-4 border border-gray rounded-xl m-4">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold overflow-hidden border border-gray-200 shrink-0">
+            <div className="w-10 h-10 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold overflow-hidden border border-gray-200 shrink-0 relative">
               {currentUser?.picture ? (
                 <Image
                   src={currentUser.picture}
                   alt={user.name}
-                  width={40}
-                  height={40}
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="40px"
+                  className="object-cover"
                 />
               ) : (
                 <span>{initials}</span>

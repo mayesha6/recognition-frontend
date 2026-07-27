@@ -163,7 +163,7 @@ export default function Step4Preview({ onBack, onClose }: any) {
           <h3 className="text-2xl font-medium">{data.recipientName || "Sarah Ahmed"}</h3>
           <p className="text-sm opacity-80 mb-6">{data.department || "Engineering Department"}</p>
 
-          <div className="bg-white/10 p-4 rounded-xl text-sm leading-relaxed backdrop-blur-sm min-h-[100px] relative group flex flex-col justify-center">
+          <div className="bg-white/10 p-4 rounded-xl text-sm leading-relaxed backdrop-blur-sm min-h-[100px] relative group flex flex-col justify-start">
             {isGenerating || isRegenerating ? (
               <div className="flex flex-col items-center gap-2 py-4 w-full">
                 <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
