@@ -156,11 +156,6 @@ export default function Step4Preview({ onBack, onClose }: any) {
       {/* বাম পাশ: প্রিভিউ কার্ড */}
       <div
         className="bg-gradient p-6 rounded-2xl text-white shadow-lg flex flex-col justify-between min-h-100 relative overflow-hidden"
-        style={data.imageId ? {
-          backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url(${data.imageId})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center"
-        } : undefined}
       >
         <div>
           <h2 className="text-3xl font-bold mb-6">Greetely</h2>
@@ -223,6 +218,16 @@ export default function Step4Preview({ onBack, onClose }: any) {
                   {data.message || `We are recognizing you for showing exceptional values under the ${selectedCategoryObj?.name || "Peer-to-Peer"} category!`}
                 </p>
               </>
+            )}
+
+            {data.imageId && (
+              <div className="mt-4 rounded-xl overflow-hidden flex items-center justify-center">
+                <img
+                  src={data.imageId}
+                  alt="Recognition Image"
+                  className="max-h-60 w-auto object-contain rounded-lg"
+                />
+              </div>
             )}
           </div>
         </div>

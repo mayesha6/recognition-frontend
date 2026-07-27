@@ -220,19 +220,9 @@ export default function ReceiveRecognitionPage() {
           {/* Card Container */}
           <div className="relative w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl border border-white/10 flex flex-col justify-between p-8 min-h-[500px] text-white animate-in fade-in zoom-in-95 duration-200">
             
-            {/* Background Image / Gradient */}
-            {viewRecognition.image ? (
-              <div 
-                className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                style={{ backgroundImage: `url(${viewRecognition.image})` }}
-              />
-            ) : (
-              <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-slate-900 to-purple-900" />
-            )}
+            {/* Background Gradient */}
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-slate-900 to-purple-900" />
             
-            {/* Dark overlay to ensure text contrast */}
-            <div className="absolute inset-0 bg-black/40" />
-
             {/* Content Overlay */}
             <div className="relative z-10 flex flex-col justify-between h-full min-h-[440px] w-full">
               
@@ -258,10 +248,19 @@ export default function ReceiveRecognitionPage() {
               </div>
 
               {/* Middle Row: Glassmorphism Message Box */}
-              <div className="my-6 bg-white/10 border border-white/15 backdrop-blur-md rounded-2xl p-6 shadow-xl">
+              <div className="my-6 bg-white/10 border border-white/15 backdrop-blur-md rounded-2xl p-6 shadow-xl flex flex-col gap-4">
                 <p className="text-white text-base leading-relaxed font-normal">
                   {viewRecognition.message}
                 </p>
+                {viewRecognition.image && (
+                  <div className="rounded-xl overflow-hidden flex items-center justify-center">
+                    <img
+                      src={viewRecognition.image}
+                      alt="Recognition"
+                      className="max-h-60 w-auto object-contain rounded-lg"
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Bottom Row: Points */}
