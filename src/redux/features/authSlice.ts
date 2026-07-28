@@ -68,6 +68,9 @@ const authSlice = createSlice({
       state.user = null;
       state.isAuthenticated = false;
       Cookies.remove("accessToken", cookieOptions);
+      Cookies.remove("accessToken", { path: "/" });
+      Cookies.remove("refreshToken", cookieOptions);
+      Cookies.remove("refreshToken", { path: "/" });
       localStorage.clear();
     },
   },
