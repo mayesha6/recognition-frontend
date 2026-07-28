@@ -26,6 +26,22 @@ export const superAdminApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
+
+    approveOrganization: builder.mutation<any, string>({
+      query: (id) => ({
+        url: `/user/approve/${id}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["User"],
+    }),
+
+    rejectOrganization: builder.mutation<any, string>({
+      query: (id) => ({
+        url: `/user/reject/${id}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["User"],
+    }),
   }),
 });
 
@@ -33,4 +49,6 @@ export const {
   useGetSuperAdminDashboardQuery,
   useDeleteOrganizationMutation,
   useUpdateOrganizationStatusMutation,
+  useApproveOrganizationMutation,
+  useRejectOrganizationMutation,
 } = superAdminApi;

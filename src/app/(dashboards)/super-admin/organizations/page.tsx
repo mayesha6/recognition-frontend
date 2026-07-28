@@ -12,7 +12,9 @@ import { toast } from "sonner";
 import { useGetDepartmentUsersQuery } from "@/redux/api/userApi";
 import { 
   useDeleteOrganizationMutation, 
-  useUpdateOrganizationStatusMutation 
+  useUpdateOrganizationStatusMutation,
+  useApproveOrganizationMutation,
+  useRejectOrganizationMutation 
 } from "@/redux/api/superAdminApi";
 
 export default function OrganizationManagement() {
@@ -51,6 +53,30 @@ export default function OrganizationManagement() {
 
   const [deleteOrganization] = useDeleteOrganizationMutation();
   const [updateOrganizationStatus] = useUpdateOrganizationStatusMutation();
+  const [approveOrganization] = useApproveOrganizationMutation();
+  const [rejectOrganization] = useRejectOrganizationMutation();
+
+  const handleApprove = async (id: string) => {
+    try {
+      await approveOrganization(id).unwrap();
+      toast.success("Organization approved successfully");
+      refetch();
+    } catch (err: any) {
+      toast.error(err?.data?.message || err?.message || "Failed to approve organization");
+      console.error("Failed to approve:", err);
+    }
+  };
+
+  const handleReject = async (id: string) => {
+    try {
+      await rejectOrganization(id).unwrap();
+      toast.success("Organization rejected successfully");
+      refetch();
+    } catch (err: any) {
+      toast.error(err?.data?.message || err?.message || "Failed to reject organization");
+      console.error("Failed to reject:", err);
+    }
+  };
 
   const handleSuspendClick = (id: string) => {
     const org = organizations.find((o: any) => (o._id || o.id) === id);
@@ -130,6 +156,8 @@ export default function OrganizationManagement() {
             onView={handleView}
             onSuspend={handleSuspendClick}
             onDelete={handleDeleteClick}
+            onApprove={handleApprove}
+            onReject={handleReject}
           />
 
           {totalPages > 1 && (

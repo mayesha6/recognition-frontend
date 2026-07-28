@@ -1,7 +1,7 @@
 "use client";
-import { Eye, Trash2, Ban, CheckCircle } from "lucide-react";
+import { Eye, Trash2, Ban, CheckCircle, Check, X } from "lucide-react";
 
-export default function OrganizationTable({ orgs, onView, onSuspend, onDelete }: any) {
+export default function OrganizationTable({ orgs, onView, onSuspend, onDelete, onApprove, onReject }: any) {
   return (
     <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
       <table className="w-full text-left">
@@ -50,6 +50,24 @@ export default function OrganizationTable({ orgs, onView, onSuspend, onDelete }:
               <td className="px-6 py-4">
                 <div className="flex justify-center items-center gap-3">
                   <button onClick={() => onView(org)} className="text-gray-400 hover:text-indigo-600 transition-colors" title="View"><Eye size={18} /></button>
+                  {org.status.toLowerCase() === 'pending' && (
+                    <>
+                      <button 
+                        onClick={() => onApprove(org._id || org.id)} 
+                        className="text-gray-400 hover:text-green-600 transition-colors" 
+                        title="Approve"
+                      >
+                        <Check size={18} />
+                      </button>
+                      <button 
+                        onClick={() => onReject(org._id || org.id)} 
+                        className="text-gray-400 hover:text-red-600 transition-colors" 
+                        title="Reject"
+                      >
+                        <X size={18} />
+                      </button>
+                    </>
+                  )}
                   <button 
                     onClick={() => onSuspend(org._id || org.id)} 
                     className="text-gray-400 transition-colors" 
