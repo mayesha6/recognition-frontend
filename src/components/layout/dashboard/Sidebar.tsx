@@ -128,12 +128,20 @@ export default function Sidebar() {
   if (!mounted) return <aside className="hidden lg:flex w-64 bg-white border-r h-full" />;
 
   let navItems = sidebarConfig[activeRole] || sidebarConfig["user"];
-  if (activeRole === "org-admin" && currentUser?.name) {
-    const orgSlug = slugify(currentUser.name);
-    navItems = navItems.map((item) => ({
-      ...item,
-      href: item.href.replace("[orgSlug]", orgSlug),
-    }));
+  if ((activeRole === "org-admin" || activeRole === "dept-admin") && currentUser) {
+    let orgName = "";
+    if (currentUser.role === "ORGANIZATION_ADMIN") {
+      orgName = currentUser.name || "";
+    } else if (currentUser.role === "DEPARTMENT_ADMIN") {
+      orgName = currentUser.organizationId?.name || (typeof currentUser.organizationId === "string" ? currentUser.organizationId : "");
+    }
+    if (orgName) {
+      const orgSlug = slugify(orgName);
+      navItems = navItems.map((item) => ({
+        ...item,
+        href: item.href.replace("[orgSlug]", orgSlug),
+      }));
+    }
   }
 
   const user = {

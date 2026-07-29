@@ -53,16 +53,34 @@ export default function SubscriptionGuard({ children }: { children: React.ReactN
   const { data: profileData, isLoading } = useGetMeQuery(undefined, { skip: !token });
   const user = profileData?.data;
 
-  const expectedSlug = user?.role === "ORGANIZATION_ADMIN" ? slugify(user.name || "") : "";
+  const expectedSlug =
+    user?.role === "ORGANIZATION_ADMIN"
+      ? slugify(user.name || "")
+      : user?.role === "DEPARTMENT_ADMIN"
+      ? slugify(
+          user.organizationId?.name ||
+            (typeof user.organizationId === "string" ? user.organizationId : "")
+        )
+      : "";
 
   useEffect(() => {
-    if (user?.role === "ORGANIZATION_ADMIN" && expectedSlug) {
-      if (pathname.startsWith("/org-admin")) {
-        const newPath = pathname.replace("/org-admin", `/${expectedSlug}`);
-        router.replace(newPath);
-      } else if (orgSlug && orgSlug.toLowerCase() !== expectedSlug.toLowerCase()) {
-        const newPath = pathname.replace(new RegExp(`^/${orgSlug}`, 'i'), `/${expectedSlug}`);
-        router.replace(newPath);
+    if (user && expectedSlug) {
+      if (user.role === "ORGANIZATION_ADMIN") {
+        if (pathname.startsWith("/org-admin")) {
+          const newPath = pathname.replace("/org-admin", `/${expectedSlug}`);
+          router.replace(newPath);
+        } else if (orgSlug && orgSlug.toLowerCase() !== expectedSlug.toLowerCase()) {
+          const newPath = pathname.replace(new RegExp(`^/${orgSlug}`, 'i'), `/${expectedSlug}`);
+          router.replace(newPath);
+        }
+      } else if (user.role === "DEPARTMENT_ADMIN") {
+        if (pathname.startsWith("/dept-admin")) {
+          const newPath = pathname.replace("/dept-admin", `/${expectedSlug}/dept-admin`);
+          router.replace(newPath);
+        } else if (orgSlug && orgSlug.toLowerCase() !== expectedSlug.toLowerCase()) {
+          const newPath = pathname.replace(new RegExp(`^/${orgSlug}`, 'i'), `/${expectedSlug}`);
+          router.replace(newPath);
+        }
       }
     }
   }, [user, expectedSlug, pathname, orgSlug, router]);

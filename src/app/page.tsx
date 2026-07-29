@@ -56,7 +56,23 @@ export default function HomePage() {
           dashboardPath = "/org-admin";
         }
       } else if (role === "DEPARTMENT_ADMIN") {
-        dashboardPath = "/dept-admin/dashboard";
+        let orgName = "";
+        try {
+          const storedUser = localStorage.getItem("user");
+          if (storedUser) {
+            const parsed = JSON.parse(storedUser);
+            const orgObj = parsed.organizationId;
+            orgName = orgObj?.name || (typeof orgObj === "string" ? orgObj : "");
+          }
+        } catch (e) {
+          console.error("Failed to parse user from localStorage:", e);
+        }
+
+        if (orgName) {
+          dashboardPath = `/${slugify(orgName)}/dept-admin/dashboard`;
+        } else {
+          dashboardPath = "/dept-admin/dashboard";
+        }
       } else if (role === "USER") {
         dashboardPath = "/user/dashboard";
       }

@@ -27,6 +27,7 @@ import {
 import { useGetOrgDashboardQuery } from "@/redux/api/orgAdminApi";
 import { useSetUserPointsMutation } from "@/redux/api/walletApi";
 import { toast } from "sonner";
+import { useParams } from "next/navigation";
 
 const dashboardData = {
     stats: { total: 100, sent: 21054, received: 4680, points: "284.5K", engagement: 91, topPerformer: "Saifur" },
@@ -36,6 +37,8 @@ const dashboardData = {
 };
 
 export default function DepartmentAdminDashboard() {
+    const params = useParams();
+    const orgSlug = params?.orgSlug as string;
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -212,7 +215,7 @@ export default function DepartmentAdminDashboard() {
                             <span className="text-xs font-semibold text-gray-700">Add Employee</span>
                         </button>
                         <a 
-                            href="/dept-admin/recognition"
+                            href={`/${orgSlug}/dept-admin/recognition`}
                             className="flex flex-col items-center justify-center p-4 border border-gray-100 rounded-2xl hover:bg-indigo-50/30 hover:border-indigo-100 transition-all text-center gap-2 group cursor-pointer"
                         >
                             <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl group-hover:bg-indigo-600 group-hover:text-white transition-colors">
@@ -221,7 +224,7 @@ export default function DepartmentAdminDashboard() {
                             <span className="text-xs font-semibold text-gray-700">Send Recognition</span>
                         </a>
                         <a 
-                            href="/dept-admin/point-distribution"
+                            href={`/${orgSlug}/dept-admin/point-distribution`}
                             className="flex flex-col items-center justify-center p-4 border border-gray-100 rounded-2xl hover:bg-indigo-50/30 hover:border-indigo-100 transition-all text-center gap-2 group cursor-pointer"
                         >
                             <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl group-hover:bg-indigo-600 group-hover:text-white transition-colors">
@@ -230,7 +233,7 @@ export default function DepartmentAdminDashboard() {
                             <span className="text-xs font-semibold text-gray-700">Distribute Points</span>
                         </a>
                         <a 
-                            href="/dept-admin/settings"
+                            href={`/${orgSlug}/dept-admin/settings`}
                             className="flex flex-col items-center justify-center p-4 border border-gray-100 rounded-2xl hover:bg-indigo-50/30 hover:border-indigo-100 transition-all text-center gap-2 group cursor-pointer"
                         >
                             <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl group-hover:bg-indigo-600 group-hover:text-white transition-colors">
