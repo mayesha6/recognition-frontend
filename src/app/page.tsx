@@ -1,6 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
+import { slugify } from "@/utils/slugify";
 
 export default function HomePage() {
   useEffect(() => {
@@ -38,7 +39,22 @@ export default function HomePage() {
       if (role === "SUPER_ADMIN") {
         dashboardPath = "/super-admin";
       } else if (role === "ORGANIZATION_ADMIN") {
-        dashboardPath = "/org-admin";
+        let orgName = "";
+        try {
+          const storedUser = localStorage.getItem("user");
+          if (storedUser) {
+            const parsed = JSON.parse(storedUser);
+            orgName = parsed.name || "";
+          }
+        } catch (e) {
+          console.error("Failed to parse user from localStorage:", e);
+        }
+
+        if (orgName) {
+          dashboardPath = `/${slugify(orgName)}`;
+        } else {
+          dashboardPath = "/org-admin";
+        }
       } else if (role === "DEPARTMENT_ADMIN") {
         dashboardPath = "/dept-admin/dashboard";
       } else if (role === "USER") {

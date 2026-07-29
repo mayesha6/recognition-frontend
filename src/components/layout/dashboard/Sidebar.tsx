@@ -90,6 +90,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import Cookies from "js-cookie";
 import { logout } from "@/redux/features/authSlice";
 import { useGetMeQuery } from "@/redux/api/authApi";
+import { slugify } from "@/utils/slugify";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -126,7 +127,14 @@ export default function Sidebar() {
   // ৩. মাউন্ট না হওয়া পর্যন্ত কিছুই রেন্ডার করবেন না বা লোডিং দেখান
   if (!mounted) return <aside className="hidden lg:flex w-64 bg-white border-r h-full" />;
 
-  const navItems = sidebarConfig[activeRole] || sidebarConfig["user"];
+  let navItems = sidebarConfig[activeRole] || sidebarConfig["user"];
+  if (activeRole === "org-admin" && currentUser?.name) {
+    const orgSlug = slugify(currentUser.name);
+    navItems = navItems.map((item) => ({
+      ...item,
+      href: item.href.replace("[orgSlug]", orgSlug),
+    }));
+  }
 
   const user = {
     name: currentUser?.name || "Saifur Rahman",

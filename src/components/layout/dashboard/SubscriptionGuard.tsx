@@ -3,14 +3,18 @@
 import { useGetMeQuery } from "@/redux/api/authApi";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/redux/features/authSlice";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams, usePathname } from "next/navigation";
 import Cookies from "js-cookie";
 import { ShieldAlert, LogOut, ArrowUpRight } from "lucide-react";
 import { RootState } from "@/redux/store";
 import { useEffect } from "react";
+import { slugify } from "@/utils/slugify";
 
 export default function SubscriptionGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const params = useParams();
+  const pathname = usePathname();
+  const orgSlug = params?.orgSlug as string;
   const dispatch = useDispatch();
   const token = useSelector((state: RootState) => state.auth?.token) || Cookies.get("accessToken");
 
@@ -31,7 +35,7 @@ export default function SubscriptionGuard({ children }: { children: React.ReactN
       const activeToken = Cookies.get("accessToken");
       if (!activeToken) {
         dispatch(logout());
-        window.location.href = `${landingPageUrl}/login`;
+        window.location.href = `${landingPageUrl}/login?redirect=${encodeURIComponent(window.location.href)}`;
       }
     };
 
@@ -48,6 +52,20 @@ export default function SubscriptionGuard({ children }: { children: React.ReactN
 
   const { data: profileData, isLoading } = useGetMeQuery(undefined, { skip: !token });
   const user = profileData?.data;
+
+  const expectedSlug = user?.role === "ORGANIZATION_ADMIN" ? slugify(user.name || "") : "";
+
+  useEffect(() => {
+    if (user?.role === "ORGANIZATION_ADMIN" && expectedSlug) {
+      if (pathname.startsWith("/org-admin")) {
+        const newPath = pathname.replace("/org-admin", `/${expectedSlug}`);
+        router.replace(newPath);
+      } else if (orgSlug && orgSlug.toLowerCase() !== expectedSlug.toLowerCase()) {
+        const newPath = pathname.replace(new RegExp(`^/${orgSlug}`, 'i'), `/${expectedSlug}`);
+        router.replace(newPath);
+      }
+    }
+  }, [user, expectedSlug, pathname, orgSlug, router]);
 
   // Check if user is Org Admin and subscription is not active or trialing
   const isOrgAdmin = user?.role === "ORGANIZATION_ADMIN";

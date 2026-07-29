@@ -101,42 +101,42 @@ export const sidebarConfig: Record<UserRole, SidebarItem[]> = {
   "org-admin": [
     {
       name: "Dashboard",
-      href: "/org-admin",
+      href: "/[orgSlug]",
       icon: LayoutDashboard,
     },
     {
       name: "Departments",
-      href: "/org-admin/department-management",
+      href: "/[orgSlug]/department-management",
       icon: Building2,
     },
     {
       name: "Employees",
-      href: "/org-admin/employee-management",
+      href: "/[orgSlug]/employee-management",
       icon: Users,
     },
     {
       name: "Recognitions",
-      href: "/org-admin/recognition",
+      href: "/[orgSlug]/recognition",
       icon: Award,
     },
     {
       name: "Rewards & Redeem",
-      href: "/org-admin/rewards",
+      href: "/[orgSlug]/rewards",
       icon: Gift,
     },
     {
       name: "Reward Claim",
-      href: "/org-admin/reward-claim",
+      href: "/[orgSlug]/reward-claim",
       icon: BaggageClaim,
     },
     {
       name: "Support Ticket",
-      href: "/org-admin/support-ticket",
+      href: "/[orgSlug]/support-ticket",
       icon: Ticket,
     },
     {
       name: "Settings",
-      href: "/org-admin/settings/general",
+      href: "/[orgSlug]/settings/general",
       icon: Settings,
     },
   ],
