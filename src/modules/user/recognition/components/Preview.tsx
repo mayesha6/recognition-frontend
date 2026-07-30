@@ -310,12 +310,12 @@ export default function Step4Preview({ onBack, onClose }: any) {
           </div>
         </div>
 
-        <div className="flex gap-4 mt-8">
-          <Button variant="outline" className="w-1/3 py-6 rounded-xl text-lg font-semibold" onClick={onBack}>
+        <div className="flex flex-col sm:flex-row gap-4 mt-8">
+          <Button variant="outline" className="w-full sm:w-1/3 py-3 sm:py-6 rounded-xl text-sm sm:text-lg font-semibold" onClick={onBack}>
             Back
           </Button>
           <Button
-            className="w-2/3 bg-gradient py-6 rounded-xl text-lg text-white font-semibold flex items-center justify-center gap-2"
+            className="w-full sm:w-2/3 bg-gradient py-3 sm:py-6 rounded-xl text-sm sm:text-lg text-white font-semibold flex items-center justify-center gap-2"
             onClick={handleSend}
             disabled={isSending}
           >
