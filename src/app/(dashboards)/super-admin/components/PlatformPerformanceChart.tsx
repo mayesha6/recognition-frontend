@@ -1,11 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from "recharts";
 
 export default function PlatformPerformanceChart({ performanceData }: { performanceData: any[] }) {
-  const [activeTab, setActiveTab] = useState("1Y");
-
   // Map 12 months with backend platformPerformance total count
   const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const formattedData = monthNames.map((name, index) => {
@@ -37,21 +34,6 @@ export default function PlatformPerformanceChart({ performanceData }: { performa
               Sent
             </span>
           </div>
-        </div>
-
-        {/* Time toggles */}
-        <div className="flex bg-gray-100 p-1 rounded-lg text-xs font-semibold text-gray-500">
-          {["7D", "30D", "90D", "1Y"].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-3 py-1 rounded-md transition-colors ${
-                activeTab === tab ? "bg-white text-gray-900 shadow-sm" : "hover:text-gray-900"
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
         </div>
       </div>
 
