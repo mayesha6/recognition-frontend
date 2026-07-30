@@ -229,7 +229,7 @@ export default function Sidebar() {
       </aside>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="lg:hidden fixed bottom-0 left-0 w-full bg-white border-t flex justify-start items-center gap-6 p-3 px-6 z-50 overflow-x-auto scrollbar-none">
+      <nav className="lg:hidden fixed bottom-0 left-0 w-full bg-white border-t border-t-gray flex justify-start items-center gap-6 p-3 px-6 z-50 overflow-x-auto scrollbar-none">
         {navItems.map((item) => (
           <Link
             key={item.name}

@@ -93,8 +93,8 @@ export default function RecognitionAnalyticsPage() {
             </div>
 
             {/* ২. চার্ট এবং ক্যাটাগরি */}
-            <div className="grid grid-cols-3 gap-6 mb-8">
-                <div className="col-span-2 bg-white p-6 rounded-2xl border border-gray shadow-sm">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-gray shadow-sm">
                     <h3 className="font-bold text-gray-900 mb-4">Recognition Trends</h3>
                     <RecognitionChart data={formattedTrendData} />
                 </div>

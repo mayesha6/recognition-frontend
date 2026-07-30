@@ -155,7 +155,7 @@ export default function Header() {
                   onClick={() => setShowNotifications(false)}
                 />
                 
-                <div className="absolute right-0 top-12 mt-2 w-80 sm:w-96 bg-white border border-gray-100 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-3 duration-200">
+                <div className="fixed sm:absolute left-4 right-4 sm:left-auto sm:right-0 top-16 sm:top-12 mt-2 w-auto sm:w-96 bg-white border border-gray-100 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-3 duration-200">
                   <div className="p-4 border-b border-gray-100 flex items-center justify-between">
                     <h4 className="font-bold text-gray-900 text-sm">Notifications</h4>
                     {unreadCount > 0 && (
