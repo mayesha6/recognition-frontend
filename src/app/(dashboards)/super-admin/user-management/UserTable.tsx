@@ -25,8 +25,15 @@ export default function UserTable({
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {data.map((user: any, i: any) => {
-              const initials = user.initials || (user.name ? user.name.split(" ").map((n: string) => n[0]).join("").toUpperCase().substring(0, 2) : "U");
+            {data.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="px-6 py-10 text-center text-gray-500 font-medium">
+                  No users found.
+                </td>
+              </tr>
+            ) : (
+              data.map((user: any, i: any) => {
+                const initials = user.initials || (user.name ? user.name.split(" ").map((n: string) => n[0]).join("").toUpperCase().substring(0, 2) : "U");
               const isActive = user.isActive === "ACTIVE" || user.status === "ACTIVE" || user.isActive === true;
               const roleDisplay = user.role === "SUPER_ADMIN" ? "Super Admin" : user.role === "ORGANIZATION_ADMIN" ? "Org Admin" : user.role === "DEPARTMENT_ADMIN" ? "Dept Admin" : "User";
 
@@ -72,7 +79,8 @@ export default function UserTable({
                   </td>
                 </tr>
               );
-            })}
+            })
+          )}
           </tbody>
         </table>
       </div>
