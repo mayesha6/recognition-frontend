@@ -67,31 +67,31 @@ export default function DashboardPage() {
 
   // Build pointsData
   const pointsData = [
-    { 
-      title: "Available Points", 
-      value: balance.toLocaleString(), 
-      subtitle: "Across all programs", 
-      icon: <Coins className="w-5 h-5 text-orange-500" />, 
-      color: "bg-orange-100" 
+    {
+      title: "Available Points",
+      value: balance.toLocaleString(),
+      subtitle: "Across all programs",
+      icon: <Coins className="w-5 h-5 text-orange-500" />,
+      color: "bg-orange-100"
     },
-    { 
-      title: "Total Sent Points", 
-      value: sentPointsTotal.toLocaleString(), 
-      icon: <MinusCircle className="w-5 h-5 text-red-500" />, 
-      color: "bg-red-100" 
+    {
+      title: "Total Sent Points",
+      value: sentPointsTotal.toLocaleString(),
+      icon: <MinusCircle className="w-5 h-5 text-red-500" />,
+      color: "bg-red-100"
     },
-    { 
-      title: "Total Received Points", 
-      value: receivedPointsTotal.toLocaleString(), 
-      icon: <PlusCircle className="w-5 h-5 text-green-500" />, 
-      color: "bg-green-100" 
+    {
+      title: "Total Received Points",
+      value: receivedPointsTotal.toLocaleString(),
+      icon: <PlusCircle className="w-5 h-5 text-green-500" />,
+      color: "bg-green-100"
     },
-    { 
-      title: "Reward Redeemed", 
-      value: totalClaims.toString(), 
+    {
+      title: "Reward Redeemed",
+      value: totalClaims.toString(),
       subtitle: lastRedeemedReward !== "None" ? `Last: ${lastRedeemedReward}` : "No claims yet",
-      icon: <Gift className="w-5 h-5 text-indigo-500" />, 
-      color: "bg-indigo-100" 
+      icon: <Gift className="w-5 h-5 text-indigo-500" />,
+      color: "bg-indigo-100"
     },
   ];
 
@@ -141,7 +141,7 @@ export default function DashboardPage() {
   });
 
   return (
-    <div className="p-8 bg-gray-50/50 min-h-screen">
+    <div className="bg-gray-50/50 min-h-screen">
       <h1 className="text-2xl font-bold mb-6">User Overview</h1>
 
       {/* ১. স্ট্যাটস কার্ডস */}
@@ -164,13 +164,13 @@ export default function DashboardPage() {
           <h3 className="font-bold mb-4 text-gray-900">Use Recognitions</h3>
           <RecognitionChart data={chartData} />
         </div>
-        
+
         {/* Quick Actions Panel */}
         <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
           <h3 className="font-bold mb-4 text-gray-900">Quick Actions</h3>
           <div className="flex flex-col gap-4 h-full justify-center">
-            <Link 
-              href="/user/send-recognition" 
+            <Link
+              href="/user/send-recognition"
               className="flex items-center gap-3 p-4 border border-gray-100 rounded-xl hover:bg-indigo-50/50 hover:border-indigo-200 transition-all group"
             >
               <div className="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-100 transition-colors">
@@ -182,8 +182,8 @@ export default function DashboardPage() {
               </div>
             </Link>
 
-            <Link 
-              href="/user/rewards" 
+            <Link
+              href="/user/rewards"
               className="flex items-center gap-3 p-4 border border-gray-100 rounded-xl hover:bg-emerald-50/50 hover:border-emerald-200 transition-all group"
             >
               <div className="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-100 transition-colors">

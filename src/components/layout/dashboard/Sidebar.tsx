@@ -229,12 +229,12 @@ export default function Sidebar() {
       </aside>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="lg:hidden fixed bottom-0 left-0 w-full bg-white border-t flex justify-around p-3 z-50">
+      <nav className="lg:hidden fixed bottom-0 left-0 w-full bg-white border-t flex justify-start items-center gap-6 p-3 px-6 z-50 overflow-x-auto scrollbar-none">
         {navItems.map((item) => (
           <Link
             key={item.name}
             href={item.href}
-            className={`flex flex-col items-center gap-1 ${pathname === item.href ? "text-primary" : "text-gray-500"
+            className={`flex flex-col items-center gap-1 shrink-0 ${pathname === item.href ? "text-primary" : "text-gray-500"
               }`}
           >
             <item.icon className="w-6 h-6" />
@@ -245,7 +245,7 @@ export default function Sidebar() {
 
         <button
           onClick={handleLogout}
-          className="flex flex-col items-center gap-1 text-gray-500 cursor-pointer"
+          className="flex flex-col items-center gap-1 text-gray-500 cursor-pointer shrink-0"
         >
           <LogOut className="w-6 h-6" />
 
