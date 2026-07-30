@@ -199,6 +199,10 @@ export default function OrganizationUsersPage() {
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
           <p className="text-sm text-gray-500 font-medium animate-pulse">Loading users...</p>
         </div>
+      ) : usersList.length === 0 ? (
+        <div className="p-12 text-center text-gray-400 border border-dashed border-gray-200 rounded-2xl text-sm bg-white shadow-sm">
+          {searchTerm ? `No users matching "${searchTerm}"` : "No users found."}
+        </div>
       ) : (
         <>
           <UserTable
