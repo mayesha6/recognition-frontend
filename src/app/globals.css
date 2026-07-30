@@ -61,3 +61,28 @@ box-sizing: border-box;
 .recharts-surface {
   outline: none !important;
 }
+
+/* ==========================================================================
+   Responsive Tables & Column Squeeze Prevention
+   ========================================================================== */
+div:has(> table), 
+.overflow-x-auto {
+  overflow-x: auto !important;
+  width: 100% !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  min-width: 1000px !important;
+  width: 100% !important;
+  table-layout: auto !important;
+}
+
+th, td {
+  white-space: nowrap !important;
+}
+
+/* Allow description columns or wrapped cells inside <p> to wrap normally */
+td p {
+  white-space: normal !important;
+}
