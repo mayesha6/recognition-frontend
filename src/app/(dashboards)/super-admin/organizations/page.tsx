@@ -9,6 +9,7 @@ import Pagination from "@/components/common/pagination";
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import { useGetDepartmentUsersQuery } from "@/redux/api/userApi";
 import { 
   useDeleteOrganizationMutation, 
@@ -18,6 +19,7 @@ import {
 } from "@/redux/api/superAdminApi";
 
 export default function OrganizationManagement() {
+  const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -122,8 +124,8 @@ export default function OrganizationManagement() {
   };
 
   const handleView = (org: any) => {
-    setSelectedOrg(org);
-    setIsViewModalOpen(true);
+    const orgId = org._id || org.id;
+    router.push(`/super-admin/organizations/${orgId}`);
   };
 
   return (

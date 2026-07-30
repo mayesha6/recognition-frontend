@@ -2,7 +2,7 @@ import { baseApi } from "./baseApi";
 
 export const departmentApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getDepartments: builder.query<any, { searchTerm?: string } | void>({
+    getDepartments: builder.query<any, { searchTerm?: string; organizationId?: string } | void>({
       query: (params) => ({
         url: "/department",
         method: "GET",

@@ -79,6 +79,14 @@ export const userApi = baseApi.injectEndpoints({
       invalidatesTags: ["User"],
     }),
 
+    getSingleUser: builder.query({
+      query: (id) => ({
+        url: `/user/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["User"],
+    }),
+
     deleteRecognition: builder.mutation({
       query: (id) => ({
         url: `/recognition/${id}`,
@@ -100,5 +108,6 @@ export const {
   useCreateUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
+  useGetSingleUserQuery,
   useDeleteRecognitionMutation
 } = userApi;
