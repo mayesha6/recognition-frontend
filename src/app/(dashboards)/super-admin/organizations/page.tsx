@@ -10,6 +10,7 @@ import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { slugify } from "@/utils/slugify";
 import { useGetDepartmentUsersQuery } from "@/redux/api/userApi";
 import { 
   useDeleteOrganizationMutation, 
@@ -124,8 +125,8 @@ export default function OrganizationManagement() {
   };
 
   const handleView = (org: any) => {
-    const orgId = org._id || org.id;
-    router.push(`/super-admin/organizations/${orgId}`);
+    const orgSlug = slugify(org.name);
+    router.push(`/super-admin/organizations/${orgSlug}`);
   };
 
   return (
