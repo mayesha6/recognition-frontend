@@ -16,7 +16,7 @@ export default function DashboardsLayout({ children }: { children: React.ReactNo
             <Sidebar />
             
             {/* Main Content */}
-            <main className="flex-1 overflow-y-auto p-8">
+            <main className="flex-1 overflow-y-auto p-8 pb-24 lg:pb-8">
               {children}
             </main>
           </div>
