@@ -1,14 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Bell, Menu, Award, Gift, MessageSquare, ShieldAlert } from "lucide-react";
+import { Search, Bell, Menu, Award, Gift, MessageSquare, ShieldAlert, LogOut } from "lucide-react";
 import Image from "next/image";
 import logo from "@/assets/images/logo.png";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
+import { logout } from "@/redux/features/authSlice";
 import { useGetMeQuery } from "@/redux/api/authApi";
 import { 
   useGetNotificationsQuery, 
@@ -49,12 +50,16 @@ const formatTimeAgo = (dateString?: string) => {
 
 export default function Header() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const token = useSelector((state: RootState) => state.auth?.token) || Cookies.get("accessToken");
   const { data: profileData, isLoading: isProfileLoading } = useGetMeQuery(undefined, { skip: !token });
   
   const user = profileData?.data;
   const tokenKeep = Cookies.get("accessToken");
   const isAuthenticated = !!tokenKeep && !!user;
+
+  // Profile Menu Dropdown State
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   const initials = user?.name
     ? user.name
@@ -111,6 +116,11 @@ export default function Header() {
     } catch (err) {
       console.error("Failed to mark all notifications as read:", err);
     }
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    window.location.href = "https://greetely.com/login";
   };
 
   return (
@@ -217,29 +227,75 @@ export default function Header() {
           {isProfileLoading ? (
             <div className="text-xs text-gray-400">Loading...</div>
           ) : isAuthenticated && user && (
-            <div className="flex items-center gap-3">
-              {/* Profile image */}
-              <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center border border-gray-200 overflow-hidden relative">
-                {user.picture ? (
-                  <Image
-                    src={user.picture}
-                    alt={user.name}
-                    fill
-                    sizes="40px"
-                    className="object-cover"
-                  />
-                ) : (
-                  <span className="text-orange-600 font-bold text-sm">
-                    {initials}
-                  </span>
-                )}
-              </div>
+            <div className="relative">
+              {/* Trigger button */}
+              <button
+                onClick={() => setShowProfileMenu(!showProfileMenu)}
+                className="flex items-center gap-3 hover:bg-gray-50 px-2.5 py-1.5 rounded-xl transition-all text-left focus:outline-none shrink-0 group border border-transparent hover:border-gray-100"
+              >
+                {/* Profile image */}
+                <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center border border-gray-200 overflow-hidden relative shrink-0">
+                  {user.picture ? (
+                    <Image
+                      src={user.picture}
+                      alt={user.name}
+                      fill
+                      sizes="40px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <span className="text-orange-600 font-bold text-sm">
+                      {initials}
+                    </span>
+                  )}
+                </div>
 
-              {/* User role labels */}
-              <div className="flex flex-col">
-                <span className="text-sm font-bold text-gray-900">{user.name}</span>
-                <span className="text-xs text-gray-500">{getRoleLabel(user.role)}</span>
-              </div>
+                {/* User role labels */}
+                <div className="hidden sm:flex flex-col">
+                  <span className="text-sm font-bold text-gray-900 leading-tight group-hover:text-indigo-600 transition-colors">
+                    {user.name}
+                  </span>
+                  <span className="text-xs text-gray-500 leading-tight">
+                    {getRoleLabel(user.role)}
+                  </span>
+                </div>
+
+                {/* Arrow icon */}
+                <svg className="w-4 h-4 text-gray-400 ml-0.5 hidden sm:block transition-transform duration-200 group-hover:text-gray-600 group-hover:translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </button>
+
+              {showProfileMenu && (
+                <>
+                  {/* Backdrop overlay */}
+                  <div 
+                    className="fixed inset-0 z-40" 
+                    onClick={() => setShowProfileMenu(false)}
+                  />
+
+                  {/* Dropdown Menu */}
+                  <div className="absolute right-0 mt-2 w-52 bg-white border border-gray-100 rounded-2xl shadow-xl z-50 py-1.5 animate-in fade-in slide-in-from-top-2 duration-150">
+                    {/* User Info Header (Mobile fallback) */}
+                    <div className="px-4 py-2 border-b border-gray-50 sm:hidden">
+                      <p className="text-sm font-bold text-gray-900 truncate">{user.name}</p>
+                      <p className="text-xs text-gray-500 truncate">{getRoleLabel(user.role)}</p>
+                    </div>
+
+                    {/* Logout Option */}
+                    <button
+                      onClick={() => {
+                        setShowProfileMenu(false);
+                        handleLogout();
+                      }}
+                      className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50/50 transition-colors font-semibold text-left"
+                    >
+                      <LogOut className="w-4 h-4 text-red-500 shrink-0" />
+                      Logout
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           )}
         </div>
