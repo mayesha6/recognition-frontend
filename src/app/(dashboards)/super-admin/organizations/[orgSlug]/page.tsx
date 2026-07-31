@@ -224,6 +224,7 @@ export default function OrganizationUsersPage() {
           userData={selectedUser}
           onSave={handleEditSave}
           departments={departmentsList}
+          isOrgScoped={true}
         />
       )}
 

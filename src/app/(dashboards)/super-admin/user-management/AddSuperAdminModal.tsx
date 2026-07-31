@@ -1,26 +1,17 @@
 import { useState } from "react";
 import { X } from "lucide-react";
-import { useGetDepartmentsQuery } from "@/redux/api/departmentApi";
 
-export default function AddSuperAdminModal({ isOpen, onClose, onSave, organizations = [], departments = [] }: any) {
+export default function AddSuperAdminModal({ isOpen, onClose, onSave, departments = [] }: any) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     role: "USER",
-    organizationId: "",
     department: "",
     status: "Active"
   });
 
   const [errors, setErrors] = useState<any>({});
-
-  // Dynamically load departments of the selected organization
-  const { data: orgDeptsRes } = useGetDepartmentsQuery(
-    { organizationId: formData.organizationId },
-    { skip: !formData.organizationId || formData.role === "SUPER_ADMIN" }
-  );
-  const activeDepartments = orgDeptsRes?.data || orgDeptsRes || [];
 
   if (!isOpen) return null;
 
@@ -30,9 +21,6 @@ export default function AddSuperAdminModal({ isOpen, onClose, onSave, organizati
     if (!formData.name.trim()) validationErrors.name = "Name is required";
     if (!formData.email.trim()) validationErrors.email = "Email is required";
     if (!formData.password) validationErrors.password = "Password is required";
-    if (formData.role !== "SUPER_ADMIN" && !formData.organizationId) {
-      validationErrors.organizationId = "Organization is required";
-    }
     
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -105,12 +93,11 @@ export default function AddSuperAdminModal({ isOpen, onClose, onSave, organizati
                 <select
                   className="w-full appearance-none border border-gray-200 rounded-lg pl-3 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 cursor-pointer text-sm bg-white"
                   value={formData.role}
-                  onChange={(e) => setFormData({ ...formData, role: e.target.value, department: e.target.value === "SUPER_ADMIN" ? "Administration" : "", organizationId: e.target.value === "SUPER_ADMIN" ? "" : formData.organizationId })}
+                  onChange={(e) => setFormData({ ...formData, role: e.target.value, department: e.target.value === "SUPER_ADMIN" ? "Administration" : "" })}
                 >
                   <option value="SUPER_ADMIN">Super Admin</option>
-                  <option value="ORGANIZATION_ADMIN">Organization Admin</option>
                   <option value="DEPARTMENT_ADMIN">Department Admin</option>
-                  <option value="USER">User (Employee)</option>
+                  <option value="USER">User (Individual)</option>
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -141,35 +128,6 @@ export default function AddSuperAdminModal({ isOpen, onClose, onSave, organizati
             </div>
           </div>
 
-          {/* Organization Selection (Only show for non-Super Admin roles) */}
-          {formData.role !== "SUPER_ADMIN" && (
-            <div>
-              <label className="text-sm font-medium text-gray-700 block mb-1">Organization</label>
-              <div className="relative w-full">
-                <select
-                  className={`w-full appearance-none border rounded-lg pl-3 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 cursor-pointer text-sm bg-white ${
-                    errors.organizationId ? "border-red-500" : "border-gray-200"
-                  }`}
-                  value={formData.organizationId}
-                  onChange={(e) => setFormData({ ...formData, organizationId: e.target.value, department: "" })}
-                >
-                  <option value="">Select an organization</option>
-                  {organizations.map((org: any) => (
-                    <option key={org._id || org.id} value={org._id || org.id}>
-                      {org.name}
-                    </option>
-                  ))}
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                  </svg>
-                </div>
-              </div>
-              {errors.organizationId && <p className="text-red-500 text-xs mt-1">{errors.organizationId}</p>}
-            </div>
-          )}
-
           {/* Department (Only show for non-Super Admin roles) */}
           {formData.role !== "SUPER_ADMIN" && (
             <div>
@@ -179,10 +137,9 @@ export default function AddSuperAdminModal({ isOpen, onClose, onSave, organizati
                   className="w-full appearance-none border border-gray-200 rounded-lg pl-3 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 cursor-pointer text-sm bg-white"
                   value={formData.department}
                   onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                  disabled={!formData.organizationId}
                 >
                   <option value="">Select a department</option>
-                  {activeDepartments.map((dept: any) => (
+                  {departments.map((dept: any) => (
                     <option key={dept._id || dept.id} value={dept.name}>
                       {dept.name}
                     </option>
