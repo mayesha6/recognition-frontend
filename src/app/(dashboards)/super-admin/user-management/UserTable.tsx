@@ -8,7 +8,8 @@ export default function UserTable({
   onEdit,
   currentPage = 1,
   totalPages = 1,
-  onPageChange
+  onPageChange,
+  showOrganization = false
 }: any) {
   return (
     <div>
@@ -18,6 +19,7 @@ export default function UserTable({
             <tr>
               <th className="px-6 py-4 font-medium">Name</th>
               <th className="px-6 py-4 font-medium">Email</th>
+              {showOrganization && <th className="px-6 py-4 font-medium">Organization</th>}
               <th className="px-6 py-4 font-medium">Department</th>
               <th className="px-6 py-4 font-medium">Role</th>
               <th className="px-6 py-4 font-medium">Status</th>
@@ -27,7 +29,7 @@ export default function UserTable({
           <tbody className="divide-y divide-gray-100">
             {data.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-6 py-10 text-center text-gray-500 font-medium">
+                <td colSpan={showOrganization ? 7 : 6} className="px-6 py-10 text-center text-gray-500 font-medium">
                   No users found.
                 </td>
               </tr>
@@ -36,6 +38,23 @@ export default function UserTable({
                 const initials = user.initials || (user.name ? user.name.split(" ").map((n: string) => n[0]).join("").toUpperCase().substring(0, 2) : "U");
               const isActive = user.isActive === "ACTIVE" || user.status === "ACTIVE" || user.isActive === true;
               const roleDisplay = user.role === "SUPER_ADMIN" ? "Super Admin" : user.role === "ORGANIZATION_ADMIN" ? "Org Admin" : user.role === "DEPARTMENT_ADMIN" ? "Dept Admin" : "User";
+
+              const getRoleBadgeColor = (role: string) => {
+                switch (role) {
+                  case "SUPER_ADMIN":
+                    return "bg-purple-100 text-purple-800";
+                  case "ORGANIZATION_ADMIN":
+                    return "bg-blue-100 text-blue-800";
+                  case "DEPARTMENT_ADMIN":
+                    return "bg-indigo-100 text-indigo-800";
+                  default:
+                    return "bg-slate-100 text-slate-800";
+                }
+              };
+
+              const orgNameDisplay = user.role === "SUPER_ADMIN"
+                ? "Greetely System"
+                : user.organizationId?.name || (typeof user.organizationId === "string" ? user.organizationId : "") || user.organization || "N/A";
 
               return (
                 <tr key={user._id || user.id || i} className="hover:bg-gray-50/50">
@@ -46,13 +65,12 @@ export default function UserTable({
                     <span className="font-normal text-[14px] text-gray-900">{user.name}</span>
                   </td>
                   <td className="font-normal text-[14px] px-6 py-4 text-gray-600">{user.email}</td>
+                  {showOrganization && (
+                    <td className="font-normal text-[14px] px-6 py-4 text-gray-600">{orgNameDisplay}</td>
+                  )}
                   <td className="font-normal text-[14px] px-6 py-4 text-gray-600">{user.department || "N/A"}</td>
                   <td className="font-normal text-[14px] px-6 py-4">
-                    <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      user.role === "SUPER_ADMIN" 
-                        ? "bg-purple-100 text-purple-800" 
-                        : "bg-blue-100 text-blue-800"
-                    }`}>
+                    <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${getRoleBadgeColor(user.role)}`}>
                       {roleDisplay}
                     </span>
                   </td>

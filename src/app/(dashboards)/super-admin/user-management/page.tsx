@@ -43,11 +43,16 @@ export default function EmployeeManagementPage() {
 
   const { data: usersRes, isLoading, refetch } = useGetDepartmentUsersQuery({
     role: roleFilter === "ALL" ? undefined : roleFilter,
-    organizationId: "null",
     page: currentPage,
     limit: 10,
     searchTerm: debouncedSearch || undefined,
   });
+
+  const { data: orgsRes } = useGetDepartmentUsersQuery({
+    accountType: "ORGANIZATION",
+    limit: 100,
+  });
+  const organizationsList = orgsRes?.data || [];
 
   const { data: deptsRes } = useGetDepartmentsQuery();
   const departmentsList = deptsRes?.data || deptsRes || [];
@@ -97,6 +102,7 @@ export default function EmployeeManagementPage() {
         role: data.role,
         password: data.password || "DefaultPassword123!",
         department: data.role === "SUPER_ADMIN" ? "Administration" : (data.department || "Engineering"),
+        organizationId: data.role === "SUPER_ADMIN" ? undefined : (data.organizationId || undefined),
       }).unwrap();
       setIsAddEmployeeModalOpen(false);
       toast.success("User created successfully");
@@ -117,6 +123,7 @@ export default function EmployeeManagementPage() {
         role: data.role,
         department: data.department,
         isActive: data.status ? "ACTIVE" : "INACTIVE",
+        organizationId: data.role === "SUPER_ADMIN" ? null : (data.organizationId || undefined),
       }).unwrap();
 
       setIsEditModalOpen(false);
@@ -174,8 +181,10 @@ export default function EmployeeManagementPage() {
               className="w-full appearance-none border border-gray-200 rounded-lg pl-3 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 cursor-pointer text-sm bg-white"
             >
               <option value="ALL">All Roles</option>
-              <option value="USER">User (Employee)</option>
               <option value="SUPER_ADMIN">Super Admin</option>
+              <option value="ORGANIZATION_ADMIN">Organization Admin</option>
+              <option value="DEPARTMENT_ADMIN">Department Admin</option>
+              <option value="USER">User (Employee)</option>
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -214,6 +223,7 @@ export default function EmployeeManagementPage() {
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={(p: number) => setCurrentPage(p)}
+            showOrganization={true}
           />
         </>
       )}
@@ -224,6 +234,7 @@ export default function EmployeeManagementPage() {
           isOpen={isAddEmployeeModalOpen} 
           onClose={() => setIsAddEmployeeModalOpen(false)} 
           onSave={handleSaveUser}
+          organizations={organizationsList}
           departments={departmentsList}
         />
       )}
@@ -235,6 +246,7 @@ export default function EmployeeManagementPage() {
           onClose={() => setIsEditModalOpen(false)} 
           userData={selectedUser}
           onSave={handleEditSave}
+          organizations={organizationsList}
           departments={departmentsList}
         />
       )}

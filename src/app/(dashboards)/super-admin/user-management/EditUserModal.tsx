@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
+import { useGetDepartmentsQuery } from "@/redux/api/departmentApi";
 
-export default function EditUserModal({ isOpen, onClose, userData, onSave, departments = [] }: any) {
+export default function EditUserModal({ isOpen, onClose, userData, onSave, organizations = [], departments = [] }: any) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("USER");
+  const [organizationId, setOrganizationId] = useState("");
   const [department, setDepartment] = useState("");
   const [status, setStatus] = useState("ACTIVE");
 
@@ -15,6 +17,7 @@ export default function EditUserModal({ isOpen, onClose, userData, onSave, depar
       setName(userData.name || "");
       setEmail(userData.email || "");
       setRole(userData.role || "USER");
+      setOrganizationId(userData.organizationId?._id || userData.organizationId || "");
       setDepartment(userData.department || "");
       setStatus(
         userData.isActive === "ACTIVE" || userData.status === "ACTIVE" || userData.isActive === true
@@ -24,12 +27,27 @@ export default function EditUserModal({ isOpen, onClose, userData, onSave, depar
     }
   }, [userData]);
 
+  // Dynamically load departments of the selected organization
+  const { data: orgDeptsRes } = useGetDepartmentsQuery(
+    { organizationId },
+    { skip: !organizationId || role === "SUPER_ADMIN" }
+  );
+  const activeDepartments = orgDeptsRes?.data || orgDeptsRes || [];
+  
+  // If we are in organization-specific scoped view, fallback to passed departments list
+  const finalDepartments = activeDepartments.length > 0 ? activeDepartments : (departments || []);
+
+  const showOrgField = role !== "SUPER_ADMIN" && organizations && organizations.length > 0;
+
   if (!isOpen) return null;
 
   const handleSubmit = () => {
     const validationErrors: any = {};
     if (!name.trim()) validationErrors.name = "Name is required";
     if (!email.trim()) validationErrors.email = "Email is required";
+    if (role !== "SUPER_ADMIN" && showOrgField && !organizationId) {
+      validationErrors.organizationId = "Organization is required";
+    }
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -40,6 +58,7 @@ export default function EditUserModal({ isOpen, onClose, userData, onSave, depar
       name,
       email,
       role,
+      organizationId: role === "SUPER_ADMIN" ? "" : organizationId,
       department: role === "SUPER_ADMIN" ? "Administration" : department,
       status: status === "ACTIVE"
     });
@@ -91,10 +110,21 @@ export default function EditUserModal({ isOpen, onClose, userData, onSave, depar
                 <select
                   className="w-full appearance-none border border-gray-200 rounded-lg pl-3 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 cursor-pointer text-sm bg-white"
                   value={role}
-                  onChange={(e) => setRole(e.target.value)}
+                  onChange={(e) => {
+                    const newRole = e.target.value;
+                    setRole(newRole);
+                    if (newRole === "SUPER_ADMIN") {
+                      setDepartment("Administration");
+                      setOrganizationId("");
+                    } else {
+                      setDepartment("");
+                    }
+                  }}
                 >
-                  <option value="USER">User (Employee)</option>
                   <option value="SUPER_ADMIN">Super Admin</option>
+                  <option value="ORGANIZATION_ADMIN">Organization Admin</option>
+                  <option value="DEPARTMENT_ADMIN">Department Admin</option>
+                  <option value="USER">User (Employee)</option>
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -125,6 +155,38 @@ export default function EditUserModal({ isOpen, onClose, userData, onSave, depar
             </div>
           </div>
 
+          {/* Organization Selection (Only show for non-Super Admin roles and if organizations are provided) */}
+          {showOrgField && (
+            <div>
+              <label className="text-sm font-medium text-gray-700 block mb-1">Organization</label>
+              <div className="relative w-full">
+                <select
+                  className={`w-full appearance-none border rounded-lg pl-3 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 cursor-pointer text-sm bg-white ${
+                    errors.organizationId ? "border-red-500" : "border-gray-200"
+                  }`}
+                  value={organizationId}
+                  onChange={(e) => {
+                    setOrganizationId(e.target.value);
+                    setDepartment("");
+                  }}
+                >
+                  <option value="">Select an organization</option>
+                  {organizations.map((org: any) => (
+                    <option key={org._id || org.id} value={org._id || org.id}>
+                      {org.name}
+                    </option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </div>
+              </div>
+              {errors.organizationId && <p className="text-red-500 text-xs mt-1">{errors.organizationId}</p>}
+            </div>
+          )}
+
           {/* Department (Only show for non-Super Admin roles) */}
           {role !== "SUPER_ADMIN" && (
             <div>
@@ -134,14 +196,15 @@ export default function EditUserModal({ isOpen, onClose, userData, onSave, depar
                   className="w-full appearance-none border border-gray-200 rounded-lg pl-3 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 cursor-pointer text-sm bg-white"
                   value={department}
                   onChange={(e) => setDepartment(e.target.value)}
+                  disabled={role !== "SUPER_ADMIN" && showOrgField && !organizationId}
                 >
                   <option value="">Select a department</option>
-                  {departments.map((dept: any) => (
+                  {finalDepartments.map((dept: any) => (
                     <option key={dept._id || dept.id} value={dept.name}>
                       {dept.name}
                     </option>
                   ))}
-                  {department && !departments.some((d: any) => d.name === department) && (
+                  {department && !finalDepartments.some((d: any) => d.name === department) && (
                     <option value={department}>{department}</option>
                   )}
                 </select>
