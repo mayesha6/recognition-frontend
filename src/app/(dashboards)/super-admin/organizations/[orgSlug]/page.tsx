@@ -48,7 +48,7 @@ export default function OrganizationUsersPage() {
   const { data: orgRes, isLoading: isOrgLoading } = useGetUserBySlugQuery(orgSlug, { skip: !orgSlug });
   const org = orgRes?.data;
   const orgId = org?._id || org?.id;
-  const orgName = org?.name || "Organization";
+  const orgName = org?.companyName || org?.name || "Organization";
 
   // Fetch users of this organization
   const { data: usersRes, isLoading: isUsersLoading, refetch } = useGetDepartmentUsersQuery({
