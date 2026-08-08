@@ -204,7 +204,23 @@ export default function Configuration({ onNext, onBack }: any) {
             className="mb-4"
             onValueChange={(val) => setValue("points", val[0])}
           />
-          <p className="text-center text-4xl font-bold text-primary">{points} pts</p>
+          <div className="flex items-center justify-center gap-2 mt-4">
+            <input
+              type="number"
+              value={points}
+              min={0}
+              max={availableBalance}
+              onChange={(e) => {
+                let val = parseInt(e.target.value, 10);
+                if (isNaN(val)) val = 0;
+                if (val < 0) val = 0;
+                if (val > availableBalance) val = availableBalance;
+                setValue("points", val);
+              }}
+              className="w-24 text-center text-3xl font-bold text-indigo-600 bg-gray-50 border border-gray-200 rounded-lg py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            />
+            <span className="text-xl font-semibold text-gray-500">pts</span>
+          </div>
         </div>
 
         <div className="space-y-4 text-sm border-t pt-4">
