@@ -131,9 +131,9 @@ export default function Sidebar() {
   if ((activeRole === "org-admin" || activeRole === "dept-admin") && currentUser) {
     let orgName = "";
     if (currentUser.role === "ORGANIZATION_ADMIN") {
-      orgName = currentUser.name || "";
+      orgName = currentUser.companyName || currentUser.name || "";
     } else if (currentUser.role === "DEPARTMENT_ADMIN") {
-      orgName = currentUser.organizationId?.name || (typeof currentUser.organizationId === "string" ? currentUser.organizationId : "");
+      orgName = currentUser.organizationId?.companyName || currentUser.organizationId?.name || (typeof currentUser.organizationId === "string" ? currentUser.organizationId : "");
     }
     if (orgName) {
       const orgSlug = slugify(orgName);

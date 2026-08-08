@@ -44,7 +44,7 @@ export default function HomePage() {
           const storedUser = localStorage.getItem("user");
           if (storedUser) {
             const parsed = JSON.parse(storedUser);
-            orgName = parsed.name || "";
+            orgName = parsed.companyName || parsed.name || "";
           }
         } catch (e) {
           console.error("Failed to parse user from localStorage:", e);
@@ -62,7 +62,7 @@ export default function HomePage() {
           if (storedUser) {
             const parsed = JSON.parse(storedUser);
             const orgObj = parsed.organizationId;
-            orgName = orgObj?.name || (typeof orgObj === "string" ? orgObj : "");
+            orgName = orgObj?.companyName || orgObj?.name || (typeof orgObj === "string" ? orgObj : "");
           }
         } catch (e) {
           console.error("Failed to parse user from localStorage:", e);

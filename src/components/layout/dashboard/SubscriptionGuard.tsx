@@ -55,10 +55,11 @@ export default function SubscriptionGuard({ children }: { children: React.ReactN
 
   const expectedSlug =
     user?.role === "ORGANIZATION_ADMIN"
-      ? slugify(user.name || "")
+      ? slugify(user.companyName || user.name || "")
       : user?.role === "DEPARTMENT_ADMIN"
       ? slugify(
-          user.organizationId?.name ||
+          user.organizationId?.companyName ||
+            user.organizationId?.name ||
             (typeof user.organizationId === "string" ? user.organizationId : "")
         )
       : "";

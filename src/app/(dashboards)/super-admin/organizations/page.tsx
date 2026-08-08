@@ -125,7 +125,7 @@ export default function OrganizationManagement() {
   };
 
   const handleView = (org: any) => {
-    const orgSlug = slugify(org.name);
+    const orgSlug = slugify(org.companyName || org.name);
     router.push(`/super-admin/organizations/${orgSlug}`);
   };
 
