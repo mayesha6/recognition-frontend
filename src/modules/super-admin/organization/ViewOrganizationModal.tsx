@@ -1,5 +1,5 @@
 "use client";
-import { X, Building2, Users, Briefcase, Calendar, ShieldCheck, Mail } from "lucide-react";
+import { X, Building2, Users, Briefcase, Calendar, ShieldCheck, Mail, Phone } from "lucide-react";
 
 export default function ViewOrganizationModal({ isOpen, onClose, org }: any) {
   if (!isOpen || !org) return null;
@@ -18,7 +18,13 @@ export default function ViewOrganizationModal({ isOpen, onClose, org }: any) {
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
+              <InfoItem icon={<Building2 size={16} />} label="Company Name" value={org.companyName || "N/A"} />
+            </div>
+            <div className="col-span-2">
               <InfoItem icon={<Mail size={16} />} label="Email" value={org.email || "N/A"} />
+            </div>
+            <div className="col-span-2">
+              <InfoItem icon={<Phone size={16} />} label="Phone" value={org.phone || "N/A"} />
             </div>
             <InfoItem icon={<Briefcase size={16} />} label="Industry" value={org.industry} />
             <InfoItem icon={<ShieldCheck size={16} />} label="Plan" value={org.plan} />

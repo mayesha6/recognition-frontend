@@ -8,7 +8,9 @@ export default function OrganizationTable({ orgs, onView, onSuspend, onDelete, o
         <thead className="bg-gray-50/50 text-gray-400 text-xs uppercase tracking-wider border-b border-gray-100">
           <tr>
             <th className="px-6 py-4 font-medium">Organization</th>
+            <th className="px-6 py-4 font-medium">Company Name</th>
             <th className="px-6 py-4 font-medium">Email</th>
+            <th className="px-6 py-4 font-medium">Phone</th>
             <th className="px-6 py-4 font-medium">Plan</th>
             <th className="px-6 py-4 font-medium">Employees</th>
             <th className="px-6 py-4 font-medium">Departments</th>
@@ -22,7 +24,9 @@ export default function OrganizationTable({ orgs, onView, onSuspend, onDelete, o
           {orgs.map((org: any) => (
             <tr key={org._id || org.id} className="hover:bg-gray-50/50 transition-colors">
               <td className="px-6 py-4 text-sm font-medium text-gray-900">{org.name}</td>
+              <td className="px-6 py-4 text-sm text-gray-600">{org.companyName || "N/A"}</td>
               <td className="px-6 py-4 text-sm text-gray-600">{org.email || "N/A"}</td>
+              <td className="px-6 py-4 text-sm text-gray-600">{org.phone || "N/A"}</td>
               <td className="px-6 py-4"><span className="px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-medium">{org.plan}</span></td>
               <td className="px-6 py-4 text-sm text-gray-600">{org.employees}</td>
               <td className="px-6 py-4 text-sm text-gray-600">{org.departments}</td>
