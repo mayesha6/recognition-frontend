@@ -18,10 +18,13 @@ export default function ContactInfo({ user }: any) {
         try {
             const formData = new FormData();
             
-            const payload = {
+            const payload: any = {
                 name: formDataFields.fullName,
                 phone: formDataFields.phone
             };
+            if (formDataFields.companyName !== undefined) {
+                payload.companyName = formDataFields.companyName;
+            }
             
             formData.append("data", JSON.stringify(payload));
             
@@ -62,6 +65,14 @@ export default function ContactInfo({ user }: any) {
                     <label className={labelStyle}>Phone Number</label>
                     <input {...register("phone")} className={inputStyle} placeholder="Phone Number" />
                 </div>
+
+                {/* Company Name */}
+                {user?.companyName !== undefined && (
+                    <div>
+                        <label className={labelStyle}>Company Name</label>
+                        <input {...register("companyName")} className={inputStyle} placeholder="Company Name" />
+                    </div>
+                )}
 
                 {/* Department & Organization */}
                 <div className="grid gap-4 grid-cols-2">

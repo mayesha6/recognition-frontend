@@ -23,6 +23,7 @@ export default function SettingsPage() {
     phone: user?.phone || "",
     department: user?.department || "Personal Account",
     organization: user?.role === "ORGANIZATION_ADMIN" ? user?.name : (user?.organizationId?.name || user?.organizationId || "Greetely"),
+    companyName: user?.companyName || "",
     profilePicture: user?.picture || "",
   };
 
