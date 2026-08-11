@@ -79,6 +79,14 @@ export const userApi = baseApi.injectEndpoints({
       invalidatesTags: ["User"],
     }),
 
+    deleteOwnAccount: builder.mutation({
+      query: () => ({
+        url: "/user/delete-own-account",
+        method: "DELETE",
+      }),
+      invalidatesTags: ["User"],
+    }),
+
     getSingleUser: builder.query({
       query: (id) => ({
         url: `/user/${id}`,
@@ -116,6 +124,7 @@ export const {
   useCreateUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
+  useDeleteOwnAccountMutation,
   useGetSingleUserQuery,
   useGetUserBySlugQuery,
   useDeleteRecognitionMutation

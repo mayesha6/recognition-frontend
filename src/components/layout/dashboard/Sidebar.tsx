@@ -90,7 +90,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import Cookies from "js-cookie";
 import { logout } from "@/redux/features/authSlice";
 import { useGetMeQuery } from "@/redux/api/authApi";
-import { useDeleteUserMutation } from "@/redux/api/userApi";
+import { useDeleteOwnAccountMutation } from "@/redux/api/userApi";
 import { toast } from "sonner";
 import DeleteConfirmationModal from "@/components/common/DeleteConfirmationModal";
 import { slugify } from "@/utils/slugify";
@@ -111,7 +111,7 @@ export default function Sidebar() {
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
+  const [deleteOwnAccount, { isLoading: isDeleting }] = useDeleteOwnAccountMutation();
 
   useEffect(() => {
     // ২. ক্লায়েন্ট সাইডে লোড হলে লোকাল স্টোরেজ থেকে রোল সেট করুন
@@ -173,13 +173,8 @@ export default function Sidebar() {
   };
 
   const handleDeleteAccount = async () => {
-    if (!currentUser?.id && !currentUser?._id) {
-      toast.error("User information not found.");
-      return;
-    }
     try {
-      const userId = currentUser.id || currentUser._id;
-      await deleteUser(userId).unwrap();
+      await deleteOwnAccount(undefined).unwrap();
       toast.success("Account deleted successfully.");
       handleLogout();
     } catch (error) {
