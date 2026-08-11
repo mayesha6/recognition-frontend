@@ -81,7 +81,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { LogOut } from "lucide-react";
+import { LogOut, MoreVertical, Trash2 } from "lucide-react";
 
 import { sidebarConfig } from "@/config/sidebar.config";
 import { UserRole } from "@/types/auth";
@@ -90,6 +90,9 @@ import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import Cookies from "js-cookie";
 import { logout } from "@/redux/features/authSlice";
 import { useGetMeQuery } from "@/redux/api/authApi";
+import { useDeleteUserMutation } from "@/redux/api/userApi";
+import { toast } from "sonner";
+import DeleteConfirmationModal from "@/components/common/DeleteConfirmationModal";
 import { slugify } from "@/utils/slugify";
 
 export default function Sidebar() {
@@ -104,6 +107,11 @@ export default function Sidebar() {
 
   const [mounted, setMounted] = useState(false);
   const [role, setRole] = useState<UserRole>("user");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
 
   useEffect(() => {
     // ২. ক্লায়েন্ট সাইডে লোড হলে লোকাল স্টোরেজ থেকে রোল সেট করুন
@@ -164,6 +172,24 @@ export default function Sidebar() {
     window.location.href = "https://greetely.com/login";
   };
 
+  const handleDeleteAccount = async () => {
+    if (!currentUser?.id && !currentUser?._id) {
+      toast.error("User information not found.");
+      return;
+    }
+    try {
+      const userId = currentUser.id || currentUser._id;
+      await deleteUser(userId).unwrap();
+      toast.success("Account deleted successfully.");
+      handleLogout();
+    } catch (error) {
+      console.error("Failed to delete account:", error);
+      toast.error("Failed to delete account. Please try again.");
+    } finally {
+      setIsDeleteModalOpen(false);
+    }
+  };
+
   return (
     <>
       {/* Desktop Sidebar */}
@@ -193,38 +219,65 @@ export default function Sidebar() {
           })}
         </nav>
 
-        <div className="p-4 border border-gray rounded-xl m-4">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold overflow-hidden border border-gray-200 shrink-0 relative">
-              {currentUser?.picture ? (
-                <Image
-                  src={currentUser.picture}
-                  alt={user.name}
-                  fill
-                  sizes="40px"
-                  className="object-cover"
-                />
-              ) : (
-                <span>{initials}</span>
+        <div className="p-4 border border-gray rounded-xl m-4 relative">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-10 h-10 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold overflow-hidden border border-gray-200 shrink-0 relative">
+                {currentUser?.picture ? (
+                  <Image
+                    src={currentUser.picture}
+                    alt={user.name}
+                    fill
+                    sizes="40px"
+                    className="object-cover"
+                  />
+                ) : (
+                  <span>{initials}</span>
+                )}
+              </div>
+
+              <div className="min-w-0">
+                <p className="text-sm font-bold truncate text-gray-900 pr-1" title={user.name}>
+                  {user.name}
+                </p>
+                <p className="text-xs text-gray-500 capitalize truncate">
+                  {user.role.replace("-", " ")}
+                </p>
+              </div>
+            </div>
+
+            <div className="relative shrink-0">
+              <button
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className="text-gray-400 hover:text-gray-600 p-1.5 rounded-full hover:bg-gray-100 transition-colors cursor-pointer flex items-center justify-center"
+                title="Account Settings"
+              >
+                <MoreVertical className="w-5 h-5" />
+              </button>
+
+              {dropdownOpen && (
+                <div className="absolute bottom-full right-0 mb-2 w-48 bg-white border border-gray-100 rounded-xl shadow-lg py-1.5 z-50 animate-in fade-in slide-in-from-bottom-2 duration-150">
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 px-4 py-2 w-full text-left text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
+                  >
+                    <LogOut className="w-4 h-4 text-gray-500" />
+                    Logout
+                  </button>
+                  <button
+                    onClick={() => {
+                      setDropdownOpen(false);
+                      setIsDeleteModalOpen(true);
+                    }}
+                    className="flex items-center gap-2 px-4 py-2 w-full text-left text-sm text-red-600 hover:bg-red-50/50 transition-colors cursor-pointer"
+                  >
+                    <Trash2 className="w-4 h-4 text-red-600" />
+                    Delete Account
+                  </button>
+                </div>
               )}
             </div>
-
-            <div>
-              <p className="text-sm font-bold">{user.name}</p>
-
-              <p className="text-xs text-gray-500 capitalize">
-                {user.role.replace("-", " ")}
-              </p>
-            </div>
           </div>
-
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 bg-[#F3F4F6] w-full text-sm text-gray-600 rounded-xl text-center justify-center py-1 hover:bg-gray-200 transition-colors cursor-pointer"
-          >
-            <LogOut className="w-4 h-4" />
-            Logout
-          </button>
         </div>
       </aside>
 
@@ -243,15 +296,52 @@ export default function Sidebar() {
           </Link>
         ))}
 
-        <button
-          onClick={handleLogout}
-          className="flex flex-col items-center gap-1 text-gray-500 cursor-pointer shrink-0"
-        >
-          <LogOut className="w-6 h-6" />
+        <div className="relative shrink-0">
+          <button
+            onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}
+            className="flex flex-col items-center gap-1 text-gray-500 cursor-pointer"
+          >
+            <MoreVertical className="w-6 h-6" />
+            <span className="text-[10px]">Settings</span>
+          </button>
 
-          <span className="text-[10px]">Logout</span>
-        </button>
+          {mobileDropdownOpen && (
+            <div className="absolute bottom-full right-0 mb-2 w-48 bg-white border border-gray-100 rounded-xl shadow-lg py-1.5 z-50 animate-in fade-in slide-in-from-bottom-2 duration-150">
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-4 py-2 w-full text-left text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
+              >
+                <LogOut className="w-4 h-4 text-gray-500" />
+                Logout
+              </button>
+              <button
+                onClick={() => {
+                  setMobileDropdownOpen(false);
+                  setIsDeleteModalOpen(true);
+                }}
+                className="flex items-center gap-2 px-4 py-2 w-full text-left text-sm text-red-600 hover:bg-red-50/50 transition-colors cursor-pointer"
+              >
+                <Trash2 className="w-4 h-4 text-red-600" />
+                Delete Account
+              </button>
+            </div>
+          )}
+        </div>
       </nav>
+
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDeleteAccount}
+        title="Delete Your Account"
+        itemName={user.name}
+        description={
+          currentUser?.role === "ORGANIZATION_ADMIN"
+            ? "Are you sure you want to delete your organization account? This will permanently remove your organization and all user accounts under it. This action cannot be undone."
+            : "Are you sure you want to delete your account? This action is permanent and cannot be undone."
+        }
+        isLoading={isDeleting}
+      />
     </>
   );
 }
