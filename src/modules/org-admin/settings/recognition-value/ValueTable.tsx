@@ -12,7 +12,8 @@ export default function ValueTable({
             <table className="w-full text-left">
                 <thead className="bg-gray-50/50 text-gray-400 text-xs uppercase tracking-wider border-b border-gray">
                     <tr>
-                        <th className="px-6 py-4 font-medium">Name</th>
+                        <th className="px-6 py-4 font-medium w-1/3">Name</th>
+                        <th className="px-6 py-4 font-medium w-1/2">Description / Context</th>
                         <th className="px-6 py-4 font-medium text-end">
                             Action
                         </th>
@@ -25,8 +26,12 @@ export default function ValueTable({
                             key={value._id || value.id}
                             className="hover:bg-gray-50/50 border-b border-gray transition-colors"
                         >
-                            <td className="px-6 py-4 text-sm font-medium text-gray-600">
+                            <td className="px-6 py-4 text-sm font-medium text-gray-900">
                                 {value.name}
+                            </td>
+
+                            <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate" title={value.description || "No description"}>
+                                {value.description || "—"}
                             </td>
 
                             <td className="px-6 py-4 text-end">

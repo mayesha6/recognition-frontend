@@ -13,6 +13,7 @@ export default function EditValueModal({
 }: any) {
 
   const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
 
   const [updateRecognitionValue, { isLoading }] =
     useUpdateRecognitionValueMutation();
@@ -20,6 +21,7 @@ export default function EditValueModal({
   useEffect(() => {
     if (valueData) {
       setName(valueData.name || "");
+      setDescription(valueData.description || "");
     }
   }, [valueData]);
 
@@ -43,6 +45,7 @@ export default function EditValueModal({
       await updateRecognitionValue({
         id,
         name: name.trim(),
+        description: description.trim(),
       }).unwrap();
 
       toast.success(
@@ -95,6 +98,20 @@ export default function EditValueModal({
                 setName(e.target.value)
               }
               className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm bg-white outline-none focus:border-indigo-500 h-10"
+            />
+          </div>
+
+          <div>
+            <label className="text-sm text-gray-500 block mb-1">
+              Description / Context (used by AI to generate messages)
+            </label>
+
+            <textarea
+              value={description}
+              onChange={(e) =>
+                setDescription(e.target.value)
+              }
+              className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm bg-white outline-none focus:border-indigo-500 h-24 resize-none"
             />
           </div>
 

@@ -12,7 +12,7 @@ export const recognitionValueApi = baseApi
                 providesTags: ["RecognitionValue"],
             }),
 
-            createRecognitionValue: builder.mutation<any, { name: string }>({
+            createRecognitionValue: builder.mutation<any, { name: string; description?: string }>({
                 query: (data) => ({
                     url: "/recognition-value",
                     method: "POST",
@@ -23,7 +23,7 @@ export const recognitionValueApi = baseApi
 
             updateRecognitionValue: builder.mutation<
                 any,
-                { id: string; name: string }
+                { id: string; name: string; description?: string }
             >({
                 query: ({ id, ...data }) => ({
                     url: `/recognition-value/${id}`,

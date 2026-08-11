@@ -11,6 +11,7 @@ export default function AddValueModal({
     onClose,
 }: any) {
     const [name, setName] = useState("");
+    const [description, setDescription] = useState("");
 
     const [createRecognitionValue, { isLoading }] =
         useCreateRecognitionValueMutation();
@@ -28,11 +29,13 @@ export default function AddValueModal({
         try {
             await createRecognitionValue({
                 name: name.trim(),
+                description: description.trim(),
             }).unwrap();
 
             toast.success("Recognition value created successfully!");
 
             setName("");
+            setDescription("");
             onClose();
         } catch (error: any) {
             toast.error(
@@ -75,6 +78,19 @@ export default function AddValueModal({
                             placeholder="e.g. Leadership"
                             onChange={(e) => setName(e.target.value)}
                             className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm bg-white outline-none focus:border-indigo-500 h-10"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="text-sm text-gray-500 mb-1 block">
+                            Description / Context (used by AI to generate messages)
+                        </label>
+
+                        <textarea
+                            value={description}
+                            placeholder="e.g. Someone who takes initiative, guides the team, and helps others succeed."
+                            onChange={(e) => setDescription(e.target.value)}
+                            className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm bg-white outline-none focus:border-indigo-500 h-24 resize-none"
                         />
                     </div>
 
