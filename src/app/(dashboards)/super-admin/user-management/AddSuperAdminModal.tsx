@@ -22,7 +22,7 @@ export default function AddSuperAdminModal({ isOpen, onClose, onSave, department
     if (!formData.name.trim()) validationErrors.name = "Name is required";
     if (!formData.email.trim()) validationErrors.email = "Email is required";
     if (!formData.password) validationErrors.password = "Password is required";
-    
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
@@ -45,13 +45,12 @@ export default function AddSuperAdminModal({ isOpen, onClose, onSave, department
           {/* Full Name */}
           <div>
             <label className="text-sm font-medium text-gray-700 block mb-1">Full Name</label>
-            <input 
-              className={`w-full border rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all ${
-                errors.name ? "border-red-500" : "border-gray-200"
-              }`}
+            <input
+              className={`w-full border rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all ${errors.name ? "border-red-500" : "border-gray-200"
+                }`}
               placeholder="e.g. John Doe"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })} 
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             />
             {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
           </div>
@@ -59,14 +58,13 @@ export default function AddSuperAdminModal({ isOpen, onClose, onSave, department
           {/* Email Address */}
           <div>
             <label className="text-sm font-medium text-gray-700 block mb-1">Email Address</label>
-            <input 
-              className={`w-full border rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all ${
-                errors.email ? "border-red-500" : "border-gray-200"
-              }`}
+            <input
+              className={`w-full border rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all ${errors.email ? "border-red-500" : "border-gray-200"
+                }`}
               type="email"
               placeholder="e.g. admin@gmail.com"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })} 
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             />
             {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
           </div>
@@ -75,14 +73,13 @@ export default function AddSuperAdminModal({ isOpen, onClose, onSave, department
           <div>
             <label className="text-sm font-medium text-gray-700 block mb-1">Password</label>
             <div className="relative">
-              <input 
-                className={`w-full border rounded-lg pl-3 pr-10 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all ${
-                  errors.password ? "border-red-500" : "border-gray-200"
-                }`}
+              <input
+                className={`w-full border rounded-lg pl-3 pr-10 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all ${errors.password ? "border-red-500" : "border-gray-200"
+                  }`}
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
                 value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })} 
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               />
               <button
                 type="button"
@@ -167,7 +164,7 @@ export default function AddSuperAdminModal({ isOpen, onClose, onSave, department
 
         <button
           onClick={handleSubmit}
-          className="w-full mt-8 bg-[#FFAA00] hover:bg-[#e69900] text-white font-medium py-3 rounded-lg transition-colors text-sm shadow-sm"
+          className="w-full mt-8 bg-gradient hover:bg-[#e69900] text-white font-medium py-3 rounded-lg transition-colors text-sm shadow-sm"
         >
           Add User
         </button>
