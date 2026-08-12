@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X } from "lucide-react";
+import { X, Eye, EyeOff } from "lucide-react";
 
 export default function AddSuperAdminModal({ isOpen, onClose, onSave, departments = [] }: any) {
   const [formData, setFormData] = useState({
@@ -12,6 +12,7 @@ export default function AddSuperAdminModal({ isOpen, onClose, onSave, department
   });
 
   const [errors, setErrors] = useState<any>({});
+  const [showPassword, setShowPassword] = useState(false);
 
   if (!isOpen) return null;
 
@@ -73,15 +74,24 @@ export default function AddSuperAdminModal({ isOpen, onClose, onSave, department
           {/* Password */}
           <div>
             <label className="text-sm font-medium text-gray-700 block mb-1">Password</label>
-            <input 
-              className={`w-full border rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all ${
-                errors.password ? "border-red-500" : "border-gray-200"
-              }`}
-              type="password"
-              placeholder="••••••••"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })} 
-            />
+            <div className="relative">
+              <input 
+                className={`w-full border rounded-lg pl-3 pr-10 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all ${
+                  errors.password ? "border-red-500" : "border-gray-200"
+                }`}
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })} 
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
             {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
           </div>
 
