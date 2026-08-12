@@ -2,6 +2,7 @@
 import ChangePassword from "@/modules/user/setting/components/ChangePassword";
 import ContactInfo from "@/modules/user/setting/components/ContactInfo";
 import GeneralSettings from "@/modules/user/setting/components/GeneralSettings";
+import DangerZone from "@/modules/user/setting/components/DangerZone";
 import { useGetMeQuery } from "@/redux/api/authApi";
 
 export default function SettingsPage() {
@@ -35,6 +36,7 @@ export default function SettingsPage() {
       </div>
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <ChangePassword />
+        <DangerZone />
       </div>
     </div>
   );
