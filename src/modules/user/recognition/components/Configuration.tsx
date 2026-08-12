@@ -258,7 +258,7 @@ export default function Configuration({ onNext, onBack }: any) {
           className="w-full mt-8 bg-gradient py-6 rounded-xl text-lg text-white font-semibold animate-pulse"
           onClick={onNext}
         >
-          Send Recognition
+          Review and Validate Recognition
         </Button>
       </div>
     </div>
