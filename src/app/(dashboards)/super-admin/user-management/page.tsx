@@ -155,11 +155,11 @@ export default function EmployeeManagementPage() {
           {/* Search Box */}
           <div className="flex items-center bg-gray-100 rounded-lg px-3 w-full sm:w-64 border border-gray-200">
             <Search className="w-4 h-4 text-gray-400" />
-            <Input 
-              placeholder="Search..." 
+            <Input
+              placeholder="Search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full focus-visible:ring-0 focus-visible:ring-offset-0 border-none bg-transparent" 
+              className="w-full focus-visible:ring-0 focus-visible:ring-offset-0 border-none bg-transparent"
             />
           </div>
 
@@ -186,9 +186,9 @@ export default function EmployeeManagementPage() {
           </div>
 
           {/* Add User button */}
-          <Button 
-            onClick={() => setIsAddEmployeeModalOpen(true)} 
-            className="bg-[#FFAA00] hover:bg-[#e69900] text-white whitespace-nowrap px-4 py-2 rounded-lg text-sm transition-colors"
+          <Button
+            onClick={() => setIsAddEmployeeModalOpen(true)}
+            className="bg-gradient hover:bg-[#e69900] text-white whitespace-nowrap px-4 py-2 rounded-lg text-sm transition-colors"
           >
             <Plus className="w-4 h-4 mr-1" />
             Add User
@@ -222,9 +222,9 @@ export default function EmployeeManagementPage() {
 
       {/* Add User Modal */}
       {isAddEmployeeModalOpen && (
-        <AddSuperAdminModal 
-          isOpen={isAddEmployeeModalOpen} 
-          onClose={() => setIsAddEmployeeModalOpen(false)} 
+        <AddSuperAdminModal
+          isOpen={isAddEmployeeModalOpen}
+          onClose={() => setIsAddEmployeeModalOpen(false)}
           onSave={handleSaveUser}
           departments={departmentsList}
         />
@@ -232,9 +232,9 @@ export default function EmployeeManagementPage() {
 
       {/* Edit User Modal */}
       {isEditModalOpen && (
-        <EditUserModal 
-          isOpen={isEditModalOpen} 
-          onClose={() => setIsEditModalOpen(false)} 
+        <EditUserModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
           userData={selectedUser}
           onSave={handleEditSave}
           departments={departmentsList}
