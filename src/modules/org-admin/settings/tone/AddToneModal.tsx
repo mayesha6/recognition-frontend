@@ -7,6 +7,7 @@ import { formatErrorMessage } from "@/utils/formatError";
 
 export default function AddToneModal({ isOpen, onClose }: any) {
   const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const [createTone, { isLoading }] = useCreateToneMutation();
 
   if (!isOpen) return null;
@@ -19,9 +20,13 @@ export default function AddToneModal({ isOpen, onClose }: any) {
     }
 
     try {
-      await createTone({ name: name.trim() }).unwrap();
+      await createTone({
+        name: name.trim(),
+        description: description.trim(),
+      }).unwrap();
       toast.success("Tone created successfully!");
       setName("");
+      setDescription("");
       onClose();
     } catch (error: any) {
       toast.error(formatErrorMessage(error, "Failed to create tone"));
@@ -47,6 +52,16 @@ export default function AddToneModal({ isOpen, onClose }: any) {
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Professional, Friendly"
               className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm bg-white outline-none focus:border-indigo-500 h-10"
+            />
+          </div>
+
+          <div>
+            <label className="text-sm text-gray-500 mb-1 block">Description / Context (used by AI to generate messages)</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="e.g. Encouraging tone that focuses on positive reinforcement and motivation."
+              className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm bg-white outline-none focus:border-indigo-500 h-24 resize-none"
             />
           </div>
 

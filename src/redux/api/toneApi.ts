@@ -12,7 +12,7 @@ export const toneApi = baseApi
         providesTags: ["Tone"],
       }),
 
-      createTone: builder.mutation<any, { name: string }>({
+      createTone: builder.mutation<any, { name: string; description?: string }>({
         query: (data) => ({
           url: "/tone",
           method: "POST",
@@ -21,7 +21,7 @@ export const toneApi = baseApi
         invalidatesTags: ["Tone"],
       }),
 
-      updateTone: builder.mutation<any, { id: string; name: string }>({
+      updateTone: builder.mutation<any, { id: string; name: string; description?: string }>({
         query: ({ id, ...data }) => ({
           url: `/tone/${id}`,
           method: "PATCH",

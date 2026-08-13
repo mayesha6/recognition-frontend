@@ -11,11 +11,13 @@ export default function EditToneModal({
   toneData,
 }: any) {
   const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const [updateTone, { isLoading }] = useUpdateToneMutation();
 
   useEffect(() => {
     if (toneData) {
       setName(toneData.name || "");
+      setDescription(toneData.description || "");
     }
   }, [toneData]);
 
@@ -31,7 +33,11 @@ export default function EditToneModal({
     }
 
     try {
-      await updateTone({ id, name: name.trim() }).unwrap();
+      await updateTone({
+        id,
+        name: name.trim(),
+        description: description.trim(),
+      }).unwrap();
       toast.success("Tone updated successfully!");
       onClose();
     } catch (error: any) {
@@ -57,6 +63,15 @@ export default function EditToneModal({
               value={name} 
               onChange={(e) => setName(e.target.value)} 
               className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm bg-white outline-none focus:border-indigo-500 h-10" 
+            />
+          </div>
+
+          <div>
+            <label className="text-sm text-gray-500 mb-1 block">Description / Context (used by AI to generate messages)</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm bg-white outline-none focus:border-indigo-500 h-24 resize-none"
             />
           </div>
 

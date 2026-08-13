@@ -7,6 +7,7 @@ import { formatErrorMessage } from "@/utils/formatError";
 
 export default function AddCategoryModal({ isOpen, onClose }: any) {
   const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const [createCategory, { isLoading }] = useCreateCategoryMutation();
 
   if (!isOpen) return null;
@@ -19,9 +20,13 @@ export default function AddCategoryModal({ isOpen, onClose }: any) {
     }
 
     try {
-      await createCategory({ name: name.trim() }).unwrap();
+      await createCategory({
+        name: name.trim(),
+        description: description.trim(),
+      }).unwrap();
       toast.success("Category created successfully!");
       setName("");
+      setDescription("");
       onClose();
     } catch (error: any) {
       toast.error(formatErrorMessage(error, "Failed to create category"));
@@ -47,6 +52,16 @@ export default function AddCategoryModal({ isOpen, onClose }: any) {
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Peer-to-Peer"
               className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm bg-white outline-none focus:border-indigo-500 h-10"
+            />
+          </div>
+
+          <div>
+            <label className="text-sm text-gray-500 mb-1 block">Description / Context (used by AI to generate messages)</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="e.g. Recognizing achievements and collaboration among coworkers."
+              className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm bg-white outline-none focus:border-indigo-500 h-24 resize-none"
             />
           </div>
 

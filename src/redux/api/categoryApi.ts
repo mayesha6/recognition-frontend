@@ -12,7 +12,7 @@ export const categoryApi = baseApi
         providesTags: ["Category"],
       }),
 
-      createCategory: builder.mutation<any, { name: string }>({
+      createCategory: builder.mutation<any, { name: string; description?: string }>({
         query: (data) => ({
           url: "/category/create",
           method: "POST",
@@ -21,7 +21,7 @@ export const categoryApi = baseApi
         invalidatesTags: ["Category"],
       }),
 
-      updateCategory: builder.mutation<any, { id: string; name: string }>({
+      updateCategory: builder.mutation<any, { id: string; name: string; description?: string }>({
         query: ({ id, ...data }) => ({
           url: `/category/update-category/${id}`,
           method: "PATCH",

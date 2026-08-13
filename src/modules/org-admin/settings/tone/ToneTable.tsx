@@ -8,7 +8,8 @@ export default function ToneTable({ data, onDelete, onEdit }: any) {
             <table className="w-full text-left">
                 <thead className="bg-gray-50/50 text-gray-400 text-xs uppercase tracking-wider border-b border-gray">
                     <tr>
-                        <th className="px-6 py-4 font-medium">Name</th>
+                        <th className="px-6 py-4 font-medium w-1/3">Name</th>
+                        <th className="px-6 py-4 font-medium w-1/2">Description / Context</th>
                         <th className="px-6 py-4 font-medium text-end">Action</th>
                     </tr>
                 </thead>
@@ -16,6 +17,9 @@ export default function ToneTable({ data, onDelete, onEdit }: any) {
                     {data.map((tone: any) => (
                         <tr key={tone._id || tone.id} className="hover:bg-gray-50/50 border-b border-gray transition-colors">
                             <td className="px-6 py-4 text-sm font-medium text-gray-600">{tone.name}</td>
+                            <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate" title={tone.description || "No description"}>
+                                {tone.description || "—"}
+                            </td>
                             <td className="px-6 py-4 text-gray-500 text-end">
                                 <div className="flex justify-end gap-3">
                                     <button onClick={() => onEdit(tone)} className="text-gray-400 hover:text-indigo-600">
