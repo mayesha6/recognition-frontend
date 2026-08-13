@@ -208,7 +208,7 @@ export default function Step4Preview({ onBack, onClose }: any) {
                   <button
                     type="button"
                     onClick={() => setIsEditingText(true)}
-                    className="absolute top-2 right-2 p-1.5 rounded-lg bg-white/10 opacity-0 group-hover:opacity-100 hover:bg-white/20 transition-all duration-200"
+                    className="absolute top-2 right-2 p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition-all duration-200"
                     title="Edit message"
                   >
                     <Pencil size={14} className="text-white" />
