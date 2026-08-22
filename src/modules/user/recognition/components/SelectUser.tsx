@@ -25,7 +25,7 @@ interface SelectUserProps {
 
 export default function SelectUser({ prefilledUser, onContinue }: SelectUserProps) {
   const { setValue, watch, trigger, formState: { errors } } = useFormContext<SendRecognitionFormValues>();
-  
+
   const getNormalizedDepartment = (user: any) => {
     if (!user) return "";
     const dept = user?.departmentId || user?.department?.name || user?.departmentName || user?.department || "";
@@ -65,7 +65,7 @@ export default function SelectUser({ prefilledUser, onContinue }: SelectUserProp
   return (
     <div className="flex justify-center items-start mt-10">
       <div className="bg-white rounded-2xl border border-gradient shadow-sm w-full max-w-lg p-8 relative">
-        
+
         {/* Close Button (Optional, can be hooked to onClose if needed) */}
         {/* <button className="absolute top-6 right-6 text-gray-400 hover:text-gray-600">
           <X className="w-5 h-5" />
@@ -114,8 +114,8 @@ export default function SelectUser({ prefilledUser, onContinue }: SelectUserProp
             <Label htmlFor="department" className="text-gray-700 font-medium">
               Select from Departments <span className="text-gray-400 font-normal">(Optional)</span>
             </Label>
-            <Select 
-              disabled={true} 
+            <Select
+              disabled={true}
               value={department}
             >
               <SelectTrigger className="h-12 border border-gray focus-visible:ring-0 focus-visible:ring-offset-0">
@@ -128,8 +128,8 @@ export default function SelectUser({ prefilledUser, onContinue }: SelectUserProp
           </div>
 
           {/* Action Button */}
-          <Button 
-            onClick={handleNext} 
+          <Button
+            onClick={handleNext}
             className="w-full h-12 bg-gradient hover:bg-[#7C3AED] text-white rounded-lg text-base font-medium mt-4"
           >
             Continue to Details

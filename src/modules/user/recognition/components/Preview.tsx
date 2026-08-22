@@ -10,9 +10,9 @@ import {
 } from "@/redux/api/recognitionApi";
 import { useEffect, useState } from "react";
 import { Sparkles, Pencil, Check, X } from "lucide-react";
-import { 
-  useSendRecognitionMutation, 
-  useGenerateMessageMutation, 
+import {
+  useSendRecognitionMutation,
+  useGenerateMessageMutation,
   useRegenerateMessageMutation,
   useEditMessageMutation
 } from "@/redux/api/userApi";

@@ -4,7 +4,7 @@ import { useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Layers, Smile, Award } from "lucide-react";
 import {
   useGetCategoriesQuery,
   useGetTonesQuery,
@@ -68,15 +68,20 @@ export default function Configuration({ onNext, onBack }: any) {
       <div className="lg:col-span-2 space-y-8">
         {/* Category Section */}
         <section>
-          <h3 className="font-light text-xl mb-3">Select Category</h3>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-2xl bg-orange-100/70 flex items-center justify-center shrink-0">
+              <Layers className="w-5 h-5 text-orange-500" />
+            </div>
+            <h3 className="font-semibold text-xl text-[#555DE3]">Select Category</h3>
+          </div>
           <div className="flex flex-wrap gap-2">
             {categories.map((cat: any) => (
               <Button
                 key={cat._id}
                 type="button"
                 className={`px-6 py-2 rounded-lg font-medium transition-all ${selectedCategory === cat._id
-                    ? "bg-gradient text-white shadow-md border-transparent"
-                    : "bg-white text-gray-700 border border-gray hover:border-primary hover:text-white"
+                  ? "bg-gradient text-white shadow-md border-transparent"
+                  : "bg-white text-gray-700 border border-gray hover:border-primary hover:text-white"
                   }`}
                 onClick={() => {
                   setValue("categoryId", cat._id);
@@ -94,15 +99,20 @@ export default function Configuration({ onNext, onBack }: any) {
 
         {/* Tone Section */}
         <section>
-          <h3 className="font-light text-xl mb-3">Choose Tone of Value</h3>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-2xl bg-teal-100/70 flex items-center justify-center shrink-0">
+              <Smile className="w-5 h-5 text-teal-500" />
+            </div>
+            <h3 className="font-semibold text-xl text-[#555DE3]">Choose Tone of Value</h3>
+          </div>
           <div className="flex flex-wrap gap-2">
             {tones.map((tone: any) => (
               <Button
                 key={tone._id}
                 type="button"
                 className={`px-6 py-2 rounded-lg font-medium transition-all ${selectedTone === tone._id
-                    ? "bg-gradient text-white shadow-md border-transparent"
-                    : "bg-white text-gray-700 border border-gray hover:border-primary hover:text-white"
+                  ? "bg-gradient text-white shadow-md border-transparent"
+                  : "bg-white text-gray-700 border border-gray hover:border-primary hover:text-white"
                   }`}
                 onClick={() => setValue("toneId", tone._id)}
               >
@@ -114,15 +124,20 @@ export default function Configuration({ onNext, onBack }: any) {
 
         {/* Value Section */}
         <section>
-          <h3 className="font-light text-xl mb-3">Employee Recognition Value (Choose up to 3)</h3>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-2xl bg-indigo-100/70 flex items-center justify-center shrink-0">
+              <Award className="w-5 h-5 text-[#555DE3]" />
+            </div>
+            <h3 className="font-semibold text-xl text-[#555DE3]">Employee Recognition Value <span className="font-normal text-base text-[#555DE3]">(Choose up to 3)</span></h3>
+          </div>
           <div className="flex flex-wrap gap-2">
             {recognitionValues.map((val: any) => (
               <Button
                 key={val._id}
                 type="button"
                 className={`px-6 py-2 rounded-lg font-medium transition-all ${selectedValues.includes(val._id)
-                    ? "bg-gradient text-white shadow-md border-transparent"
-                    : "bg-white text-gray-700 border border-gray hover:border-primary hover:text-white"
+                  ? "bg-gradient text-white shadow-md border-transparent"
+                  : "bg-white text-gray-700 border border-gray hover:border-primary hover:text-white"
                   }`}
                 onClick={() => toggleValue(val._id)}
               >
@@ -134,7 +149,12 @@ export default function Configuration({ onNext, onBack }: any) {
 
         {/* AI Message Control (Optional Prompt) */}
         <section>
-          <h3 className="font-light text-xl mb-3">AI Message Control (Optional)</h3>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-2xl bg-amber-100/70 flex items-center justify-center shrink-0">
+              <Sparkles className="w-5 h-5 text-amber-500" />
+            </div>
+            <h3 className="font-semibold text-xl text-[#555DE3]">AI Message Control <span className="font-normal text-base text-gray-400">(Optional)</span></h3>
+          </div>
           <textarea
             className="w-full border border-gray rounded-lg p-3 text-sm bg-white outline-none focus:border-primary placeholder:text-gray-400 animate-fade-in"
             placeholder="Optional prompt for AI (e.g. 'Make it more formal', 'Highlight leadership')"
@@ -156,9 +176,9 @@ export default function Configuration({ onNext, onBack }: any) {
                 scrollbar-width: none;
               }
             `}</style>
-            
-            <h2 className="font-light text-xl mb-4">Select Image for {selectedCategoryObj?.name}</h2>
-            
+
+            <h2 className="font-light text-xl mb-4 text-[#555DE3]">Select Image for {selectedCategoryObj?.name}</h2>
+
             <div className="max-h-[60vh] overflow-y-auto no-scrollbar">
               <div className="grid grid-cols-3 gap-4">
                 {selectedCategoryObj?.images?.map((img: string) => {
@@ -170,18 +190,17 @@ export default function Configuration({ onNext, onBack }: any) {
                         setValue("imageId", img);
                         setIsModalOpen(false);
                       }}
-                      className={`h-24 bg-gray-200 rounded-lg cursor-pointer overflow-hidden border-2 transition-all duration-200 ${
-                        isSelected 
-                          ? "border-indigo-600 shadow-sm" 
+                      className={`h-24 bg-gray-200 rounded-lg cursor-pointer overflow-hidden border-2 transition-all duration-200 ${isSelected
+                          ? "border-indigo-600 shadow-sm"
                           : "border-transparent hover:border-indigo-500 hover:shadow-sm"
-                      }`}
+                        }`}
                     >
                       <img src={img} alt="Category option" className="object-cover w-full h-full" />
                     </div>
                   );
                 })}
               </div>
-              
+
               {(!selectedCategoryObj?.images || selectedCategoryObj.images.length === 0) && (
                 <p className="text-gray-500 text-sm text-center py-4">No images available for this category.</p>
               )}
@@ -192,7 +211,7 @@ export default function Configuration({ onNext, onBack }: any) {
 
       {/* ডান পাশের Action Card */}
       <div className="border border-gray-200 rounded-2xl p-6 shadow-custom-card h-fit">
-        <h3 className="font-bold text-xl mb-6">Assign Points</h3>
+        <h3 className="font-bold text-xl mb-6 text-[#555DE3]">Assign Points</h3>
 
         <div className="mb-8">
           <Slider
@@ -237,7 +256,7 @@ export default function Configuration({ onNext, onBack }: any) {
         </div>
 
         <div className="mt-8 space-y-3 text-sm">
-          <h4 className="font-bold">Recognition Summary</h4>
+          <h4 className="font-bold text-[#555DE3]">Recognition Summary</h4>
           <div className="grid grid-cols-2 gap-2 text-gray-600">
             <span>Occasion:</span>{" "}
             <span className="text-right text-gray-900 font-medium">
@@ -263,4 +282,4 @@ export default function Configuration({ onNext, onBack }: any) {
       </div>
     </div>
   );
-}
+}
